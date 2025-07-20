@@ -3,7 +3,8 @@
 <html>
 <head>
 	<title>Online Resume Maker</title>
-<?php require "assets/autoloader.php"?>
+<?php require "autoloader.php" ?>
+
 	<style type="text/css" id="#some2">
 <?php include 'css/myStyle.css';?>
 *{
