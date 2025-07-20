@@ -1,5 +1,7 @@
-# Use official PHP image with Apache
 FROM php:8.1-apache
+
+# Install mysqli extension for PHP
+RUN docker-php-ext-install mysqli
 
 # Enable mod_rewrite (for .htaccess support)
 RUN a2enmod rewrite
