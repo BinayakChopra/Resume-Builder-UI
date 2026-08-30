@@ -71,6 +71,15 @@
   box-shadow: 0 30px 70px rgba(79, 125, 249, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
 }
 
+@media (max-width: 768px) {
+  .tilt-card {
+    transform: none !important;
+  }
+  .tilt-card-container {
+    perspective: none !important;
+  }
+}
+
 /* Laser Scanning Line Effect */
 @keyframes laserScan {
   0% {

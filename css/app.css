@@ -596,8 +596,15 @@ select.form-control {
   left: 20%;
 }
 
+.hero-grid {
+  grid-template-columns: 1.1fr 0.9fr;
+}
+
 /* Responsive adjustments */
 @media (max-width: 992px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
   .nav-menu {
     display: none;
   }
@@ -612,5 +619,261 @@ select.form-control {
     padding: 24px;
     border-bottom: 1px solid var(--border-medium);
     gap: 12px;
+  }
+
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px;
+  }
+}
+
+/* Mobile Portrait Optimization */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    position: relative;
+  }
+
+  .hero-section {
+    padding: 100px 0 50px 0 !important;
+  }
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+  :root {
+    --header-height: 64px;
+  }
+
+  html {
+    font-size: 15px;
+  }
+
+  body {
+    font-size: 0.9rem;
+  }
+
+  /* Header adjustments */
+  .app-header {
+    height: 64px;
+    padding: 0 12px;
+  }
+
+  .nav-brand {
+    font-size: 1.05rem;
+    gap: 8px;
+  }
+
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .brand-badge {
+    font-size: 0.6rem;
+    padding: 2px 5px;
+  }
+
+  .nav-actions {
+    gap: 6px;
+  }
+
+  .nav-actions .btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .nav-actions .btn-sm {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+
+  .nav-actions .btn span {
+    display: none;
+  }
+
+  /* Container spacing */
+  .container {
+    padding-left: 14px;
+    padding-right: 14px;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .container-wide {
+    padding-left: 12px;
+    padding-right: 12px;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Cards and glassmorphism */
+  .glass-card {
+    padding: 20px 16px;
+    border-radius: var(--radius-md);
+  }
+
+  /* Grid layouts */
+  .grid,
+  .grid-2,
+  .hero-grid,
+  [style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Typography scaling */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 1.4rem !important;
+  }
+
+  h3 {
+    font-size: 1.1rem !important;
+  }
+
+  p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 10px 16px;
+    font-size: 0.875rem;
+  }
+
+  .btn-lg {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+
+  .btn-sm {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+  }
+
+  .btn-icon {
+    padding: 8px;
+  }
+
+  /* Form inputs */
+  .form-control {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .form-label {
+    font-size: 0.85rem;
+  }
+
+  /* Badges */
+  .badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  /* Modals */
+  .modal-dialog {
+    width: 92%;
+    max-width: 92%;
+    margin: 20px auto;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 16px;
+  }
+
+  /* Toast notifications */
+  .toast-container {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+  }
+
+  .toast {
+    min-width: auto;
+    width: 100%;
+    max-width: 100%;
+    font-size: 0.85rem;
+    padding: 12px 16px;
+  }
+
+  /* Ambient orbs - reduce size on mobile */
+  .orb-blue {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -100px;
+  }
+
+  .orb-purple {
+    width: 280px;
+    height: 280px;
+    right: -80px;
+  }
+
+  .orb-cyan {
+    width: 250px;
+    height: 250px;
+  }
+
+  /* Flex utilities */
+  .flex-between {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 12px;
+  }
+
+  .flex-between.keep-row {
+    flex-direction: row;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.6rem !important;
+  }
+
+  h2 {
+    font-size: 1.25rem !important;
+  }
+
+  .container,
+  .container-wide {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .glass-card {
+    padding: 16px 12px;
+  }
+
+  .btn-lg {
+    padding: 11px 18px;
+    font-size: 0.9rem;
   }
 }
