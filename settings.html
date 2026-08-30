@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — ResumeFlow AI</title>
+  <meta name="description" content="Manage your ResumeFlow user profile, preferences, and data storage.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body class="bg-grid-pattern">
+
+  <!-- Ambient Glow Orbs -->
+  <div class="orb-glow orb-blue"></div>
+  <div class="orb-glow orb-purple"></div>
+
+  <!-- Master Application Header -->
+  <header class="app-header">
+    <div class="container-wide flex-between">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <span>ResumeFlow <span class="brand-badge">v2.0</span></span>
+      </a>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="builder.html" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Resume Studio</a></li>
+        <li><a href="templates.html" class="nav-link"><i class="fa-solid fa-layer-group"></i> Templates</a></li>
+        <li><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-folder-open"></i> My Resumes</a></li>
+        <li><a href="contact.html" class="nav-link"><i class="fa-solid fa-paper-plane"></i> Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-icon" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+        <a href="builder.html" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-bolt"></i> Open Studio
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Settings Main Container -->
+  <main style="padding: 120px 0 80px 0; min-height: 85vh;">
+    <div class="container" style="max-width: 800px;">
+
+      <div style="margin-bottom: 32px;">
+        <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 6px;">Application & Profile Settings</h1>
+        <p style="color: var(--text-secondary); font-size: 0.95rem;">
+          Configure your user account, studio preferences, and client-side database management.
+        </p>
+      </div>
+
+      <!-- User Profile Card -->
+      <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+          <i class="fa-regular fa-user" style="color: var(--accent-indigo);"></i> User Profile
+        </h2>
+
+        <form id="settingsProfileForm">
+          <div class="grid grid-2" style="margin-bottom: 16px;">
+            <div class="form-group">
+              <label class="form-label">Display Name</label>
+              <input type="text" id="settingsName" class="form-control" placeholder="Binayak Chopra">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" id="settingsEmail" class="form-control" placeholder="binayak@example.com">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 24px;">
+            <label class="form-label">Profile Avatar Image URL</label>
+            <input type="url" id="settingsAvatar" class="form-control" placeholder="https://...">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-sm">
+            <i class="fa-solid fa-floppy-disk"></i> Save Profile Changes
+          </button>
+        </form>
+      </div>
+
+      <!-- App Preferences Card -->
+      <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+          <i class="fa-solid fa-sliders" style="color: var(--accent-cyan);"></i> Studio Preferences
+        </h2>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="flex-between" style="padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
+            <div>
+              <div style="font-weight: 600;">Real-Time Auto-Save</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Debounces and saves changes to browser LocalStorage automatically</div>
+            </div>
+            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Enabled</span>
+          </div>
+
+          <div class="flex-between" style="padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
+            <div>
+              <div style="font-weight: 600;">ATS AI Suggestions Engine</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Calculates ATS scores and provides action verb suggestions</div>
+            </div>
+            <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Active</span>
+          </div>
+
+          <div class="flex-between">
+            <div>
+              <div style="font-weight: 600;">Vector PDF Export Rendering</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Uses high-DPI browser print rasterization and client PDF engine</div>
+            </div>
+            <span class="badge badge-cyan">Optimal</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data Management Card -->
+      <div class="glass-card" style="padding: 32px; border-color: rgba(239, 68, 68, 0.2);">
+        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--accent-coral);">
+          <i class="fa-solid fa-database"></i> Storage & Reset Controls
+        </h2>
+
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px;">
+          All your resumes are stored locally in your browser's persistent storage. You can backup your data or reset to the preloaded sample resume.
+        </p>
+
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="handleSeedReset()">
+            <i class="fa-solid fa-rotate-left"></i> Restore Binayak Chopra Sample Resume
+          </button>
+          <button class="btn btn-ghost btn-sm" style="color: var(--accent-coral);" onclick="handleClearAllData()">
+            <i class="fa-solid fa-trash-can"></i> Clear All Resumes & Reset Storage
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Master Application Footer -->
+  <footer style="border-top: 1px solid var(--border-subtle); padding: 40px 0; background: var(--bg-surface);">
+    <div class="container flex-between" style="flex-wrap: wrap; gap: 20px;">
+      <div>
+        <div style="font-weight: 800; font-size: 1.1rem;">ResumeFlow AI 2.0</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Crafted by Binayak Chopra.</p>
+      </div>
+      <div style="display: flex; gap: 16px;">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="builder.html" class="nav-link">Studio</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = StorageService.getUserSession() || { name: 'Binayak Chopra', email: 'binayakchopra@example.com', avatar: '' };
+      document.getElementById('settingsName').value = user.name || '';
+      document.getElementById('settingsEmail').value = user.email || '';
+      document.getElementById('settingsAvatar').value = user.avatar || '';
+
+      document.getElementById('settingsProfileForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const updated = {
+          name: document.getElementById('settingsName').value.trim() || 'User',
+          email: document.getElementById('settingsEmail').value.trim() || 'user@example.com',
+          avatar: document.getElementById('settingsAvatar').value.trim() || ''
+        };
+        StorageService.setUserSession(updated);
+        showToast('Profile updated successfully!', 'success');
+      });
+    });
+
+    function handleSeedReset() {
+      if (confirm('Restore default Binayak Chopra resume dataset?')) {
+        const sample = StorageService.getSampleResume();
+        StorageService.saveResume(sample);
+        StorageService.setActiveResumeId(sample.id);
+        showToast('Sample dataset restored!', 'success');
+      }
+    }
+
+    function handleClearAllData() {
+      if (confirm('Are you sure? This will delete all saved resumes and reset your local vault.')) {
+        localStorage.removeItem('rb_resumes');
+        localStorage.removeItem('rb_active_id');
+        showToast('Storage cleared successfully.', 'info');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 800);
+      }
+    }
+  </script>
+</body>
+</html>

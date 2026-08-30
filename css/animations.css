@@ -1,0 +1,186 @@
+/* ==========================================================================
+   RESUME BUILDER 2.0 — KEYFRAME ANIMATIONS & MICRO-INTERACTIONS
+   Aesthetic glow, floating orbs, matrix scanline, 3D tilt perspective
+   ========================================================================== */
+
+/* Floating Orbs Animation */
+@keyframes floatOrb {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-30px) scale(1.08);
+  }
+}
+
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.1);
+  }
+}
+
+.orb-blue {
+  animation: floatOrb 12s ease-in-out infinite alternate;
+}
+.orb-purple {
+  animation: floatOrb 15s ease-in-out infinite alternate-reverse;
+}
+.orb-cyan {
+  animation: pulseSlow 8s ease-in-out infinite;
+}
+
+/* Gradient Flow Text */
+@keyframes gradientText {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #4f7df9 0%, #8b5cf6 40%, #06b6d4 80%, #38ef7d 100%);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientText 8s ease infinite;
+}
+
+/* 3D Tilted Interactive Card */
+.tilt-card-container {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.tilt-card {
+  transform: rotateY(-8deg) rotateX(6deg);
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+}
+
+.tilt-card-container:hover .tilt-card {
+  transform: rotateY(0deg) rotateX(0deg) translateY(-8px);
+  box-shadow: 0 30px 70px rgba(79, 125, 249, 0.3), 0 0 40px rgba(139, 92, 246, 0.2);
+}
+
+/* Laser Scanning Line Effect */
+@keyframes laserScan {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.laser-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #06b6d4, #ffffff, #06b6d4, transparent);
+  box-shadow: 0 0 15px 3px #06b6d4;
+  z-index: 20;
+  pointer-events: none;
+  animation: laserScan 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Shimmer Loading Effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-badge {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.03) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* Slide in from bottom */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s var(--ease-smooth) forwards;
+}
+
+/* Pulse Badge */
+@keyframes pulseDot {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-emerald);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulseDot 2s infinite;
+}
+
+/* ATS Score Circular Progress Bar Animation */
+@keyframes fillScore {
+  from {
+    stroke-dashoffset: 283;
+  }
+}
+
+.score-circle-progress {
+  stroke-dasharray: 283;
+  stroke-dashoffset: 35;
+  transition: stroke-dashoffset 1.2s ease-in-out, stroke 0.4s ease;
+}
+
+/* Grid background subtle grid lines */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+[data-theme="light"] .bg-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}

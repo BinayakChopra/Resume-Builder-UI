@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Studio — Live Editor & ATS Analyzer</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/builder.css">
+  <link rel="stylesheet" href="css/templates.css">
+
+  <!-- html2pdf.js for Client-Side PDF Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- Master Application Header -->
+  <header class="app-header">
+    <div class="container-wide flex-between">
+      <!-- Brand & Document Title -->
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <a href="index.html" class="nav-brand">
+          <div class="brand-icon">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <span>ResumeFlow</span>
+        </a>
+        <div style="height: 24px; width: 1px; background: var(--border-subtle);"></div>
+        <!-- Editable Resume Title Input -->
+        <input type="text" id="resumeTitleInput" class="form-control" style="max-width: 260px; height: 36px; font-weight: 700; font-size: 0.9rem;" value="My Professional Resume" title="Click to rename document">
+      </div>
+
+      <!-- Action Tools in Header -->
+      <div class="nav-actions">
+        <!-- Save Status -->
+        <div style="font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
+          <span class="status-dot"></span> <span id="saveStatusIndicator">Auto-saved</span>
+        </div>
+
+        <!-- ATS Score Pill -->
+        <div class="ats-score-pill" id="atsScoreBadge" data-modal-target="atsModal" title="Click to view ATS optimization suggestions">
+          <i class="fa-solid fa-shield-halved"></i> ATS Score: <span id="atsScoreText">92%</span>
+        </div>
+
+        <!-- Load Sample Data -->
+        <button class="btn btn-secondary btn-sm" id="loadSampleBtn" title="Load sample verified profile (Binayak Chopra)">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Load Sample
+        </button>
+
+        <!-- Theme Toggle -->
+        <button class="btn btn-secondary btn-icon btn-sm" id="themeToggleBtn" title="Toggle Theme">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+
+        <!-- Download PDF Action -->
+        <button class="btn btn-primary btn-sm" id="downloadPdfBtn">
+          <i class="fa-solid fa-file-pdf"></i> Download PDF
+        </button>
+
+        <a href="dashboard.html" class="btn btn-secondary btn-sm">
+          <i class="fa-solid fa-folder"></i> Dashboard
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Studio Split-Screen Layout -->
+  <main class="builder-layout">
+
+    <!-- Left Column: Form Editor & Controls -->
+    <section class="builder-editor-pane">
+
+      <!-- Navigation Tabs -->
+      <div class="editor-nav-tabs">
+        <button type="button" class="tab-btn active" data-target="all"><i class="fa-solid fa-list-check"></i> All Sections</button>
+        <button type="button" class="tab-btn" data-target="sec-personal"><i class="fa-solid fa-user"></i> Personal</button>
+        <button type="button" class="tab-btn" data-target="sec-summary"><i class="fa-solid fa-quote-left"></i> Summary</button>
+        <button type="button" class="tab-btn" data-target="sec-experience"><i class="fa-solid fa-briefcase"></i> Experience</button>
+        <button type="button" class="tab-btn" data-target="sec-education"><i class="fa-solid fa-graduation-cap"></i> Education</button>
+        <button type="button" class="tab-btn" data-target="sec-skills"><i class="fa-solid fa-code"></i> Skills</button>
+        <button type="button" class="tab-btn" data-target="sec-projects"><i class="fa-solid fa-diagram-project"></i> Projects</button>
+        <button type="button" class="tab-btn" data-target="sec-design"><i class="fa-solid fa-palette"></i> Design & Style</button>
+      </div>
+
+      <!-- Section: Personal Information -->
+      <div class="accordion-section active" id="sec-personal">
+        <div class="accordion-header">
+          <div class="accordion-title">
+            <i class="fa-solid fa-circle-user"></i> Personal Information & Contact
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <!-- Profile Photo Upload -->
+          <div class="avatar-upload-box">
+            <div class="avatar-preview-circle">
+              <img src="photo/user.png" id="avatarImgPreview" alt="Avatar Preview" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80'">
+            </div>
+            <div class="avatar-controls">
+              <label class="form-label">Profile Photo (Optional)</label>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <input type="file" id="avatarFileInput" accept="image/*" style="display: none;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('avatarFileInput').click()">
+                  <i class="fa-solid fa-upload"></i> Upload Image
+                </button>
+                <button type="button" class="btn btn-ghost btn-sm" id="removeAvatarBtn" style="color: var(--accent-coral);">
+                  <i class="fa-solid fa-trash"></i> Remove
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Full Name *</label>
+              <input type="text" id="fullName" class="form-control sync-input" placeholder="e.g. Binayak Chopra">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Professional Target Headline *</label>
+              <input type="text" id="jobTitle" class="form-control sync-input" placeholder="e.g. Frontend Engineer & Security Analyst">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email Address *</label>
+              <input type="email" id="email" class="form-control sync-input" placeholder="e.g. binayak@example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input type="tel" id="phone" class="form-control sync-input" placeholder="e.g. +91 98765 43210">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Location (City, Country)</label>
+              <input type="text" id="location" class="form-control sync-input" placeholder="e.g. Amritsar, Punjab, India">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Portfolio Website URL</label>
+              <input type="url" id="website" class="form-control sync-input" placeholder="e.g. https://portfolio-binayak.vercel.app">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">LinkedIn Profile URL</label>
+              <input type="url" id="linkedin" class="form-control sync-input" placeholder="e.g. https://linkedin.com/in/binayak-chopra">
+            </div>
+            <div class="form-group">
+              <label class="form-label">GitHub Profile URL</label>
+              <input type="url" id="github" class="form-control sync-input" placeholder="e.g. https://github.com/BinayakChopra">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Professional Summary -->
+      <div class="accordion-section active" id="sec-summary">
+        <div class="accordion-header">
+          <div class="accordion-title">
+            <i class="fa-solid fa-quote-left"></i> Professional Summary / Executive Profile
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="ai-suggest-bar">
+            <label class="form-label" style="margin-bottom:0;">Summary Statement (30–80 words)</label>
+            <button type="button" class="ai-pill-btn" onclick="enhanceBulletPoints(this)">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> AI Summary Generator
+            </button>
+          </div>
+          <textarea id="summary" class="form-control sync-input" rows="4" placeholder="Motivated software engineer specializing in frontend development and cybersecurity with hands-on experience building modern, responsive web applications..."></textarea>
+        </div>
+      </div>
+
+      <!-- Section: Work Experience -->
+      <div class="accordion-section active" id="sec-experience">
+        <div class="accordion-header">
+          <div class="accordion-title">
+            <i class="fa-solid fa-briefcase"></i> Work Experience & Internships
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <div id="experienceList"></div>
+          <button type="button" class="btn btn-secondary btn-sm" style="width: 100%; margin-top: 8px;" onclick="addExperienceItem()">
+            <i class="fa-solid fa-plus"></i> Add Work Experience
+          </button>
+        </div>
+      </div>
+
+      <!-- Section: Education -->
+      <div class="accordion-section active" id="sec-education">
+        <div class="accordion-header">
+          <div class="accordion-title">
+            <i class="fa-solid fa-graduation-cap"></i> Education & Academics
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <div id="educationList"></div>
+          <button type="button" class="btn btn-secondary btn-sm" style="width: 100%; margin-top: 8px;" onclick="addEducationItem()">
+            <i class="fa-solid fa-plus"></i> Add Education
+          </button>
+        </div>
+      </div>
+
+      <!-- Section: Skills -->
+      <div class="accordion-section active" id="sec-skills">
+        <div class="accordion-header">
+          <div class="accordion-title">
+            <i class="fa-solid fa-code"></i> Technical Skills & Proficiencies
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="form-group">
+            <label class="form-label">Programming Languages (Comma separated)</label>
+            <input type="text" id="skillsLanguages" class="form-control sync-input" placeholder="e.g. Java, C++, JavaScript (ES6+), HTML5, CSS3, SQL">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Frontend & Web Frameworks</label>
+            <input type="text" id="skillsFrontend" class="form-control sync-input" placeholder="e.g. React.js 19, Tailwind CSS, Framer Motion, Responsive UI">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Developer Tools & DevOps</label>
+            <input type="text" id="skillsTools" class="form-control sync-input" placeholder="e.g. Git, GitHub, Docker, MySQL, VS Code, Vercel">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Cybersecurity & Core Domains</label>
+            <input type="text" id="skillsSecurity" class="form-control sync-input" placeholder="e.g. Digital Forensics, SOC Concepts, Network Protocols">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Key Projects -->
+      <div class="accordion-section active" id="sec-projects">
+        <div class="accordion-header">
+          <div class="accordion-title">
+            <i class="fa-solid fa-diagram-project"></i> Projects & Portfolios
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <div id="projectsList"></div>
+          <button type="button" class="btn btn-secondary btn-sm" style="width: 100%; margin-top: 8px;" onclick="addProjectItem()">
+            <i class="fa-solid fa-plus"></i> Add Project
+          </button>
+        </div>
+      </div>
+
+      <!-- Section: Certifications & Languages -->
+      <div class="accordion-section active" id="sec-certifications">
+        <div class="accordion-header">
+          <div class="accordion-title">
+            <i class="fa-solid fa-certificate"></i> Certifications & Languages
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <label class="form-label">Certificates</label>
+          <div id="certificationsList"></div>
+          <button type="button" class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: 16px;" onclick="addCertItem()">
+            <i class="fa-solid fa-plus"></i> Add Certification
+          </button>
+
+          <label class="form-label">Languages</label>
+          <div id="languagesList"></div>
+          <button type="button" class="btn btn-secondary btn-sm" style="width: 100%;" onclick="addLangItem()">
+            <i class="fa-solid fa-plus"></i> Add Language
+          </button>
+        </div>
+      </div>
+
+      <!-- Section: Design & Styling Customizer -->
+      <div class="accordion-section active" id="sec-design">
+        <div class="accordion-header">
+          <div class="accordion-title">
+            <i class="fa-solid fa-palette"></i> Template & Visual Customizer
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <div class="form-group">
+            <label class="form-label">Resume Template</label>
+            <select id="templateSelect" class="form-control">
+              <option value="tpl-modern-tech">Silicon Valley Modern Tech (2-Column)</option>
+              <option value="tpl-executive">Executive Minimalist (Single Column)</option>
+              <option value="tpl-creative">Creative Designer Banner</option>
+              <option value="tpl-cyber">Cyber Dark / Terminal</option>
+              <option value="tpl-academic">Ivy League Academic (Serif)</option>
+              <option value="tpl-compact">Compact Pro 1-Page</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Accent Theme Color</label>
+            <div class="color-picker-grid">
+              <div class="color-swatch active" style="background:#4f7df9;" data-color="#4f7df9" title="Silicon Blue"></div>
+              <div class="color-swatch" style="background:#10b981;" data-color="#10b981" title="Emerald Green"></div>
+              <div class="color-swatch" style="background:#8b5cf6;" data-color="#8b5cf6" title="Cyber Purple"></div>
+              <div class="color-swatch" style="background:#06b6d4;" data-color="#06b6d4" title="Cyan Neon"></div>
+              <div class="color-swatch" style="background:#f43f5e;" data-color="#f43f5e" title="Crimson Rose"></div>
+              <div class="color-swatch" style="background:#f59e0b;" data-color="#f59e0b" title="Sunset Amber"></div>
+              <div class="color-swatch" style="background:#0f172a;" data-color="#0f172a" title="Obsidian Slate"></div>
+              <input type="color" id="customColorPicker" value="#4f7df9" style="width:36px; height:36px; border:none; border-radius:50%; cursor:pointer;" title="Custom Color Picker">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Typography Font Family</label>
+              <select id="fontSelect" class="form-control">
+                <option value="'Plus Jakarta Sans', sans-serif">Plus Jakarta Sans (Modern)</option>
+                <option value="'Inter', sans-serif">Inter (Clean Tech)</option>
+                <option value="'Outfit', sans-serif">Outfit (Contemporary)</option>
+                <option value="'JetBrains Mono', monospace">JetBrains Mono (Developer)</option>
+                <option value="'Playfair Display', Georgia, serif">Playfair Display (Academic Serif)</option>
+                <option value="'Roboto', sans-serif">Roboto (Universal)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Font Sizing Scale</label>
+              <select id="fontSizeSelect" class="form-control">
+                <option value="9pt">Compact (9pt)</option>
+                <option value="9.5pt" selected>Standard (9.5pt)</option>
+                <option value="10pt">Spacious (10pt)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Right Column: Sticky Live Preview Pane -->
+    <section class="builder-preview-pane">
+
+      <!-- Studio Toolbar Widget -->
+      <div class="studio-toolbar">
+        <!-- Zoom Controller -->
+        <div class="toolbar-group">
+          <div class="zoom-controls">
+            <button class="btn btn-ghost btn-sm btn-icon" id="zoomOutBtn" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
+            <span class="zoom-value" id="zoomValueText">100%</span>
+            <button class="btn btn-ghost btn-sm btn-icon" id="zoomInBtn" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="zoomFitBtn" title="Reset Zoom">Fit</button>
+        </div>
+
+        <!-- Direct Actions -->
+        <div class="toolbar-group">
+          <button class="btn btn-secondary btn-sm" id="printDirectBtn" title="Print Document">
+            <i class="fa-solid fa-print"></i> Print
+          </button>
+          <button class="btn btn-secondary btn-sm" id="exportJsonBtn" title="Export Backup JSON">
+            <i class="fa-solid fa-download"></i> Backup JSON
+          </button>
+          <input type="file" id="importJsonInput" accept=".json" style="display:none;">
+          <button class="btn btn-secondary btn-sm" id="importJsonBtn" title="Restore from JSON Backup">
+            <i class="fa-solid fa-upload"></i> Restore
+          </button>
+          <button class="btn btn-primary btn-sm" id="downloadPdfBtn2" onclick="document.getElementById('downloadPdfBtn').click()">
+            <i class="fa-solid fa-file-pdf"></i> Save PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Sheet Paper Wrapper -->
+      <div class="resume-paper-wrapper" id="resumePaperWrapper">
+        <div id="resumePaper">
+          <!-- Dynamic Resume HTML mounted here by TemplateEngine -->
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ATS Analysis & Optimization Modal -->
+  <div class="modal-backdrop" id="atsModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-emerald);">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3 style="font-size: 1.25rem;">ATS Readiness & Optimization</h3>
+        </div>
+        <button class="btn btn-ghost btn-icon modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center; margin-bottom: 24px;">
+          <div style="font-size: 3rem; font-weight: 900; color: var(--accent-emerald);" id="atsModalScore">96%</div>
+          <div style="font-weight: 700; color: var(--text-primary);">Applicant Tracking System Match Grade</div>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">Your resume has been scanned against modern recruiter ATS algorithms.</p>
+        </div>
+
+        <h4 style="font-size: 1rem; margin-bottom: 12px;">Actionable Optimization Recommendations:</h4>
+        <div id="atsTipsContainer">
+          <!-- Populated by ats.js -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary modal-close-btn">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core JavaScript Modules -->
+  <script src="js/storage.js"></script>
+  <script src="js/templates.js"></script>
+  <script src="js/ats.js"></script>
+  <script src="js/builder.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

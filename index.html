@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResumeFlow AI — Next-Gen Interactive Resume Builder</title>
+  <meta name="description" content="Build ATS-optimized, designer-grade resumes in real time with AI bullet enhancement, 6 modern templates, and instant vector PDF export.">
+
+  <!-- Favicon & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Core Stylesheets -->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/templates.css">
+</head>
+<body class="bg-grid-pattern">
+
+  <!-- Ambient Glow Orbs -->
+  <div class="orb-glow orb-blue"></div>
+  <div class="orb-glow orb-purple"></div>
+  <div class="orb-glow orb-cyan"></div>
+
+  <!-- Master Application Header -->
+  <header class="app-header">
+    <div class="container-wide flex-between">
+      <!-- Brand Logo -->
+      <a href="index.html" class="nav-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <span>ResumeFlow <span class="brand-badge">v2.0</span></span>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link active"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="builder.html" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Resume Studio</a></li>
+        <li><a href="templates.html" class="nav-link"><i class="fa-solid fa-layer-group"></i> Templates</a></li>
+        <li><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-folder-open"></i> My Resumes</a></li>
+        <li><a href="contact.html" class="nav-link"><i class="fa-solid fa-paper-plane"></i> Contact</a></li>
+      </ul>
+
+      <!-- Action Buttons -->
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-icon" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+        <a href="dashboard.html" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:8px;">
+          <img src="photo/user.png" id="navUserAvatar" style="width:24px; height:24px; border-radius:50%;" alt="User" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'">
+          <span id="navUserName">Dashboard</span>
+        </a>
+        <a href="builder.html" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-bolt"></i> Build Free CV
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section style="padding: 160px 0 90px 0; position: relative; overflow: hidden;">
+    <div class="container">
+      <div class="grid" style="grid-template-columns: 1.1fr 0.9fr; align-items: center; gap: 48px;">
+
+        <!-- Left Hero Content -->
+        <div class="animate-fade-in-up">
+          <div class="badge badge-primary shimmer-badge" style="margin-bottom: 20px;">
+            <span class="status-dot"></span> Next-Gen AI Resume Engine · 2026 Edition
+          </div>
+
+          <h1 style="font-size: 3.4rem; font-weight: 900; line-height: 1.15; margin-bottom: 24px;">
+            Craft <span class="text-gradient">Top-Tier Resumes</span> That Land 6-Figure Offers.
+          </h1>
+
+          <p style="font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 32px; line-height: 1.7; max-width: 580px;">
+            Engineered with real-time ATS optimization, 6 designer templates, instant action-verb boosters, and pixel-perfect vector PDF exports. 100% free with zero paywalls.
+          </p>
+
+          <!-- CTA Buttons -->
+          <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 40px;">
+            <a href="builder.html" class="btn btn-primary btn-lg">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Launch Resume Studio
+            </a>
+            <a href="templates.html" class="btn btn-secondary btn-lg">
+              <i class="fa-solid fa-eye"></i> Explore Templates
+            </a>
+          </div>
+
+          <!-- Trust Proof Metrics -->
+          <div style="display: flex; gap: 32px; flex-wrap: wrap; border-top: 1px solid var(--border-subtle); padding-top: 24px;">
+            <div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-cyan);">99.4%</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">ATS Pass Rate</div>
+            </div>
+            <div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-emerald);">6+</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Designer Layouts</div>
+            </div>
+            <div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-purple);">0 ms</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Instant Live Sync</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Hero: 3D Interactive Live Hologram Resume Preview -->
+        <div class="tilt-card-container">
+          <div class="glass-card tilt-card" style="padding: 24px; border-radius: var(--radius-lg); position: relative; overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.5);">
+            <!-- Laser Scan Line -->
+            <div class="laser-scan-line"></div>
+
+            <!-- Mini Floating Badges -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+              <span class="badge badge-emerald"><i class="fa-solid fa-circle-check"></i> ATS Scored: 96/100</span>
+              <span class="badge badge-cyan"><i class="fa-solid fa-sparkles"></i> AI Enhanced</span>
+            </div>
+
+            <!-- Mockup Card Body -->
+            <div style="background: #ffffff; color: #1e293b; border-radius: 8px; padding: 22px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 8.5pt; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #4f7df9; padding-bottom: 8px; margin-bottom: 10px;">
+                <div>
+                  <h3 style="font-size: 13pt; font-weight: 800; color: #0f172a; margin: 0;">Binayak Chopra</h3>
+                  <div style="color: #4f7df9; font-weight: 700; font-size: 8pt;">Frontend Engineer & Security Specialist</div>
+                </div>
+                <div style="text-align: right; font-size: 7pt; color: #64748b;">
+                  <div>binayakchopra34@gmail.com</div>
+                  <div>portfolio-binayak.vercel.app</div>
+                </div>
+              </div>
+
+              <!-- Summary -->
+              <p style="font-size: 7.5pt; color: #334155; line-height: 1.4; margin-bottom: 8px;">
+                Motivated Computer Science Engineer specializing in modern web architectures and cybersecurity. Built high-performance platforms using React 19, Tailwind, and Docker.
+              </p>
+
+              <!-- Experience preview -->
+              <div style="font-weight: 700; font-size: 8pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; margin-bottom: 4px; text-transform: uppercase;">
+                Experience & Milestones
+              </div>
+              <div style="font-size: 7pt; color: #475569; margin-bottom: 6px;">
+                <div style="display: flex; justify-content: space-between; font-weight: 600;">
+                  <span>Lead Full Stack Engineer · CyberSmart</span>
+                  <span>2024 – Present</span>
+                </div>
+                <div>• Engineered reactive frontend components accelerating load speed by 35%.</div>
+                <div>• Containerized microservices with Docker for seamless continuous integration.</div>
+              </div>
+
+              <!-- Skill pills -->
+              <div style="margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap;">
+                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">React 19</span>
+                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">JavaScript ES6+</span>
+                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">Docker</span>
+                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">Digital Forensics</span>
+              </div>
+            </div>
+
+            <!-- Floating Action in Card -->
+            <div style="margin-top: 18px; text-align: center;">
+              <a href="builder.html" class="btn btn-primary btn-sm" style="width: 100%;">
+                <i class="fa-solid fa-pen-to-square"></i> Open Live Studio with This Profile
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Features Showcase -->
+  <section style="padding: 90px 0; position: relative;">
+    <div class="container">
+      <div style="text-align: center; max-width: 680px; margin: 0 auto 60px auto;">
+        <span class="badge badge-cyan" style="margin-bottom: 12px;"><i class="fa-solid fa-cubes"></i> Powerful Features</span>
+        <h2 style="font-size: 2.4rem; font-weight: 800; margin-bottom: 16px;">Built for Maximum Job Placement</h2>
+        <p style="color: var(--text-secondary);">Everything you need to create an irresistible resume that bypasses ATS filters and catches recruiter attention.</p>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px;">
+
+        <!-- Feature 1 -->
+        <div class="glass-card" style="padding: 32px;">
+          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(79, 125, 249, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-primary); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(79, 125, 249, 0.3);">
+            <i class="fa-solid fa-gauge-high"></i>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Real-Time ATS Scoring</h3>
+          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
+            Instant automated analysis of your keyword density, action verbs, measurable statistics, and contact information readiness.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="glass-card" style="padding: 32px;">
+          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-emerald); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(16, 185, 129, 0.3);">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">AI Action-Verb Booster</h3>
+          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
+            Transform mundane job duties into high-impact bullet points enriched with impactful power verbs (e.g. Engineered, Spearheaded, Optimized).
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="glass-card" style="padding: 32px;">
+          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(139, 92, 246, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-secondary); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(139, 92, 246, 0.3);">
+            <i class="fa-solid fa-palette"></i>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">6 Designer Templates</h3>
+          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
+            Seamlessly switch between Silicon Valley Modern, Executive Minimalist, Creative Banner, Cyber Dark, Ivy Academic, and Compact Pro.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="glass-card" style="padding: 32px;">
+          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(6, 182, 212, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-cyan); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(6, 182, 212, 0.3);">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Vector-Crisp PDF Export</h3>
+          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
+            Direct high-definition vector PDF generation with zero cutoff margins, pure typography sharpness, and exact A4 page breaks.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="glass-card" style="padding: 32px;">
+          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(244, 63, 94, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-coral); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(244, 63, 94, 0.3);">
+            <i class="fa-solid fa-hard-drive"></i>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Local & Multi-Resume Vault</h3>
+          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
+            Manage multiple resume versions (Frontend, Security, Full-Stack) with local autosaving, version duplication, and JSON backup export.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="glass-card" style="padding: 32px;">
+          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(245, 158, 11, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-amber); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(245, 158, 11, 0.3);">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Micro-Customization Suite</h3>
+          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
+            Total control over color palettes, typography pairings (Inter, Poppins, JetBrains Mono), spacing density, and avatar photo shapes.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Templates Showcase Grid -->
+  <section style="padding: 80px 0; background: rgba(15, 17, 26, 0.5); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="container">
+      <div class="flex-between" style="margin-bottom: 40px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <span class="badge badge-primary"><i class="fa-solid fa-sparkles"></i> Curated Designs</span>
+          <h2 style="font-size: 2.2rem; font-weight: 800; margin-top: 6px;">Pick a Template, Make It Yours</h2>
+        </div>
+        <a href="templates.html" class="btn btn-outline">
+          View All Templates <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+
+        <!-- Template Card 1 -->
+        <div class="glass-card" style="overflow: hidden; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="background: #f8fafc; border-radius: 8px; padding: 16px; min-height: 220px; color: #1e293b; border: 1px solid #e2e8f0; margin-bottom: 16px;">
+            <div style="display: flex; gap: 10px;">
+              <div style="width: 30%; background: #eef2ff; height: 180px; border-radius: 4px; padding: 6px;">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: #4f7df9; margin: 0 auto 6px auto;"></div>
+                <div style="height: 4px; width: 80%; background: #cbd5e1; margin-bottom: 4px;"></div>
+                <div style="height: 3px; width: 60%; background: #94a3b8;"></div>
+              </div>
+              <div style="width: 70%; padding: 4px;">
+                <div style="height: 8px; width: 60%; background: #0f172a; margin-bottom: 6px;"></div>
+                <div style="height: 4px; width: 40%; background: #4f7df9; margin-bottom: 12px;"></div>
+                <div style="height: 4px; width: 90%; background: #94a3b8; margin-bottom: 6px;"></div>
+                <div style="height: 4px; width: 85%; background: #94a3b8; margin-bottom: 6px;"></div>
+                <div style="height: 4px; width: 70%; background: #94a3b8;"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Silicon Valley Modern</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">2-column layout with sidebar accent and skill chips.</p>
+            <a href="builder.html" class="btn btn-primary btn-sm" style="width: 100%;">Use This Template</a>
+          </div>
+        </div>
+
+        <!-- Template Card 2 -->
+        <div class="glass-card" style="overflow: hidden; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="background: #ffffff; border-radius: 8px; padding: 16px; min-height: 220px; color: #1e293b; border: 1px solid #e2e8f0; margin-bottom: 16px;">
+            <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 10px;">
+              <div style="height: 8px; width: 50%; background: #0f172a; margin: 0 auto 4px auto;"></div>
+              <div style="height: 4px; width: 30%; background: #4f7df9; margin: 0 auto;"></div>
+            </div>
+            <div style="height: 4px; width: 80%; background: #94a3b8; margin-bottom: 8px;"></div>
+            <div style="height: 4px; width: 95%; background: #cbd5e1; margin-bottom: 6px;"></div>
+            <div style="height: 4px; width: 90%; background: #cbd5e1; margin-bottom: 6px;"></div>
+            <div style="height: 4px; width: 75%; background: #cbd5e1;"></div>
+          </div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Executive Minimalist</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Authoritative single-column hierarchy for leaders.</p>
+            <a href="builder.html" class="btn btn-primary btn-sm" style="width: 100%;">Use This Template</a>
+          </div>
+        </div>
+
+        <!-- Template Card 3 -->
+        <div class="glass-card" style="overflow: hidden; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="background: #0f111a; border-radius: 8px; padding: 16px; min-height: 220px; color: #e2e8f0; border: 1px solid rgba(6, 182, 212, 0.3); margin-bottom: 16px;">
+            <div style="border-bottom: 1px dashed #00f2fe; padding-bottom: 6px; margin-bottom: 8px;">
+              <div style="font-size: 6pt; color: #00f2fe; font-family: monospace;">> USER_EXEC // CYBER_RESUME</div>
+              <div style="height: 6px; width: 40%; background: #00f2fe; margin-top: 4px;"></div>
+            </div>
+            <div style="height: 3px; width: 70%; background: #a855f7; margin-bottom: 6px;"></div>
+            <div style="height: 3px; width: 90%; background: #475569; margin-bottom: 4px;"></div>
+            <div style="height: 3px; width: 80%; background: #475569;"></div>
+          </div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Cyber Dark / Terminal</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Matrix neon aesthetics tailored for engineers.</p>
+            <a href="builder.html" class="btn btn-primary btn-sm" style="width: 100%;">Use This Template</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section style="padding: 100px 0; text-align: center; position: relative;">
+    <div class="container">
+      <div class="glass-card" style="padding: 60px 32px; max-width: 900px; margin: 0 auto; border-color: rgba(79, 125, 249, 0.3); box-shadow: 0 20px 60px rgba(79, 125, 249, 0.2);">
+        <h2 style="font-size: 2.6rem; font-weight: 900; margin-bottom: 16px;">Ready to Elevate Your Career?</h2>
+        <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 32px auto;">
+          Join thousands of developers and professionals who build high-impact, ATS-friendly resumes in minutes.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <a href="builder.html" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Open Resume Studio Now
+          </a>
+          <a href="dashboard.html" class="btn btn-secondary btn-lg">
+            <i class="fa-solid fa-folder"></i> Access My Saved Resumes
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Master Application Footer -->
+  <footer style="border-top: 1px solid var(--border-subtle); padding: 48px 0 32px 0; background: var(--bg-surface);">
+    <div class="container flex-between" style="flex-wrap: wrap; gap: 24px;">
+      <div>
+        <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 4px;">ResumeFlow AI 2.0</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Crafted with passion by <a href="https://github.com/BinayakChopra" target="_blank" style="color: var(--accent-primary); font-weight: 600;">Binayak Chopra</a>.
+        </p>
+      </div>
+      <div style="display: flex; gap: 20px; font-size: 1.2rem;">
+        <a href="https://github.com/BinayakChopra" target="_blank" title="GitHub" style="color: var(--text-secondary);"><i class="fa-brands fa-github"></i></a>
+        <a href="https://linkedin.com/in/binayak-chopra" target="_blank" title="LinkedIn" style="color: var(--text-secondary);"><i class="fa-brands fa-linkedin"></i></a>
+        <a href="https://portfolio-binayak.vercel.app" target="_blank" title="Portfolio" style="color: var(--text-secondary);"><i class="fa-solid fa-globe"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core JavaScript Modules -->
+  <script src="js/storage.js"></script>
+  <script src="js/templates.js"></script>
+  <script src="js/ats.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

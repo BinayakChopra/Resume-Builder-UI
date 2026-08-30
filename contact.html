@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact & Support — ResumeFlow AI</title>
+  <meta name="description" content="Get support, submit feedback, or connect with the creator of ResumeFlow AI.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body class="bg-grid-pattern">
+
+  <!-- Ambient Glow Orbs -->
+  <div class="orb-glow orb-blue"></div>
+  <div class="orb-glow orb-purple"></div>
+
+  <!-- Master Application Header -->
+  <header class="app-header">
+    <div class="container-wide flex-between">
+      <a href="index.html" class="nav-brand">
+        <div class="brand-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <span>ResumeFlow <span class="brand-badge">v2.0</span></span>
+      </a>
+
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html" class="nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="builder.html" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Resume Studio</a></li>
+        <li><a href="templates.html" class="nav-link"><i class="fa-solid fa-layer-group"></i> Templates</a></li>
+        <li><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-folder-open"></i> My Resumes</a></li>
+        <li><a href="contact.html" class="nav-link active"><i class="fa-solid fa-paper-plane"></i> Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="btn btn-secondary btn-icon" id="themeToggleBtn" title="Toggle Light/Dark Mode">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+        <a href="builder.html" class="btn btn-primary btn-sm">
+          <i class="fa-solid fa-bolt"></i> Open Studio
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contact Main Container -->
+  <main style="padding: 120px 0 80px 0; min-height: 85vh;">
+    <div class="container" style="max-width: 960px;">
+
+      <div style="text-align: center; margin-bottom: 48px;">
+        <span class="badge badge-primary" style="margin-bottom: 12px;"><i class="fa-solid fa-headset"></i> Get In Touch</span>
+        <h1 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 12px;">Contact & Developer Support</h1>
+        <p style="color: var(--text-secondary); max-width: 540px; margin: 0 auto;">
+          Have questions, feature requests, or want to collaborate? Reach out to the developer behind ResumeFlow AI.
+        </p>
+      </div>
+
+      <div class="grid grid-2" style="gap: 32px; align-items: start;">
+
+        <!-- Contact Form Card -->
+        <div class="glass-card" style="padding: 32px;">
+          <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px;">Send a Message</h2>
+
+          <form id="contactForm">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input type="text" id="contactName" class="form-control" placeholder="Alex Morgan" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" id="contactEmail" class="form-control" placeholder="alex@company.com" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <input type="text" id="contactSubject" class="form-control" placeholder="Feature suggestion / feedback..." required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Message</label>
+              <textarea id="contactMessage" class="form-control" rows="4" placeholder="Write your message here..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              <i class="fa-solid fa-paper-plane"></i> Send Message
+            </button>
+          </form>
+        </div>
+
+        <!-- Creator Profile & Links Card -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+
+          <div class="glass-card" style="padding: 32px;">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--accent-gradient); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: #fff; font-weight: 800;">
+                BC
+              </div>
+              <div>
+                <h3 style="font-size: 1.2rem; font-weight: 800;">Binayak Chopra</h3>
+                <p style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 600;">Frontend Developer & Security Enthusiast</p>
+              </div>
+            </div>
+
+            <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+              Creator of ResumeFlow AI, Calyx, Digital Phone Directory, and Promo Drive. Dedicated to building high-performance, aesthetically captivating developer tools.
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <a href="https://github.com/BinayakChopra" target="_blank" class="btn btn-secondary btn-sm" style="justify-content: flex-start;">
+                <i class="fa-brands fa-github" style="width: 20px;"></i> GitHub Profile
+              </a>
+              <a href="https://linkedin.com" target="_blank" class="btn btn-secondary btn-sm" style="justify-content: flex-start;">
+                <i class="fa-brands fa-linkedin" style="width: 20px;"></i> LinkedIn Profile
+              </a>
+            </div>
+          </div>
+
+          <!-- FAQ Card -->
+          <div class="glass-card" style="padding: 24px;">
+            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; color: var(--accent-indigo);">
+              <i class="fa-solid fa-circle-question"></i> Privacy Notice
+            </h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+              ResumeFlow AI operates 100% locally in your browser. None of your personal data, work history, or contact details are sent to any external server without your consent.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Master Application Footer -->
+  <footer style="border-top: 1px solid var(--border-subtle); padding: 40px 0; background: var(--bg-surface);">
+    <div class="container flex-between" style="flex-wrap: wrap; gap: 20px;">
+      <div>
+        <div style="font-weight: 800; font-size: 1.1rem;">ResumeFlow AI 2.0</div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Crafted by Binayak Chopra.</p>
+      </div>
+      <div style="display: flex; gap: 16px;">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="builder.html" class="nav-link">Studio</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('contactForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        showToast('Thank you! Your message has been received.', 'success');
+        document.getElementById('contactForm').reset();
+      });
+    });
+  </script>
+</body>
+</html>
