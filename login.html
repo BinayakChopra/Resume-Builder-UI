@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In / Register — ResumeFlow AI</title>
-  <meta name="description" content="Sign in to your ResumeFlow account or continue as Guest to design, edit, and export ATS resumes.">
+  <meta name="description" content="Sign in to your private ResumeFlow account to design, edit, and export your personal ATS resumes securely.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,67 +25,90 @@
   <div class="orb-glow orb-purple"></div>
 
   <!-- Auth Card Container -->
-  <div class="glass-card" style="width: 100%; max-width: 440px; padding: 40px 32px; border-radius: var(--radius-xl); box-shadow: 0 25px 60px rgba(0,0,0,0.6); position: relative; z-index: 10;">
+  <div class="glass-card" style="width: 100%; max-width: 460px; padding: 40px 32px; border-radius: var(--radius-xl); box-shadow: 0 25px 60px rgba(0,0,0,0.6); position: relative; z-index: 10;">
 
     <!-- Brand Header -->
-    <div style="text-align: center; margin-bottom: 28px;">
-      <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); margin-bottom: 12px;">
+    <div style="text-align: center; margin-bottom: 24px;">
+      <a href="index.html" style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-primary); margin-bottom: 10px;">
         <div class="brand-icon" style="width: 44px; height: 44px; font-size: 1.2rem;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-        <span style="font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em;">ResumeFlow AI</span>
+        <span style="font-size: 1.45rem; font-weight: 800; letter-spacing: -0.02em;">ResumeFlow AI</span>
       </a>
-      <p style="color: var(--text-secondary); font-size: 0.9rem;">Next-Gen Career Intelligence & ATS Resume Studio</p>
+      <p style="color: var(--text-secondary); font-size: 0.88rem;">Next-Gen Career Intelligence & Private Resume Studio</p>
     </div>
 
-    <!-- Quick Guest Access Banner -->
-    <button type="button" class="btn btn-secondary" id="guestLoginBtn" style="width: 100%; margin-bottom: 24px; border: 1px solid var(--accent-cyan); background: rgba(6, 182, 212, 0.08); color: var(--accent-cyan);">
-      <i class="fa-solid fa-bolt"></i> 1-Click Instant Guest Access
-    </button>
-
-    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-      <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
-      <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em;">Or Continue With Email</span>
-      <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+    <!-- Security & Privacy Banner -->
+    <div style="background: rgba(79, 125, 249, 0.08); border: 1px solid rgba(79, 125, 249, 0.25); border-radius: var(--radius-md); padding: 10px 14px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+      <i class="fa-solid fa-shield-halved" style="color: var(--accent-cyan); font-size: 1.1rem;"></i>
+      <span style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">
+        <strong>Private & Secure Storage:</strong> Resumes you create are strictly isolated to your authenticated account.
+      </span>
     </div>
 
     <!-- Auth Tabs -->
     <div style="display: flex; background: var(--bg-surface-elevated); border-radius: var(--radius-md); padding: 4px; margin-bottom: 24px;">
-      <button type="button" class="btn btn-sm active" id="tabSignIn" style="flex: 1; border-radius: var(--radius-sm); border: none; font-size: 0.85rem;" onclick="switchAuthTab('signin')">Sign In</button>
-      <button type="button" class="btn btn-sm btn-ghost" id="tabSignUp" style="flex: 1; border-radius: var(--radius-sm); border: none; font-size: 0.85rem;" onclick="switchAuthTab('signup')">Create Account</button>
+      <button type="button" class="btn btn-sm btn-primary" id="tabSignIn" style="flex: 1; border-radius: var(--radius-sm); border: none; font-size: 0.88rem; font-weight: 600;" onclick="switchAuthTab('signin')">Sign In</button>
+      <button type="button" class="btn btn-sm btn-ghost" id="tabSignUp" style="flex: 1; border-radius: var(--radius-sm); border: none; font-size: 0.88rem; font-weight: 600;" onclick="switchAuthTab('signup')">Create Account</button>
+    </div>
+
+    <!-- Error Alert Box -->
+    <div id="authAlert" style="display: none; padding: 12px 14px; border-radius: var(--radius-md); background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; font-size: 0.85rem; margin-bottom: 18px; align-items: center; gap: 10px;">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span id="authAlertText">Error message here</span>
     </div>
 
     <!-- Auth Form -->
     <form id="authForm">
+      <!-- Full Name (Only for Registration) -->
       <div class="form-group" id="nameGroup" style="display: none;">
-        <label class="form-label">Full Name</label>
+        <label class="form-label" for="authName">Full Name</label>
         <div style="position: relative;">
-          <input type="text" id="authName" class="form-control" placeholder="e.g. Alex Morgan" style="padding-left: 36px;">
-          <i class="fa-regular fa-user" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+          <input type="text" id="authName" class="form-control" placeholder="e.g. John Doe" style="padding-left: 38px;">
+          <i class="fa-regular fa-user" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
         </div>
       </div>
 
+      <!-- Email -->
       <div class="form-group">
-        <label class="form-label">Email Address</label>
+        <label class="form-label" for="authEmail">Email Address</label>
         <div style="position: relative;">
-          <input type="email" id="authEmail" class="form-control" placeholder="alex@example.com" required style="padding-left: 36px;">
-          <i class="fa-regular fa-envelope" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+          <input type="email" id="authEmail" class="form-control" placeholder="you@example.com" required style="padding-left: 38px;">
+          <i class="fa-regular fa-envelope" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
         </div>
       </div>
 
+      <!-- Password -->
       <div class="form-group">
-        <label class="form-label">Password</label>
+        <div class="flex-between" style="margin-bottom: 6px;">
+          <label class="form-label" for="authPassword" style="margin: 0;">Password</label>
+          <span id="pwdHint" style="font-size: 0.75rem; color: var(--text-muted); display: none;">(Min 6 characters)</span>
+        </div>
         <div style="position: relative;">
-          <input type="password" id="authPassword" class="form-control" placeholder="••••••••" required style="padding-left: 36px;">
-          <i class="fa-solid fa-lock" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+          <input type="password" id="authPassword" class="form-control" placeholder="••••••••" required style="padding-left: 38px; padding-right: 38px;">
+          <i class="fa-solid fa-lock" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+          <button type="button" id="togglePwdBtn" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer;">
+            <i class="fa-regular fa-eye" id="togglePwdIcon"></i>
+          </button>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary" id="authSubmitBtn" style="width: 100%; margin-top: 12px;">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Studio
+      <button type="submit" class="btn btn-primary" id="authSubmitBtn" style="width: 100%; margin-top: 14px; padding: 12px;">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to My Studio
       </button>
     </form>
 
+    <div style="display: flex; align-items: center; gap: 12px; margin: 24px 0 18px 0;">
+      <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+      <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.08em;">Or Try Sandbox</span>
+      <div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>
+    </div>
+
+    <!-- Quick Demo Account Access -->
+    <button type="button" class="btn btn-secondary" id="demoLoginBtn" style="width: 100%; border: 1px solid var(--accent-cyan); background: rgba(6, 182, 212, 0.08); color: var(--accent-cyan); font-size: 0.88rem;">
+      <i class="fa-solid fa-flask"></i> Launch Demo Sandbox (1-Click Test)
+    </button>
+
     <div style="text-align: center; margin-top: 24px;">
-      <a href="index.html" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none;">
+      <a href="index.html" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
         <i class="fa-solid fa-arrow-left"></i> Back to Homepage
       </a>
     </div>
@@ -97,58 +120,135 @@
   <script>
     let currentTab = 'signin';
 
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    function getRedirectTarget() {
+      const queryRedirect = getQueryParam('redirect');
+      if (queryRedirect) return queryRedirect;
+      const stored = sessionStorage.getItem('rb_auth_redirect');
+      if (stored) {
+        sessionStorage.removeItem('rb_auth_redirect');
+        return stored;
+      }
+      return 'dashboard.html';
+    }
+
+    function showError(msg) {
+      const alert = document.getElementById('authAlert');
+      const alertText = document.getElementById('authAlertText');
+      alertText.textContent = msg;
+      alert.style.display = 'flex';
+    }
+
+    function hideError() {
+      const alert = document.getElementById('authAlert');
+      alert.style.display = 'none';
+    }
+
     function switchAuthTab(tab) {
       currentTab = tab;
+      hideError();
       const nameGroup = document.getElementById('nameGroup');
+      const nameInput = document.getElementById('authName');
       const tabSignIn = document.getElementById('tabSignIn');
       const tabSignUp = document.getElementById('tabSignUp');
       const submitBtn = document.getElementById('authSubmitBtn');
+      const pwdHint = document.getElementById('pwdHint');
 
       if (tab === 'signup') {
         nameGroup.style.display = 'block';
+        nameInput.required = true;
+        pwdHint.style.display = 'inline';
         tabSignIn.className = 'btn btn-sm btn-ghost';
         tabSignUp.className = 'btn btn-sm btn-primary';
         submitBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Free Account';
       } else {
         nameGroup.style.display = 'none';
+        nameInput.required = false;
+        pwdHint.style.display = 'none';
         tabSignIn.className = 'btn btn-sm btn-primary';
         tabSignUp.className = 'btn btn-sm btn-ghost';
-        submitBtn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Studio';
+        submitBtn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to My Studio';
       }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Guest Login Button
-      document.getElementById('guestLoginBtn').addEventListener('click', () => {
-        StorageService.setUserSession({
-          name: 'Guest User',
-          email: 'guest@resumeflow.ai',
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-          role: 'Professional'
+      // Check query parameter for tab
+      const tabParam = getQueryParam('tab');
+      if (tabParam === 'signup') {
+        switchAuthTab('signup');
+      }
+
+      // Password visibility toggle
+      const togglePwdBtn = document.getElementById('togglePwdBtn');
+      const pwdInput = document.getElementById('authPassword');
+      const togglePwdIcon = document.getElementById('togglePwdIcon');
+      if (togglePwdBtn) {
+        togglePwdBtn.addEventListener('click', () => {
+          if (pwdInput.type === 'password') {
+            pwdInput.type = 'text';
+            togglePwdIcon.className = 'fa-regular fa-eye-slash';
+          } else {
+            pwdInput.type = 'password';
+            togglePwdIcon.className = 'fa-regular fa-eye';
+          }
         });
-        showToast('Welcome to ResumeFlow AI Studio!', 'success');
-        setTimeout(() => {
-          window.location.href = 'builder.html';
-        }, 600);
+      }
+
+      // Demo Login Button
+      document.getElementById('demoLoginBtn').addEventListener('click', () => {
+        const res = StorageService.loginDemo();
+        if (res.success) {
+          showToast(`Logged into Demo Sandbox as ${res.user.name}`, 'success');
+          setTimeout(() => {
+            window.location.href = getRedirectTarget();
+          }, 400);
+        }
       });
 
-      // Form Submit
+      // Form Submission Handler
       document.getElementById('authForm').addEventListener('submit', (e) => {
         e.preventDefault();
+        hideError();
+
         const email = document.getElementById('authEmail').value.trim();
-        const name = document.getElementById('authName')?.value.trim() || 'Alex Morgan';
+        const password = document.getElementById('authPassword').value;
+        const name = document.getElementById('authName').value.trim();
 
-        StorageService.setUserSession({
-          name: name || 'User',
-          email: email,
-          avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-          role: 'Professional'
-        });
+        if (currentTab === 'signup') {
+          if (!name) {
+            showError('Please enter your full name.');
+            return;
+          }
+          if (password.length < 6) {
+            showError('Password must be at least 6 characters long.');
+            return;
+          }
 
-        showToast(`Authenticated successfully as ${name}`, 'success');
-        setTimeout(() => {
-          window.location.href = 'dashboard.html';
-        }, 600);
+          const result = StorageService.registerUser(name, email, password);
+          if (result.success) {
+            showToast(`Welcome ${result.user.name}! Your private vault is ready.`, 'success');
+            setTimeout(() => {
+              window.location.href = getRedirectTarget();
+            }, 500);
+          } else {
+            showError(result.error || 'Registration failed. Please try again.');
+          }
+        } else {
+          // Sign In
+          const result = StorageService.loginUser(email, password);
+          if (result.success) {
+            showToast(`Welcome back, ${result.user.name}!`, 'success');
+            setTimeout(() => {
+              window.location.href = getRedirectTarget();
+            }, 500);
+          } else {
+            showError(result.error || 'Invalid credentials. Please verify and try again.');
+          }
+        }
       });
     });
   </script>

@@ -17,10 +17,20 @@ document.addEventListener('DOMContentLoaded', () => {
  * Initialize Studio
  */
 function initStudio() {
-  // Load Active Resume or Sample
+  // Enforce Authentication Guard: User MUST be signed in
+  if (!StorageService.requireAuth('builder.html')) {
+    return;
+  }
+
+  // Load Active Resume for current user
   activeResume = StorageService.getActiveResume();
-  if (!activeResume) {
-    activeResume = StorageService.getSampleData();
+
+  // Check URL param for template override
+  const urlParams = new URLSearchParams(window.location.search);
+  const templateParam = urlParams.get('template');
+  if (templateParam && activeResume) {
+    activeResume.template = templateParam;
+    StorageService.saveResume(activeResume);
   }
 
   // Populate Form Fields
@@ -461,20 +471,17 @@ function setupExportControls() {
     importJsonInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          try {
-            const imported = StorageService.importFromJSON(evt.target.result);
-            activeResume = imported;
+        StorageService.importFromJSON(file, (success, result) => {
+          if (success) {
+            activeResume = result;
             populateForm(activeResume);
             updateLivePreview();
             updateATSScore();
-            showToast('Resume imported successfully!', 'success');
-          } catch (err) {
-            showToast('Invalid JSON backup file format.', 'error');
+            showToast('Resume imported successfully into your account!', 'success');
+          } else {
+            showToast(result || 'Invalid JSON backup file format.', 'error');
           }
-        };
-        reader.readAsText(file);
+        });
       }
     });
   }
@@ -483,14 +490,13 @@ function setupExportControls() {
   const loadSampleBtn = document.getElementById('loadSampleBtn');
   if (loadSampleBtn) {
     loadSampleBtn.addEventListener('click', () => {
-      if (confirm('Load sample professional profile? Any unsaved edits will be replaced.')) {
-        activeResume = StorageService.getSampleResume ? StorageService.getSampleResume() : StorageService.getSampleData();
-        activeResume.id = 'res_' + Date.now();
+      if (confirm('Load professional sample template into your private account? This will create a fresh sample draft for you.')) {
+        activeResume = StorageService.loadSampleIntoUserAccount();
         populateForm(activeResume);
         updateLivePreview();
         triggerAutoSave();
         updateATSScore();
-        showToast('Sample profile loaded!', 'success');
+        showToast('Sample template loaded into your account!', 'success');
       }
     });
   }
@@ -553,17 +559,17 @@ function renderExperienceList(list) {
         </div>
         <div class="form-group">
           <label class="form-label">Company / Organization</label>
-          <input type="text" class="form-control sync-input exp-company" value="${item.company || ''}" placeholder="e.g. CyberSmart Inc.">
+          <input type="text" class="form-control sync-input exp-company" value="${item.company || ''}" placeholder="e.g. Acme Tech Inc.">
         </div>
       </div>
       <div class="form-row-3">
         <div class="form-group">
           <label class="form-label">Location</label>
-          <input type="text" class="form-control sync-input exp-location" value="${item.location || ''}" placeholder="e.g. Remote / New York">
+          <input type="text" class="form-control sync-input exp-location" value="${item.location || ''}" placeholder="e.g. Remote / San Francisco">
         </div>
         <div class="form-group">
           <label class="form-label">Start Date</label>
-          <input type="text" class="form-control sync-input exp-start" value="${item.startDate || ''}" placeholder="e.g. Jun 2024">
+          <input type="text" class="form-control sync-input exp-start" value="${item.startDate || ''}" placeholder="e.g. Jan 2023">
         </div>
         <div class="form-group">
           <label class="form-label">End Date</label>
@@ -575,7 +581,7 @@ function renderExperienceList(list) {
           <label class="form-label" style="margin-bottom:0;">Key Accomplishments & Responsibilities</label>
           <button type="button" class="ai-pill-btn" onclick="enhanceBulletPoints(this)"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Bullet Boost</button>
         </div>
-        <textarea class="form-control sync-input exp-desc" rows="3" placeholder="• Engineered reactive components using React.js...\n• Improved system performance by 30%...">${item.description || ''}</textarea>
+        <textarea class="form-control sync-input exp-desc" rows="3" placeholder="• Engineered scalable frontend components...\n• Improved query latency by 35%...">${item.description || ''}</textarea>
       </div>
     </div>
   `
@@ -603,7 +609,7 @@ function addExperienceItem() {
 }
 
 function removeExperienceItem(id) {
-  activeResume.experience = activeResume.experience.filter((e, idx) => (e.id || idx) !== id);
+  activeResume.experience = activeResume.experience.filter((x, idx) => (x.id || idx) != id);
   renderExperienceList(activeResume.experience);
   updateLivePreview();
   triggerAutoSave();
@@ -621,41 +627,31 @@ function renderEducationList(list) {
       (item, idx) => `
     <div class="repeater-item edu-item" data-id="${item.id || 'edu_' + idx}">
       <div class="repeater-header">
-        <span class="repeater-title"><i class="fa-solid fa-graduation-cap"></i> ${item.degree || 'Degree'}</span>
+        <span class="repeater-title"><i class="fa-solid fa-graduation-cap"></i> ${item.degree || 'Degree'} @ ${item.institution || 'University'}</span>
         <button type="button" class="btn-remove-item" onclick="removeEducationItem('${item.id || idx}')"><i class="fa-solid fa-trash-can"></i></button>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Degree & Field of Study</label>
-          <input type="text" class="form-control sync-input edu-degree" value="${item.degree || ''}" placeholder="e.g. B.Tech in Computer Science">
+          <label class="form-label">Degree / Field of Study</label>
+          <input type="text" class="form-control sync-input edu-degree" value="${item.degree || ''}" placeholder="e.g. B.S. in Computer Science">
         </div>
         <div class="form-group">
-          <label class="form-label">University / Institution</label>
-          <input type="text" class="form-control sync-input edu-institution" value="${item.institution || ''}" placeholder="e.g. Lovely Professional University">
+          <label class="form-label">School / University</label>
+          <input type="text" class="form-control sync-input edu-institution" value="${item.institution || ''}" placeholder="e.g. Stanford University">
         </div>
       </div>
       <div class="form-row-3">
         <div class="form-group">
           <label class="form-label">Location</label>
-          <input type="text" class="form-control sync-input edu-location" value="${item.location || ''}" placeholder="e.g. Punjab, India">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Start Year</label>
-          <input type="text" class="form-control sync-input edu-start" value="${item.startDate || ''}" placeholder="e.g. 2024">
+          <input type="text" class="form-control sync-input edu-location" value="${item.location || ''}" placeholder="e.g. Stanford, CA">
         </div>
         <div class="form-group">
           <label class="form-label">Graduation Year</label>
-          <input type="text" class="form-control sync-input edu-end" value="${item.endDate || ''}" placeholder="e.g. 2028">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">GPA / Grade (Optional)</label>
-          <input type="text" class="form-control sync-input edu-gpa" value="${item.gpa || ''}" placeholder="e.g. 8.8 / 10.0">
+          <input type="text" class="form-control sync-input edu-end" value="${item.endDate || ''}" placeholder="e.g. 2024">
         </div>
         <div class="form-group">
-          <label class="form-label">Coursework / Honors</label>
-          <input type="text" class="form-control sync-input edu-details" value="${item.details || ''}" placeholder="e.g. Algorithms, Data Structures, Cybersecurity">
+          <label class="form-label">GPA / Honors</label>
+          <input type="text" class="form-control sync-input edu-gpa" value="${item.gpa || ''}" placeholder="e.g. 3.8 / 4.0">
         </div>
       </div>
     </div>
@@ -674,7 +670,7 @@ function addEducationItem() {
     institution: '',
     location: '',
     startDate: '',
-    endDate: '',
+    endDate: '2024',
     gpa: '',
     details: '',
   });
@@ -684,7 +680,7 @@ function addEducationItem() {
 }
 
 function removeEducationItem(id) {
-  activeResume.education = activeResume.education.filter((e, idx) => (e.id || idx) !== id);
+  activeResume.education = activeResume.education.filter((x, idx) => (x.id || idx) != id);
   renderEducationList(activeResume.education);
   updateLivePreview();
   triggerAutoSave();
@@ -702,32 +698,22 @@ function renderProjectsList(list) {
       (item, idx) => `
     <div class="repeater-item proj-item" data-id="${item.id || 'proj_' + idx}">
       <div class="repeater-header">
-        <span class="repeater-title"><i class="fa-solid fa-diagram-project"></i> ${item.title || 'Project Title'}</span>
+        <span class="repeater-title"><i class="fa-solid fa-diagram-project"></i> ${item.title || 'Project Name'}</span>
         <button type="button" class="btn-remove-item" onclick="removeProjectItem('${item.id || idx}')"><i class="fa-solid fa-trash-can"></i></button>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Project Name</label>
-          <input type="text" class="form-control sync-input proj-title" value="${item.title || ''}" placeholder="e.g. Resume Builder UI">
+          <label class="form-label">Project Title</label>
+          <input type="text" class="form-control sync-input proj-title" value="${item.title || ''}" placeholder="e.g. Distributed Analytics Engine">
         </div>
         <div class="form-group">
-          <label class="form-label">Tech Stack (comma separated)</label>
-          <input type="text" class="form-control sync-input proj-tech" value="${item.techStack || ''}" placeholder="e.g. React.js, Tailwind, Docker">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Live Demo URL</label>
-          <input type="text" class="form-control sync-input proj-link" value="${item.link || ''}" placeholder="e.g. https://my-app.com">
-        </div>
-        <div class="form-group">
-          <label class="form-label">GitHub Repository</label>
-          <input type="text" class="form-control sync-input proj-github" value="${item.github || ''}" placeholder="e.g. https://github.com/...">
+          <label class="form-label">Tech Stack</label>
+          <input type="text" class="form-control sync-input proj-tech" value="${item.techStack || ''}" placeholder="e.g. React, Node.js, AWS">
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Key Highlights & Impact</label>
-        <textarea class="form-control sync-input proj-desc" rows="2" placeholder="• Developed a high-speed live editor with zero server latency...">${item.description || ''}</textarea>
+        <label class="form-label">Project Description</label>
+        <textarea class="form-control sync-input proj-desc" rows="2" placeholder="• Built a high-performance system...">${item.description || ''}</textarea>
       </div>
     </div>
   `
@@ -746,7 +732,7 @@ function addProjectItem() {
     techStack: '',
     link: '',
     github: '',
-    description: '• Engineered a scalable web application with modern user interface.\n• Implemented responsive layouts with high cross-browser compatibility.',
+    description: '• Architected and developed a full-stack solution serving 10,000+ users.',
   });
   renderProjectsList(activeResume.projects);
   updateLivePreview();
@@ -754,7 +740,7 @@ function addProjectItem() {
 }
 
 function removeProjectItem(id) {
-  activeResume.projects = activeResume.projects.filter((p, idx) => (p.id || idx) !== id);
+  activeResume.projects = activeResume.projects.filter((x, idx) => (x.id || idx) != id);
   renderProjectsList(activeResume.projects);
   updateLivePreview();
   triggerAutoSave();
@@ -772,21 +758,17 @@ function renderCertificationsList(list) {
       (item, idx) => `
     <div class="repeater-item cert-item" data-id="${item.id || 'cert_' + idx}">
       <div class="repeater-header">
-        <span class="repeater-title"><i class="fa-solid fa-certificate"></i> ${item.name || 'Certificate'}</span>
-        <button type="button" class="btn-remove-item" onclick="removeCertItem('${item.id || idx}')"><i class="fa-solid fa-trash-can"></i></button>
+        <span class="repeater-title"><i class="fa-solid fa-certificate"></i> ${item.name || 'Certification'}</span>
+        <button type="button" class="btn-remove-item" onclick="removeCertificationItem('${item.id || idx}')"><i class="fa-solid fa-trash-can"></i></button>
       </div>
-      <div class="form-row-3">
+      <div class="form-row">
         <div class="form-group">
           <label class="form-label">Certification Name</label>
-          <input type="text" class="form-control sync-input cert-name" value="${item.name || ''}" placeholder="e.g. AWS Cloud Practitioner">
+          <input type="text" class="form-control sync-input cert-name" value="${item.name || ''}" placeholder="e.g. AWS Certified Solutions Architect">
         </div>
         <div class="form-group">
-          <label class="form-label">Issuing Org</label>
+          <label class="form-label">Issuer</label>
           <input type="text" class="form-control sync-input cert-issuer" value="${item.issuer || ''}" placeholder="e.g. Amazon Web Services">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Issue Date</label>
-          <input type="text" class="form-control sync-input cert-date" value="${item.date || ''}" placeholder="e.g. 2025">
         </div>
       </div>
     </div>
@@ -797,13 +779,13 @@ function renderCertificationsList(list) {
   setupFormListeners();
 }
 
-function addCertItem() {
+function addCertificationItem() {
   if (!activeResume.certifications) activeResume.certifications = [];
   activeResume.certifications.push({
     id: 'cert_' + Date.now(),
     name: '',
     issuer: '',
-    date: '2025',
+    date: '2024',
     credentialId: '',
   });
   renderCertificationsList(activeResume.certifications);
@@ -811,8 +793,8 @@ function addCertItem() {
   triggerAutoSave();
 }
 
-function removeCertItem(id) {
-  activeResume.certifications = activeResume.certifications.filter((c, idx) => (c.id || idx) !== id);
+function removeCertificationItem(id) {
+  activeResume.certifications = activeResume.certifications.filter((x, idx) => (x.id || idx) != id);
   renderCertificationsList(activeResume.certifications);
   updateLivePreview();
   triggerAutoSave();
@@ -830,8 +812,8 @@ function renderLanguagesList(list) {
       (item, idx) => `
     <div class="repeater-item lang-item" data-id="${item.id || 'lang_' + idx}">
       <div class="repeater-header">
-        <span class="repeater-title"><i class="fa-solid fa-language"></i> ${item.name || 'Language'}</span>
-        <button type="button" class="btn-remove-item" onclick="removeLangItem('${item.id || idx}')"><i class="fa-solid fa-trash-can"></i></button>
+        <span class="repeater-title"><i class="fa-solid fa-language"></i> ${item.name || 'Language'} (${item.fluency || 'Fluency'})</span>
+        <button type="button" class="btn-remove-item" onclick="removeLanguageItem('${item.id || idx}')"><i class="fa-solid fa-trash-can"></i></button>
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -839,8 +821,8 @@ function renderLanguagesList(list) {
           <input type="text" class="form-control sync-input lang-name" value="${item.name || ''}" placeholder="e.g. English">
         </div>
         <div class="form-group">
-          <label class="form-label">Fluency Level</label>
-          <input type="text" class="form-control sync-input lang-fluency" value="${item.fluency || ''}" placeholder="e.g. Fluent / Native">
+          <label class="form-label">Proficiency Level</label>
+          <input type="text" class="form-control sync-input lang-fluency" value="${item.fluency || ''}" placeholder="e.g. Native / Professional">
         </div>
       </div>
     </div>
@@ -851,43 +833,63 @@ function renderLanguagesList(list) {
   setupFormListeners();
 }
 
-function addLangItem() {
+function addLanguageItem() {
   if (!activeResume.languages) activeResume.languages = [];
   activeResume.languages.push({
     id: 'lang_' + Date.now(),
     name: '',
-    fluency: 'Fluent / Professional',
+    fluency: 'Professional',
   });
   renderLanguagesList(activeResume.languages);
   updateLivePreview();
   triggerAutoSave();
 }
 
-function removeLangItem(id) {
-  activeResume.languages = activeResume.languages.filter((l, idx) => (l.id || idx) !== id);
+function removeLanguageItem(id) {
+  activeResume.languages = activeResume.languages.filter((x, idx) => (x.id || idx) != id);
   renderLanguagesList(activeResume.languages);
   updateLivePreview();
   triggerAutoSave();
 }
 
 /**
- * AI Bullet Point Booster Helper
+ * AI Bullet Enhancer
  */
 function enhanceBulletPoints(btn) {
-  const textarea = btn.closest('.form-group').querySelector('textarea');
+  const textarea = btn.closest('.form-group')?.querySelector('textarea');
   if (!textarea) return;
 
-  const currentVal = textarea.value.trim();
-  const suggestions = [
-    '• Engineered robust frontend architecture using React.js 19 and modern CSS, accelerating page render by 35%.\n• Designed and automated continuous integration workflows with Docker, eliminating deployment bottlenecks.\n• Collaborated with engineering stakeholders to spearhead feature releases for 5,000+ active users.',
-    '• Architected high-performance web components adhering to strict accessibility and responsive standards.\n• Reduced server response latency by 40% through optimized API queries and client-side state caching.\n• Conducted comprehensive vulnerability scans and digital forensic analysis to ensure system hardening.',
-  ];
+  const currentText = textarea.value.trim();
+  if (!currentText) {
+    showToast('Please type some basic bullet points first to enhance.', 'info');
+    return;
+  }
 
-  const randomPick = suggestions[Math.floor(Math.random() * suggestions.length)];
-  textarea.value = randomPick;
-  syncFormDataToState();
-  updateLivePreview();
-  triggerAutoSave();
-  updateATSScore();
-  showToast('AI Action-Verb Bullets applied!', 'success');
+  showToast('AI is optimizing action verbs & quantifiable metrics...', 'info');
+
+  setTimeout(() => {
+    const lines = currentText.split('\n').filter((l) => l.trim().length > 0);
+    const actionVerbs = ['Spearheaded', 'Architected', 'Engineered', 'Optimized', 'Automated', 'Scaled'];
+
+    const enhanced = lines
+      .map((line, idx) => {
+        let clean = line.replace(/^[•\-\*]\s*/, '').trim();
+        const verb = actionVerbs[idx % actionVerbs.length];
+        if (!clean.startsWith(verb)) {
+          clean = `${verb} ${clean.charAt(0).toLowerCase() + clean.slice(1)}`;
+        }
+        if (!clean.includes('%') && !clean.includes('by') && !clean.includes('$')) {
+          clean += ', improving system throughput by 32%';
+        }
+        return `• ${clean}`;
+      })
+      .join('\n');
+
+    textarea.value = enhanced;
+    syncFormDataToState();
+    updateLivePreview();
+    triggerAutoSave();
+    updateATSScore();
+    showToast('Bullets successfully enhanced with AI power verbs!', 'success');
+  }, 400);
 }

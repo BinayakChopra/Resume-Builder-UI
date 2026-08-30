@@ -41,6 +41,7 @@
       </ul>
 
       <div class="nav-actions">
+        <!-- Dynamically rendered by app.js -->
         <button class="btn btn-secondary btn-icon" id="themeToggleBtn" title="Toggle Light/Dark Mode">
           <i class="fa-solid fa-sun" id="themeIcon"></i>
         </button>
@@ -56,68 +57,84 @@
     <div class="container" style="max-width: 800px;">
 
       <div style="margin-bottom: 32px;">
-        <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 6px;">Application & Profile Settings</h1>
+        <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 6px;">Account & Studio Settings</h1>
         <p style="color: var(--text-secondary); font-size: 0.95rem;">
-          Configure your user account, studio preferences, and client-side database management.
+          Manage your private account profile, security credentials, and storage preferences.
         </p>
       </div>
 
       <!-- User Profile Card -->
       <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
-        <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-          <i class="fa-regular fa-user" style="color: var(--accent-indigo);"></i> User Profile
-        </h2>
+        <div class="flex-between" style="margin-bottom: 20px;">
+          <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; margin: 0;">
+            <i class="fa-regular fa-user" style="color: var(--accent-indigo);"></i> Private Account Profile
+          </h2>
+          <span class="badge badge-emerald"><i class="fa-solid fa-shield-check"></i> Verified Account</span>
+        </div>
 
         <form id="settingsProfileForm">
           <div class="grid grid-2" style="margin-bottom: 16px;">
             <div class="form-group">
-              <label class="form-label">Display Name</label>
-              <input type="text" id="settingsName" class="form-control" placeholder="e.g. Alex Morgan">
+              <label class="form-label" for="settingsName">Display Name</label>
+              <input type="text" id="settingsName" class="form-control" placeholder="e.g. Alex Morgan" required>
             </div>
             <div class="form-group">
-              <label class="form-label">Email Address</label>
-              <input type="email" id="settingsEmail" class="form-control" placeholder="alex@example.com">
+              <label class="form-label" for="settingsEmail">Email Address (Read-only)</label>
+              <input type="email" id="settingsEmail" class="form-control" readonly style="opacity: 0.7; cursor: not-allowed;">
             </div>
           </div>
 
           <div class="form-group" style="margin-bottom: 24px;">
-            <label class="form-label">Profile Avatar Image URL</label>
+            <label class="form-label" for="settingsAvatar">Profile Avatar Image URL</label>
             <input type="url" id="settingsAvatar" class="form-control" placeholder="https://...">
           </div>
 
-          <button type="submit" class="btn btn-primary btn-sm">
-            <i class="fa-solid fa-floppy-disk"></i> Save Profile Changes
-          </button>
+          <div class="flex-between" style="flex-wrap: wrap; gap: 12px;">
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-floppy-disk"></i> Save Profile Changes
+            </button>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="handleLogout()" style="color: var(--accent-coral);">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+            </button>
+          </div>
         </form>
       </div>
 
       <!-- App Preferences Card -->
       <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
         <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-          <i class="fa-solid fa-sliders" style="color: var(--accent-cyan);"></i> Studio Preferences
+          <i class="fa-solid fa-sliders" style="color: var(--accent-cyan);"></i> Studio Features & Privacy
         </h2>
 
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <div class="flex-between" style="padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
             <div>
+              <div style="font-weight: 600;">Account Data Isolation</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Resumes are strictly partitioned and accessible solely by this user account</div>
+            </div>
+            <span class="badge badge-emerald"><i class="fa-solid fa-lock"></i> Isolated</span>
+          </div>
+
+          <div class="flex-between" style="padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
+            <div>
               <div style="font-weight: 600;">Real-Time Auto-Save</div>
-              <div style="font-size: 0.85rem; color: var(--text-muted);">Debounces and saves changes to browser LocalStorage automatically</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Debounces and saves changes to your private account storage automatically</div>
             </div>
             <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Enabled</span>
           </div>
 
           <div class="flex-between" style="padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
             <div>
-              <div style="font-weight: 600;">ATS AI Suggestions Engine</div>
-              <div style="font-size: 0.85rem; color: var(--text-muted);">Calculates ATS scores and provides action verb suggestions</div>
+              <div style="font-weight: 600;">ATS AI Scanner Engine</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Calculates keyword density, metric scoring, and power action verbs</div>
             </div>
             <span class="badge badge-emerald"><i class="fa-solid fa-check"></i> Active</span>
           </div>
 
           <div class="flex-between">
             <div>
-              <div style="font-weight: 600;">Vector PDF Export Rendering</div>
-              <div style="font-size: 0.85rem; color: var(--text-muted);">Uses high-DPI browser print rasterization and client PDF engine</div>
+              <div style="font-weight: 600;">Vector PDF Export Engine</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Generates high-resolution vector PDF outputs with zero compression artifacts</div>
             </div>
             <span class="badge badge-cyan">Optimal</span>
           </div>
@@ -127,19 +144,19 @@
       <!-- Data Management Card -->
       <div class="glass-card" style="padding: 32px; border-color: rgba(239, 68, 68, 0.2);">
         <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; color: var(--accent-coral);">
-          <i class="fa-solid fa-database"></i> Storage & Reset Controls
+          <i class="fa-solid fa-database"></i> Private Storage Management
         </h2>
 
         <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px;">
-          All your resumes are stored locally in your browser's persistent storage. You can backup your data or reset to the preloaded sample resume.
+          You can load a fresh sample template into your private account or clear your account's saved drafts.
         </p>
 
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <button class="btn btn-secondary btn-sm" onclick="handleSeedReset()">
-            <i class="fa-solid fa-rotate-left"></i> Restore Default Sample Resume
+          <button class="btn btn-secondary btn-sm" onclick="handleLoadSampleTemplate()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Load Sample Resume Template
           </button>
-          <button class="btn btn-ghost btn-sm" style="color: var(--accent-coral);" onclick="handleClearAllData()">
-            <i class="fa-solid fa-trash-can"></i> Clear All Resumes & Reset Storage
+          <button class="btn btn-ghost btn-sm" style="color: var(--accent-coral);" onclick="handleClearMyResumes()">
+            <i class="fa-solid fa-trash-can"></i> Clear All My Resumes
           </button>
         </div>
       </div>
@@ -167,40 +184,48 @@
   <script src="js/app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const user = StorageService.getUserSession() || { name: 'Guest User', email: 'guest@resumeflow.ai', avatar: '' };
-      document.getElementById('settingsName').value = user.name || '';
-      document.getElementById('settingsEmail').value = user.email || '';
-      document.getElementById('settingsAvatar').value = user.avatar || '';
+      // Require Authentication
+      if (!StorageService.requireAuth('settings.html')) return;
+
+      const user = StorageService.getUserSession();
+      if (user) {
+        document.getElementById('settingsName').value = user.name || '';
+        document.getElementById('settingsEmail').value = user.email || '';
+        document.getElementById('settingsAvatar').value = user.avatar || '';
+      }
 
       document.getElementById('settingsProfileForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        const updated = {
-          name: document.getElementById('settingsName').value.trim() || 'User',
-          email: document.getElementById('settingsEmail').value.trim() || 'user@example.com',
-          avatar: document.getElementById('settingsAvatar').value.trim() || ''
-        };
-        StorageService.setUserSession(updated);
-        showToast('Profile updated successfully!', 'success');
+        const updatedName = document.getElementById('settingsName').value.trim();
+        const updatedAvatar = document.getElementById('settingsAvatar').value.trim();
+
+        StorageService.updateUserProfile({
+          name: updatedName,
+          avatar: updatedAvatar
+        });
+
+        showToast('Account profile updated successfully!', 'success');
       });
     });
 
-    function handleSeedReset() {
-      if (confirm('Restore default sample resume dataset?')) {
-        const sample = StorageService.getSampleResume();
-        StorageService.saveResume(sample);
-        StorageService.setActiveResumeId(sample.id);
-        showToast('Sample dataset restored!', 'success');
+    function handleLoadSampleTemplate() {
+      if (confirm('Load professional sample template into your private account?')) {
+        StorageService.loadSampleIntoUserAccount();
+        showToast('Sample template loaded into your account!', 'success');
+        setTimeout(() => {
+          window.location.href = 'builder.html';
+        }, 500);
       }
     }
 
-    function handleClearAllData() {
-      if (confirm('Are you sure? This will delete all saved resumes and reset your local vault.')) {
-        localStorage.removeItem('rb_resumes');
-        localStorage.removeItem('rb_active_id');
-        showToast('Storage cleared successfully.', 'info');
-        setTimeout(() => {
-          window.location.href = 'index.html';
-        }, 800);
+    function handleClearMyResumes() {
+      if (confirm('Are you sure you want to delete all resumes in your account? This cannot be undone.')) {
+        const user = StorageService.getUserSession();
+        if (user) {
+          localStorage.removeItem(`rb_user_${user.id}_resumes`);
+          localStorage.removeItem(`rb_user_${user.id}_active_res_id`);
+          showToast('Your resume storage has been cleared.', 'info');
+        }
       }
     }
   </script>

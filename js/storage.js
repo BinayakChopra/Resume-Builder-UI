@@ -1,19 +1,18 @@
 /**
  * ============================================================================
- * RESUME BUILDER 2.0 — STORAGE & DATA PERSISTENCE SERVICE
- * LocalStorage management, active session, multi-resume storage, sample seeder
+ * RESUME BUILDER 2.0 — MULTI-USER STORAGE & AUTHENTICATION SERVICE
+ * Complete User Isolation, Account Management, Private Vaults & Security
  * ============================================================================
  */
 
 const StorageService = (() => {
   const KEYS = {
-    USER_SESSION: 'rb_user_session',
-    ACTIVE_RESUME_ID: 'rb_active_resume_id',
-    RESUMES_LIST: 'rb_resumes_list',
-    USER_SETTINGS: 'rb_user_settings',
+    USERS_REGISTRY: 'rb_users_registry',
+    ACTIVE_USER_ID: 'rb_active_user_id',
+    THEME: 'rb_theme',
   };
 
-  // Generic, professional sample resume data (Alex Morgan)
+  // Generic Sample Resume Dataset (Available on demand for inspiration)
   const SAMPLE_RESUME_DATA = {
     id: 'sample-alex-morgan',
     title: 'Senior Software Engineer & Cloud Architect',
@@ -152,59 +151,366 @@ const StorageService = (() => {
     }
   };
 
+  // Internal keys scoped by User ID
+  const getUserResumesKey = (userId) => `rb_user_${userId}_resumes`;
+  const getUserActiveResumeKey = (userId) => `rb_user_${userId}_active_res_id`;
+
   /**
-   * Initialize default state on first launch
+   * Get all registered users
    */
-  const initialize = () => {
-    // Check if user session exists, else create guest session
-    if (!getUserSession()) {
-      setUserSession({
-        id: 'user_guest_demo',
-        name: 'Guest User',
-        username: 'guest',
-        email: 'guest@resumeflow.ai',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-        isGuest: true,
-      });
+  const getUsersRegistry = () => getJSON(KEYS.USERS_REGISTRY, []);
+
+  /**
+   * Set registered users
+   */
+  const setUsersRegistry = (users) => setJSON(KEYS.USERS_REGISTRY, users);
+
+  /**
+   * Get currently logged-in user session (returns null if unauthenticated)
+   */
+  const getUserSession = () => {
+    const activeUserId = localStorage.getItem(KEYS.ACTIVE_USER_ID);
+    if (!activeUserId) return null;
+
+    const users = getUsersRegistry();
+    const user = users.find((u) => u.id === activeUserId);
+    if (!user) {
+      localStorage.removeItem(KEYS.ACTIVE_USER_ID);
+      return null;
     }
 
-    // Check if resumes list exists, else seed with sample resume
-    const resumes = getAllResumes();
-    if (!resumes || resumes.length === 0) {
-      saveResume(SAMPLE_RESUME_DATA);
-      setActiveResumeId(SAMPLE_RESUME_DATA.id);
-    }
+    // Return safe user object (excluding plain password if preferred)
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar || 'photo/user.png',
+      createdAt: user.createdAt,
+    };
   };
 
-  // User Session Management
-  const getUserSession = () => getJSON(KEYS.USER_SESSION, null);
-  const setUserSession = (user) => setJSON(KEYS.USER_SESSION, user);
-  const clearUserSession = () => localStorage.removeItem(KEYS.USER_SESSION);
+  /**
+   * Register a new user account
+   */
+  const registerUser = (name, email, password) => {
+    if (!name || !email || !password) {
+      return { success: false, error: 'All fields (Name, Email, Password) are required.' };
+    }
 
-  // Active Resume ID
-  const getActiveResumeId = () => localStorage.getItem(KEYS.ACTIVE_RESUME_ID) || SAMPLE_RESUME_DATA.id;
-  const setActiveResumeId = (id) => localStorage.setItem(KEYS.ACTIVE_RESUME_ID, id);
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanName = name.trim();
+    const users = getUsersRegistry();
 
-  // Resumes CRUD
-  const getAllResumes = () => getJSON(KEYS.RESUMES_LIST, []);
+    // Check if email already registered
+    const existing = users.find((u) => u.email.toLowerCase() === cleanEmail);
+    if (existing) {
+      return {
+        success: false,
+        error: 'An account with this email address already exists. Please sign in instead.',
+      };
+    }
 
+    if (password.length < 6) {
+      return { success: false, error: 'Password must be at least 6 characters long.' };
+    }
+
+    const userId = 'usr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+    const newUser = {
+      id: userId,
+      name: cleanName,
+      email: cleanEmail,
+      password: password,
+      avatar: 'photo/user.png',
+      createdAt: new Date().toISOString(),
+    };
+
+    users.push(newUser);
+    setUsersRegistry(users);
+
+    // Set active session
+    localStorage.setItem(KEYS.ACTIVE_USER_ID, userId);
+
+    // Create an initial private starter resume customized with their name and email
+    const starterResume = {
+      id: 'res_' + Date.now(),
+      title: `${cleanName}'s Professional Resume`,
+      template: 'tpl-modern-tech',
+      themeColor: '#4f7df9',
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontSize: '9.5pt',
+      spacing: 'normal',
+      photoUrl: '',
+      photoShape: 'circle',
+      photoSize: 90,
+      personalInfo: {
+        fullName: cleanName,
+        jobTitle: 'Software Engineer / Professional',
+        email: cleanEmail,
+        phone: '',
+        location: '',
+        website: '',
+        linkedin: '',
+        github: '',
+      },
+      summary: 'Motivated professional with expertise in building scalable solutions and delivering high-impact results.',
+      experience: [],
+      education: [],
+      skills: {
+        languages: '',
+        frontend: '',
+        backend: '',
+        tools: '',
+      },
+      projects: [],
+      certifications: [],
+      languages: [{ id: 'lang-1', name: 'English', fluency: 'Professional' }],
+      customSections: [],
+      updatedAt: new Date().toISOString(),
+    };
+
+    // Save to this user's private vault
+    setJSON(getUserResumesKey(userId), [starterResume]);
+    localStorage.setItem(getUserActiveResumeKey(userId), starterResume.id);
+
+    return {
+      success: true,
+      user: {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        avatar: newUser.avatar,
+        createdAt: newUser.createdAt,
+      },
+    };
+  };
+
+  /**
+   * Log in an existing user
+   */
+  const loginUser = (email, password) => {
+    if (!email || !password) {
+      return { success: false, error: 'Please provide both email and password.' };
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const users = getUsersRegistry();
+
+    const user = users.find((u) => u.email.toLowerCase() === cleanEmail);
+    if (!user) {
+      return { success: false, error: 'No account found with this email. Please create an account.' };
+    }
+
+    if (user.password !== password) {
+      return { success: false, error: 'Incorrect password. Please try again.' };
+    }
+
+    // Set active session
+    localStorage.setItem(KEYS.ACTIVE_USER_ID, user.id);
+
+    // Ensure user has at least one resume
+    const userResumes = getJSON(getUserResumesKey(user.id), []);
+    if (userResumes.length === 0) {
+      const initialResume = {
+        id: 'res_' + Date.now(),
+        title: `${user.name}'s Resume`,
+        template: 'tpl-modern-tech',
+        themeColor: '#4f7df9',
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        fontSize: '9.5pt',
+        spacing: 'normal',
+        photoUrl: '',
+        photoShape: 'circle',
+        photoSize: 90,
+        personalInfo: {
+          fullName: user.name,
+          jobTitle: '',
+          email: user.email,
+          phone: '',
+          location: '',
+          website: '',
+          linkedin: '',
+          github: '',
+        },
+        summary: '',
+        experience: [],
+        education: [],
+        skills: { languages: '', frontend: '', backend: '', tools: '' },
+        projects: [],
+        certifications: [],
+        languages: [],
+        customSections: [],
+        updatedAt: new Date().toISOString(),
+      };
+      setJSON(getUserResumesKey(user.id), [initialResume]);
+      localStorage.setItem(getUserActiveResumeKey(user.id), initialResume.id);
+    }
+
+    return {
+      success: true,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar,
+        createdAt: user.createdAt,
+      },
+    };
+  };
+
+  /**
+   * 1-Click Demo / Test Account Login (Isolated Demo Vault)
+   */
+  const loginDemo = () => {
+    const demoEmail = 'demo@resumeflow.ai';
+    const users = getUsersRegistry();
+    let demoUser = users.find((u) => u.email.toLowerCase() === demoEmail);
+
+    if (!demoUser) {
+      demoUser = {
+        id: 'usr_demo_account',
+        name: 'Demo Candidate',
+        email: demoEmail,
+        password: 'demo_password_123',
+        avatar: 'photo/user.png',
+        createdAt: new Date().toISOString(),
+      };
+      users.push(demoUser);
+      setUsersRegistry(users);
+    }
+
+    localStorage.setItem(KEYS.ACTIVE_USER_ID, demoUser.id);
+
+    // Initialize with a copy of sample data if empty
+    const demoResumes = getJSON(getUserResumesKey(demoUser.id), []);
+    if (demoResumes.length === 0) {
+      const demoCopy = JSON.parse(JSON.stringify(SAMPLE_RESUME_DATA));
+      demoCopy.id = 'res_demo_' + Date.now();
+      setJSON(getUserResumesKey(demoUser.id), [demoCopy]);
+      localStorage.setItem(getUserActiveResumeKey(demoUser.id), demoCopy.id);
+    }
+
+    return {
+      success: true,
+      user: {
+        id: demoUser.id,
+        name: demoUser.name,
+        email: demoUser.email,
+        avatar: demoUser.avatar,
+        createdAt: demoUser.createdAt,
+      },
+    };
+  };
+
+  /**
+   * Log out active user session
+   */
+  const logoutUser = () => {
+    localStorage.removeItem(KEYS.ACTIVE_USER_ID);
+    window.location.href = 'login.html';
+  };
+
+  /**
+   * Auth Guard: Checks if user is signed in. If not, redirects to login.html with return URL.
+   */
+  const requireAuth = (redirectUrl = window.location.pathname) => {
+    const user = getUserSession();
+    if (!user) {
+      const target = redirectUrl.split('/').pop() || 'builder.html';
+      sessionStorage.setItem('rb_auth_redirect', target);
+      window.location.href = `login.html?redirect=${encodeURIComponent(target)}`;
+      return false;
+    }
+    return true;
+  };
+
+  /**
+   * Update active user profile
+   */
+  const updateUserProfile = (updatedData) => {
+    const user = getUserSession();
+    if (!user) return false;
+
+    const users = getUsersRegistry();
+    const index = users.findIndex((u) => u.id === user.id);
+    if (index >= 0) {
+      users[index] = { ...users[index], ...updatedData };
+      setUsersRegistry(users);
+      return true;
+    }
+    return false;
+  };
+
+  // ==========================================================================
+  // ACCOUNT-ISOLATED RESUME CRUD (PRIVATE TO ACTIVE USER)
+  // ==========================================================================
+
+  /**
+   * Get all resumes belonging strictly to the currently logged in user
+   */
+  const getAllResumes = () => {
+    const user = getUserSession();
+    if (!user) return [];
+    return getJSON(getUserResumesKey(user.id), []);
+  };
+
+  /**
+   * Get resume by ID within the active user's private vault
+   */
   const getResumeById = (id) => {
     const list = getAllResumes();
     return list.find((r) => r.id === id) || null;
   };
 
-  const getActiveResume = () => {
-    const activeId = getActiveResumeId();
-    const resume = getResumeById(activeId);
-    if (resume) return resume;
-    // Fallback to first resume or sample data
-    const all = getAllResumes();
-    if (all.length > 0) return all[0];
-    return SAMPLE_RESUME_DATA;
+  /**
+   * Get active resume ID for current user
+   */
+  const getActiveResumeId = () => {
+    const user = getUserSession();
+    if (!user) return null;
+    return localStorage.getItem(getUserActiveResumeKey(user.id));
   };
 
+  /**
+   * Set active resume ID for current user
+   */
+  const setActiveResumeId = (id) => {
+    const user = getUserSession();
+    if (!user) return;
+    localStorage.setItem(getUserActiveResumeKey(user.id), id);
+  };
+
+  /**
+   * Get the active resume data for editing in the studio
+   */
+  const getActiveResume = () => {
+    const user = getUserSession();
+    if (!user) return null;
+
+    const activeId = getActiveResumeId();
+    const list = getAllResumes();
+
+    if (activeId) {
+      const found = list.find((r) => r.id === activeId);
+      if (found) return found;
+    }
+
+    if (list.length > 0) {
+      setActiveResumeId(list[0].id);
+      return list[0];
+    }
+
+    // If none exists, create a fresh private one for this user
+    return createNewResume(`${user.name}'s Resume`);
+  };
+
+  /**
+   * Save / update a resume in active user's private storage
+   */
   const saveResume = (resumeData) => {
-    if (!resumeData || !resumeData.id) {
+    const user = getUserSession();
+    if (!user || !resumeData) return null;
+
+    if (!resumeData.id) {
       resumeData.id = 'res_' + Date.now();
     }
     resumeData.updatedAt = new Date().toISOString();
@@ -218,44 +524,59 @@ const StorageService = (() => {
       list.unshift(resumeData);
     }
 
-    setJSON(KEYS.RESUMES_LIST, list);
+    setJSON(getUserResumesKey(user.id), list);
     setActiveResumeId(resumeData.id);
     return resumeData;
   };
 
+  /**
+   * Delete a resume from active user's private storage
+   */
   const deleteResume = (id) => {
+    const user = getUserSession();
+    if (!user) return [];
+
     let list = getAllResumes();
     list = list.filter((r) => r.id !== id);
-    setJSON(KEYS.RESUMES_LIST, list);
+    setJSON(getUserResumesKey(user.id), list);
 
     if (getActiveResumeId() === id) {
       if (list.length > 0) {
         setActiveResumeId(list[0].id);
       } else {
-        // Create fresh empty one
-        const fresh = createNewResume('Untitled Resume');
+        const fresh = createNewResume(`${user.name}'s Resume`);
         setActiveResumeId(fresh.id);
       }
     }
     return list;
   };
 
+  /**
+   * Duplicate a resume in active user's private storage
+   */
   const duplicateResume = (id) => {
     const target = getResumeById(id);
     if (!target) return null;
 
     const copy = JSON.parse(JSON.stringify(target));
     copy.id = 'res_' + Date.now();
-    copy.title = (copy.title || 'Untitled') + ' (Copy)';
+    copy.title = (copy.title || 'Untitled Resume') + ' (Copy)';
     copy.updatedAt = new Date().toISOString();
+
+    const user = getUserSession();
+    if (!user) return null;
 
     const list = getAllResumes();
     list.unshift(copy);
-    setJSON(KEYS.RESUMES_LIST, list);
+    setJSON(getUserResumesKey(user.id), list);
     return copy;
   };
 
+  /**
+   * Create a new blank or template resume in active user's private storage
+   */
   const createNewResume = (title = 'My New Resume', template = 'tpl-modern-tech') => {
+    const user = getUserSession();
     const newResume = {
       id: 'res_' + Date.now(),
       title: title,
@@ -268,9 +589,9 @@ const StorageService = (() => {
       photoShape: 'circle',
       photoSize: 90,
       personalInfo: {
-        fullName: '',
+        fullName: user ? user.name : '',
         jobTitle: '',
-        email: '',
+        email: user ? user.email : '',
         phone: '',
         location: '',
         website: '',
@@ -282,9 +603,9 @@ const StorageService = (() => {
       education: [],
       skills: {
         languages: '',
-        frameworks: '',
+        frontend: '',
+        backend: '',
         tools: '',
-        cloud: '',
       },
       projects: [],
       certifications: [],
@@ -293,59 +614,90 @@ const StorageService = (() => {
       updatedAt: new Date().toISOString(),
     };
 
-    saveResume(newResume);
+    if (user) {
+      saveResume(newResume);
+    }
     return newResume;
   };
 
+  /**
+   * Load the professional sample template into the active user's private account
+   */
+  const loadSampleIntoUserAccount = () => {
+    const user = getUserSession();
+    if (!user) return null;
+
+    const sampleCopy = JSON.parse(JSON.stringify(SAMPLE_RESUME_DATA));
+    sampleCopy.id = 'res_' + Date.now();
+    sampleCopy.title = `${user.name}'s Master CV (From Sample)`;
+    sampleCopy.personalInfo.fullName = user.name;
+    sampleCopy.personalInfo.email = user.email;
+
+    saveResume(sampleCopy);
+    setActiveResumeId(sampleCopy.id);
+    return sampleCopy;
+  };
+
+  /**
+   * Export resume as JSON backup
+   */
   const exportAsJSON = (resumeData) => {
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(resumeData, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `${(resumeData.personalInfo?.fullName || 'resume').replace(/\s+/g, '_')}_backup.json`);
+    const filename = (resumeData.title || 'resume').replace(/[^a-z0-9]/gi, '_').toLowerCase() + '_backup.json';
+    downloadAnchor.setAttribute('download', filename);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
   };
 
+  /**
+   * Import resume from JSON file into current user's private vault
+   */
   const importFromJSON = (file, callback) => {
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = (e) => {
       try {
-        const parsed = JSON.parse(event.target.result);
-        if (parsed && typeof parsed === 'object') {
+        const parsed = JSON.parse(e.target.result);
+        if (parsed && (parsed.personalInfo || parsed.title)) {
           parsed.id = 'res_' + Date.now();
           parsed.title = (parsed.title || 'Imported Resume') + ' (Imported)';
-          saveResume(parsed);
-          if (callback) callback(parsed);
+          const saved = saveResume(parsed);
+          callback(true, saved);
+        } else {
+          callback(false, 'Invalid ResumeFlow JSON format.');
         }
       } catch (err) {
-        console.error('Failed to parse JSON file:', err);
-        alert('Invalid JSON file format.');
+        callback(false, 'Failed to parse JSON file.');
       }
     };
     reader.readAsText(file);
   };
 
-  const getSampleResume = () => JSON.parse(JSON.stringify(SAMPLE_RESUME_DATA));
-
-  // Self initialize on load
-  initialize();
-
   return {
+    // Auth & User Session
     getUserSession,
-    setUserSession,
-    clearUserSession,
-    getActiveResumeId,
-    setActiveResumeId,
+    registerUser,
+    loginUser,
+    loginDemo,
+    logoutUser,
+    requireAuth,
+    updateUserProfile,
+
+    // Resumes (Account Scoped)
     getAllResumes,
     getResumeById,
+    getActiveResumeId,
+    setActiveResumeId,
     getActiveResume,
     saveResume,
     deleteResume,
     duplicateResume,
     createNewResume,
+    loadSampleIntoUserAccount,
     exportAsJSON,
     importFromJSON,
-    getSampleResume,
+    getSampleData: () => JSON.parse(JSON.stringify(SAMPLE_RESUME_DATA)),
   };
 })();
