@@ -13,10 +13,10 @@ const StorageService = (() => {
     USER_SETTINGS: 'rb_user_settings',
   };
 
-  // Sample verified profile data for Binayak Chopra
+  // Generic, professional sample resume data (Alex Morgan)
   const SAMPLE_RESUME_DATA = {
-    id: 'sample-binayak-chopra',
-    title: 'Software Engineer & Security Analyst Resume',
+    id: 'sample-alex-morgan',
+    title: 'Senior Software Engineer & Cloud Architect',
     template: 'tpl-modern-tech',
     themeColor: '#4f7df9',
     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -26,111 +26,101 @@ const StorageService = (() => {
     photoShape: 'circle',
     photoSize: 90,
     personalInfo: {
-      fullName: 'Binayak Chopra',
-      jobTitle: 'Frontend Engineer & Security Enthusiast',
-      email: 'binayakchopra34@gmail.com',
-      phone: '+91 98765 43210',
-      location: 'Amritsar, Punjab, India',
-      website: 'https://portfolio-binayak.vercel.app',
-      linkedin: 'https://linkedin.com/in/binayak-chopra',
-      github: 'https://github.com/BinayakChopra',
+      fullName: 'Alex Morgan',
+      jobTitle: 'Senior Full Stack Engineer & Cloud Architect',
+      email: 'alex.morgan@example.com',
+      phone: '+1 (555) 234-5678',
+      location: 'San Francisco, CA',
+      website: 'https://alexmorgan.dev',
+      linkedin: 'https://linkedin.com/in/alexmorgan-dev',
+      github: 'https://github.com/alexmorgan-dev',
     },
     summary:
-      'Motivated Computer Science Engineering student specializing in modern frontend development and defensive cybersecurity. Experienced in building high-performance, responsive web platforms with React.js, Tailwind CSS, and Docker. Aspiring Cybersecurity Analyst proficient in digital forensics, incident response, and secure software architectures.',
+      'Results-driven Senior Full Stack Engineer & Cloud Architect with 5+ years of experience engineering high-scale distributed systems, microservices, and reactive web applications. Spearheaded cloud architecture migrations reducing API latency by 42% and automated CI/CD pipelines scaling to 2M+ active users. Passionate about clean code, system reliability, and mentoring engineering teams.',
     experience: [
       {
         id: 'exp-1',
-        role: 'Full Stack Engineering Intern',
-        company: 'CyberSmart Tech Solutions',
-        location: 'Remote, India',
-        startDate: 'Jun 2025',
+        role: 'Senior Software Engineer',
+        company: 'Nexus Cloud Systems',
+        location: 'San Francisco, CA',
+        startDate: 'Jan 2023',
         endDate: 'Present',
         current: true,
         description:
-          '• Engineered interactive frontend modules using React.js 19 and Tailwind CSS, increasing page load speed by 35%.\n• Designed and containerized scalable web services with Docker and modern CI/CD pipelines.\n• Conducted forensic security assessments and digital artifact inspections across test environments.',
+          '• Architected high-throughput microservices using Node.js, Go, and Kubernetes, reducing server latency by 42% across 2M+ daily active users.\n• Spearheaded the migration from monolithic architecture to event-driven serverless functions on AWS, cutting monthly infrastructure costs by $35,000.\n• Mentored 8 junior and mid-level software engineers on scalable frontend design patterns and automated end-to-end testing.',
       },
       {
         id: 'exp-2',
-        role: 'Lead Frontend Developer',
-        company: 'University Developer Student Club',
-        location: 'Punjab, India',
-        startDate: 'Aug 2024',
-        endDate: 'May 2025',
+        role: 'Full Stack Developer',
+        company: 'Horizon Tech Labs',
+        location: 'Austin, TX',
+        startDate: 'Jun 2021',
+        endDate: 'Dec 2022',
         current: false,
         description:
-          '• Mentored 40+ engineering students in modern JavaScript (ES6+), React state architectures, and responsive UI/UX principles.\n• Led development of 3 flagship university project portals with over 5,000 monthly active users.',
+          '• Developed responsive, high-accessibility web applications using React.js, TypeScript, and Tailwind CSS, increasing user engagement by 28%.\n• Engineered secure RESTful and GraphQL APIs integrated with PostgreSQL and Redis caching layers.\n• Automated continuous integration and deployment pipelines using GitHub Actions and Docker, reducing release cycle time by 60%.',
       },
     ],
     education: [
       {
         id: 'edu-1',
-        degree: 'Bachelor of Technology (B.Tech) in Computer Science & Engineering',
-        institution: 'Lovely Professional University (LPU)',
-        location: 'Punjab, India',
-        startDate: '2024',
-        endDate: '2028',
-        gpa: '8.8 / 10.0',
-        details: 'Specialization in Software Systems, Algorithms, Computer Forensics & Network Security.',
+        degree: 'Bachelor of Science in Computer Science',
+        institution: 'University of California, Berkeley',
+        location: 'Berkeley, CA',
+        startDate: '2017',
+        endDate: '2021',
+        gpa: '3.9 / 4.0',
+        details: 'Dean’s Honor List. Focus on Distributed Systems, Algorithms, Computer Security, and Database Management.',
       },
     ],
     skills: {
-      languages: 'Java, C++, C, JavaScript (ES6+), HTML5, CSS3, SQL',
-      frontend: 'React.js 19, Tailwind CSS, Framer Motion, Web Audio API, Responsive UI/UX',
-      tools: 'Git, GitHub, Docker, MySQL, VS Code, XAMPP, Vercel',
-      security: 'Digital Forensics, SOC Fundamentals, Network Protocols, Evidence Analysis',
+      languages: 'TypeScript, JavaScript (ES6+), Python, Go, Java, SQL, HTML5/CSS3',
+      frontend: 'React.js, Next.js, Vue.js, Tailwind CSS, Redux Toolkit, Webpack, Vite, UI/UX Design',
+      backend: 'Node.js, Express, FastAPI, GraphQL, RESTful APIs, Microservices, gRPC',
+      cloud: 'AWS (ECS, Lambda, S3, RDS), Docker, Kubernetes, Terraform, CI/CD, Redis, PostgreSQL, MongoDB',
     },
     projects: [
       {
         id: 'proj-1',
-        title: 'Next-Gen Resume Builder UI',
-        role: 'Full-Stack Creator',
-        techStack: 'JavaScript, React/HTML5, CSS3, Docker',
-        link: 'https://resume-builder-ui.onrender.com',
-        github: 'https://github.com/BinayakChopra/Resume-Builder-UI.git',
+        title: 'CloudScale — Distributed Metrics Engine',
+        role: 'Lead Architect',
+        techStack: 'Go, React, Docker, Prometheus, Grafana',
+        link: 'https://github.com/alexmorgan-dev',
+        github: 'https://github.com/alexmorgan-dev/cloudscale',
         description:
-          '• Built an interactive resume studio featuring real-time ATS scoring, multi-template switching, and vector PDF export.\n• Containerized using Docker for production deployment with zero server latency.',
+          '• Engineered a distributed telemetry engine handling over 50,000 events/sec with sub-millisecond query response.\n• Built an interactive dashboard visualizing real-time cluster health and automated anomaly alerts.',
       },
       {
         id: 'proj-2',
-        title: '3D Holographic Developer Portfolio',
-        role: 'Designer & Architect',
-        techStack: 'React 19, Framer Motion, Web Audio API',
-        link: 'https://portfolio-binayak.vercel.app',
-        github: 'https://github.com/BinayakChopra',
+        title: 'AI Document Intelligence Platform',
+        role: 'Full-Stack Developer',
+        techStack: 'Python, FastAPI, Next.js, OpenAI API, PostgreSQL',
+        link: 'https://github.com/alexmorgan-dev',
+        github: 'https://github.com/alexmorgan-dev/doc-intelligence',
         description:
-          '• Engineered a futuristic glassmorphic portfolio with procedural audio synthesis, 3D card physics, and cyber terminal.',
-      },
-      {
-        id: 'proj-3',
-        title: 'Calyx — Smart Assistant Engine',
-        role: 'Core Developer',
-        techStack: 'HTML5, CSS3, JavaScript ES6+',
-        link: '',
-        github: 'https://github.com/BinayakChopra',
-        description:
-          '• Designed a responsive virtual assistant interface with voice synthesis and gesture-driven commands.',
+          '• Built a high-accuracy document parsing engine extracting structured JSON data from complex multi-page PDF documents.',
       },
     ],
     certifications: [
       {
         id: 'cert-1',
-        name: 'Digital Forensics & Incident Response Specialization',
-        issuer: 'CyberSec Institute',
-        date: '2025',
-        credentialId: 'CS-DFIR-2025-9921',
+        name: 'AWS Certified Solutions Architect – Professional',
+        issuer: 'Amazon Web Services',
+        date: '2024',
+        credentialId: 'AWS-PSA-882194',
       },
       {
         id: 'cert-2',
-        name: 'Certified Database Management Professional',
-        issuer: 'Oracle / NPTEL',
-        date: '2024',
-        credentialId: 'DBMS-NPTEL-8841',
+        name: 'Certified Kubernetes Administrator (CKA)',
+        issuer: 'Cloud Native Computing Foundation (CNCF)',
+        date: '2023',
+        credentialId: 'CKA-99210-2023',
       },
     ],
     languages: [
-      { id: 'lang-1', name: 'English', fluency: 'Fluent / Professional' },
-      { id: 'lang-2', name: 'Hindi', fluency: 'Native / Bilingual' },
-      { id: 'lang-3', name: 'Punjabi', fluency: 'Native / Bilingual' },
+      { id: 'lang-1', name: 'English', fluency: 'Native / Bilingual' },
+      { id: 'lang-2', name: 'Spanish', fluency: 'Professional Working' },
+      { id: 'lang-3', name: 'French', fluency: 'Conversational' },
     ],
     customSections: [],
     updatedAt: new Date().toISOString(),
@@ -169,11 +159,11 @@ const StorageService = (() => {
     // Check if user session exists, else create guest session
     if (!getUserSession()) {
       setUserSession({
-        id: 'user_binayak_demo',
-        name: 'Binayak Chopra',
-        username: 'binayak',
-        email: 'binayakchopra34@gmail.com',
-        avatar: 'photo/user.png',
+        id: 'user_guest_demo',
+        name: 'Guest User',
+        username: 'guest',
+        email: 'guest@resumeflow.ai',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
         isGuest: true,
       });
     }
@@ -251,12 +241,12 @@ const StorageService = (() => {
   };
 
   const duplicateResume = (id) => {
-    const original = getResumeById(id);
-    if (!original) return null;
+    const target = getResumeById(id);
+    if (!target) return null;
 
-    const copy = JSON.parse(JSON.stringify(original));
+    const copy = JSON.parse(JSON.stringify(target));
     copy.id = 'res_' + Date.now();
-    copy.title = `${original.title} (Copy)`;
+    copy.title = (copy.title || 'Untitled') + ' (Copy)';
     copy.updatedAt = new Date().toISOString();
 
     const list = getAllResumes();
@@ -265,7 +255,7 @@ const StorageService = (() => {
     return copy;
   };
 
-  const createNewResume = (title = 'New Professional Resume', template = 'tpl-modern-tech') => {
+  const createNewResume = (title = 'My New Resume', template = 'tpl-modern-tech') => {
     const newResume = {
       id: 'res_' + Date.now(),
       title: title,
@@ -278,23 +268,23 @@ const StorageService = (() => {
       photoShape: 'circle',
       photoSize: 90,
       personalInfo: {
-        fullName: 'Your Name',
-        jobTitle: 'Professional Title',
-        email: 'your.email@example.com',
-        phone: '+1 (555) 000-0000',
-        location: 'City, Country',
+        fullName: '',
+        jobTitle: '',
+        email: '',
+        phone: '',
+        location: '',
         website: '',
         linkedin: '',
         github: '',
       },
-      summary: 'Write a brief 2-3 sentence overview of your key qualifications, strengths, and career highlights.',
+      summary: '',
       experience: [],
       education: [],
       skills: {
-        languages: 'JavaScript, HTML5, CSS3',
-        frontend: 'React, Responsive Design',
-        tools: 'Git, VS Code',
-        security: '',
+        languages: '',
+        frameworks: '',
+        tools: '',
+        cloud: '',
       },
       projects: [],
       certifications: [],
@@ -307,37 +297,41 @@ const StorageService = (() => {
     return newResume;
   };
 
-  const getSampleData = () => JSON.parse(JSON.stringify(SAMPLE_RESUME_DATA));
-
-  // Export & Import
   const exportAsJSON = (resumeData) => {
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(resumeData, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `${(resumeData.title || 'resume').replace(/\s+/g, '_')}_backup.json`);
+    downloadAnchor.setAttribute('download', `${(resumeData.personalInfo?.fullName || 'resume').replace(/\s+/g, '_')}_backup.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
   };
 
-  const importFromJSON = (jsonString) => {
-    try {
-      const data = JSON.parse(jsonString);
-      if (data && data.personalInfo) {
-        data.id = 'res_' + Date.now();
-        data.title = data.title ? `${data.title} (Imported)` : 'Imported Resume';
-        saveResume(data);
-        return data;
+  const importFromJSON = (file, callback) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(event.target.result);
+        if (parsed && typeof parsed === 'object') {
+          parsed.id = 'res_' + Date.now();
+          parsed.title = (parsed.title || 'Imported Resume') + ' (Imported)';
+          saveResume(parsed);
+          if (callback) callback(parsed);
+        }
+      } catch (err) {
+        console.error('Failed to parse JSON file:', err);
+        alert('Invalid JSON file format.');
       }
-      throw new Error('Invalid resume data format');
-    } catch (e) {
-      console.error('Import failed:', e);
-      throw e;
-    }
+    };
+    reader.readAsText(file);
   };
 
+  const getSampleResume = () => JSON.parse(JSON.stringify(SAMPLE_RESUME_DATA));
+
+  // Self initialize on load
+  initialize();
+
   return {
-    initialize,
     getUserSession,
     setUserSession,
     clearUserSession,
@@ -350,11 +344,8 @@ const StorageService = (() => {
     deleteResume,
     duplicateResume,
     createNewResume,
-    getSampleData,
     exportAsJSON,
     importFromJSON,
+    getSampleResume,
   };
 })();
-
-// Auto-initialize on script load
-StorageService.initialize();

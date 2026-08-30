@@ -72,11 +72,11 @@
           <div class="grid grid-2" style="margin-bottom: 16px;">
             <div class="form-group">
               <label class="form-label">Display Name</label>
-              <input type="text" id="settingsName" class="form-control" placeholder="Binayak Chopra">
+              <input type="text" id="settingsName" class="form-control" placeholder="e.g. Alex Morgan">
             </div>
             <div class="form-group">
               <label class="form-label">Email Address</label>
-              <input type="email" id="settingsEmail" class="form-control" placeholder="binayak@example.com">
+              <input type="email" id="settingsEmail" class="form-control" placeholder="alex@example.com">
             </div>
           </div>
 
@@ -136,7 +136,7 @@
 
         <div style="display: flex; gap: 12px; flex-wrap: wrap;">
           <button class="btn btn-secondary btn-sm" onclick="handleSeedReset()">
-            <i class="fa-solid fa-rotate-left"></i> Restore Binayak Chopra Sample Resume
+            <i class="fa-solid fa-rotate-left"></i> Restore Default Sample Resume
           </button>
           <button class="btn btn-ghost btn-sm" style="color: var(--accent-coral);" onclick="handleClearAllData()">
             <i class="fa-solid fa-trash-can"></i> Clear All Resumes & Reset Storage
@@ -152,7 +152,7 @@
     <div class="container flex-between" style="flex-wrap: wrap; gap: 20px;">
       <div>
         <div style="font-weight: 800; font-size: 1.1rem;">ResumeFlow AI 2.0</div>
-        <p style="font-size: 0.85rem; color: var(--text-muted);">Crafted by Binayak Chopra.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Next-Gen Career Intelligence Studio</p>
       </div>
       <div style="display: flex; gap: 16px;">
         <a href="index.html" class="nav-link">Home</a>
@@ -167,7 +167,7 @@
   <script src="js/app.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const user = StorageService.getUserSession() || { name: 'Binayak Chopra', email: 'binayakchopra@example.com', avatar: '' };
+      const user = StorageService.getUserSession() || { name: 'Guest User', email: 'guest@resumeflow.ai', avatar: '' };
       document.getElementById('settingsName').value = user.name || '';
       document.getElementById('settingsEmail').value = user.email || '';
       document.getElementById('settingsAvatar').value = user.avatar || '';
@@ -185,7 +185,7 @@
     });
 
     function handleSeedReset() {
-      if (confirm('Restore default Binayak Chopra resume dataset?')) {
+      if (confirm('Restore default sample resume dataset?')) {
         const sample = StorageService.getSampleResume();
         StorageService.saveResume(sample);
         StorageService.setActiveResumeId(sample.id);

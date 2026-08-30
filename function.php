@@ -33,10 +33,10 @@ function userName()
     if ($con && isset($_SESSION['userId'])) {
         $res = @$con->query("SELECT * FROM users WHERE id = '" . $con->real_escape_string($_SESSION['userId']) . "'");
         if ($res && $row = $res->fetch_assoc()) {
-            return $row['name'] ?? 'Binayak Chopra';
+            return $row['name'] ?? 'User';
         }
     }
-    return $_SESSION['userName'] ?? 'Binayak Chopra';
+    return $_SESSION['userName'] ?? 'User';
 }
 
 function user()
@@ -45,10 +45,10 @@ function user()
     if ($con && isset($_SESSION['userId'])) {
         $res = @$con->query("SELECT * FROM users WHERE id = '" . $con->real_escape_string($_SESSION['userId']) . "'");
         if ($res && $row = $res->fetch_assoc()) {
-            return $row['username'] ?? 'binayak';
+            return $row['username'] ?? 'user';
         }
     }
-    return $_SESSION['user'] ?? 'binayak';
+    return $_SESSION['user'] ?? 'user';
 }
 
 function pass()

@@ -58,7 +58,7 @@
       <div class="form-group" id="nameGroup" style="display: none;">
         <label class="form-label">Full Name</label>
         <div style="position: relative;">
-          <input type="text" id="authName" class="form-control" placeholder="Binayak Chopra" style="padding-left: 36px;">
+          <input type="text" id="authName" class="form-control" placeholder="e.g. Alex Morgan" style="padding-left: 36px;">
           <i class="fa-regular fa-user" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
         </div>
       </div>
@@ -66,7 +66,7 @@
       <div class="form-group">
         <label class="form-label">Email Address</label>
         <div style="position: relative;">
-          <input type="email" id="authEmail" class="form-control" placeholder="binayak@example.com" required style="padding-left: 36px;">
+          <input type="email" id="authEmail" class="form-control" placeholder="alex@example.com" required style="padding-left: 36px;">
           <i class="fa-regular fa-envelope" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
         </div>
       </div>
@@ -121,10 +121,10 @@
       // Guest Login Button
       document.getElementById('guestLoginBtn').addEventListener('click', () => {
         StorageService.setUserSession({
-          name: 'Binayak Chopra (Guest)',
+          name: 'Guest User',
           email: 'guest@resumeflow.ai',
           avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
-          role: 'Developer'
+          role: 'Professional'
         });
         showToast('Welcome to ResumeFlow AI Studio!', 'success');
         setTimeout(() => {
@@ -136,10 +136,10 @@
       document.getElementById('authForm').addEventListener('submit', (e) => {
         e.preventDefault();
         const email = document.getElementById('authEmail').value.trim();
-        const name = document.getElementById('authName')?.value.trim() || 'Binayak Chopra';
+        const name = document.getElementById('authName')?.value.trim() || 'Alex Morgan';
 
         StorageService.setUserSession({
-          name: name || 'Demo User',
+          name: name || 'User',
           email: email,
           avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
           role: 'Professional'

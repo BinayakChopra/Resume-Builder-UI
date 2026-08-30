@@ -483,8 +483,8 @@ function setupExportControls() {
   const loadSampleBtn = document.getElementById('loadSampleBtn');
   if (loadSampleBtn) {
     loadSampleBtn.addEventListener('click', () => {
-      if (confirm('Load sample verified profile (Binayak Chopra)? Any unsaved edits will be replaced.')) {
-        activeResume = StorageService.getSampleData();
+      if (confirm('Load sample professional profile? Any unsaved edits will be replaced.')) {
+        activeResume = StorageService.getSampleResume ? StorageService.getSampleResume() : StorageService.getSampleData();
         activeResume.id = 'res_' + Date.now();
         populateForm(activeResume);
         updateLivePreview();

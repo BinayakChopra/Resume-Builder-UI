@@ -65,9 +65,9 @@ class database
         if (!$this->isConnected || !$this->link) {
             return [
                 'id' => $id,
-                'name' => 'Binayak Chopra',
-                'username' => 'binayak',
-                'email' => 'binayak@example.com'
+                'name' => 'User',
+                'username' => 'user',
+                'email' => 'user@example.com'
             ];
         }
         $result = $this->query("SELECT * FROM users WHERE id = '" . $this->link->real_escape_string($id) . "'");
@@ -76,9 +76,9 @@ class database
         }
         return [
             'id' => $id,
-            'name' => 'Binayak Chopra',
-            'username' => 'binayak',
-            'email' => 'binayak@example.com'
+            'name' => 'User',
+            'username' => 'user',
+            'email' => 'user@example.com'
         ];
     }
 }
