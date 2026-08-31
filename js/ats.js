@@ -156,3 +156,7 @@ const ATSScanner = (() => {
     ACTION_VERBS,
   };
 })();
+
+if (typeof window !== 'undefined') window.ATSScanner = ATSScanner;
+if (typeof globalThis !== 'undefined') globalThis.ATSScanner = ATSScanner;
+

@@ -85,10 +85,10 @@ const TemplateEngine = (() => {
             ${data.skills.security ? `<div style="margin-bottom:8px;"><strong style="font-size:8.5pt; color:var(--tpl-primary);">Security / Core:</strong><br>${renderSkillTags({ s: data.skills.security })}</div>` : ''}
           ` : ''}
 
-          <!-- Languages Section -->
+          <!-- Spoken Languages Section -->
           ${data.languages && data.languages.length > 0 ? `
             <div class="section-title"><i class="fa-solid fa-language"></i> Languages</div>
-            ${data.languages.map((l) => `<div class="contact-item"><strong>${escapeHTML(l.name)}:</strong> <span>${escapeHTML(l.fluency)}</span></div>`).join('')}
+            ${data.languages.map((l) => `<div class="contact-item"><strong>${escapeHTML(l.name)}:</strong> <span>${escapeHTML(l.fluency || 'Proficient')}</span></div>`).join('')}
           ` : ''}
         </aside>
 
@@ -231,11 +231,28 @@ const TemplateEngine = (() => {
         ${data.skills ? `
           <div class="section-title">Core Competencies & Technologies</div>
           <div style="font-size:9pt; line-height:1.6;">
-            ${data.skills.languages ? `<div><strong>Languages:</strong> ${escapeHTML(data.skills.languages)}</div>` : ''}
+            ${data.skills.languages ? `<div><strong>Programming Languages:</strong> ${escapeHTML(data.skills.languages)}</div>` : ''}
             ${data.skills.frontend ? `<div><strong>Frontend & Architecture:</strong> ${escapeHTML(data.skills.frontend)}</div>` : ''}
             ${data.skills.tools ? `<div><strong>Tools & Platforms:</strong> ${escapeHTML(data.skills.tools)}</div>` : ''}
             ${data.skills.security ? `<div><strong>Security & Concepts:</strong> ${escapeHTML(data.skills.security)}</div>` : ''}
           </div>
+        ` : ''}
+
+        ${data.languages && data.languages.length > 0 ? `
+          <div class="section-title">Languages & Proficiency</div>
+          <div style="font-size:9pt; display:flex; flex-wrap:wrap; gap:16px; margin-bottom:8px;">
+            ${data.languages.map((l) => `<span><strong>${escapeHTML(l.name)}:</strong> <span style="color:var(--tpl-text-muted);">${escapeHTML(l.fluency || 'Proficient')}</span></span>`).join('')}
+          </div>
+        ` : ''}
+
+        ${data.certifications && data.certifications.length > 0 ? `
+          <div class="section-title">Certifications & Credentials</div>
+          ${data.certifications.map((c) => `
+            <div style="margin-bottom:6px; display:flex; justify-content:space-between; font-size:9pt;">
+              <div><strong>${escapeHTML(c.name)}</strong> — <span style="color:var(--tpl-accent);">${escapeHTML(c.issuer)}</span></div>
+              <div style="font-size:8.5pt; color:var(--tpl-text-muted);">${escapeHTML(c.date)}</div>
+            </div>
+          `).join('')}
         ` : ''}
       </div>
     `;
@@ -261,6 +278,8 @@ const TemplateEngine = (() => {
               ${p.email ? `<span><i class="fa-solid fa-envelope"></i> ${escapeHTML(p.email)}</span>` : ''}
               ${p.phone ? `<span><i class="fa-solid fa-phone"></i> ${escapeHTML(p.phone)}</span>` : ''}
               ${p.location ? `<span><i class="fa-solid fa-location-dot"></i> ${escapeHTML(p.location)}</span>` : ''}
+              ${p.linkedin ? `<span><i class="fa-brands fa-linkedin"></i> LinkedIn</span>` : ''}
+              ${p.github ? `<span><i class="fa-brands fa-github"></i> GitHub</span>` : ''}
             </div>
           </div>
         </header>
@@ -317,6 +336,13 @@ const TemplateEngine = (() => {
                   <div style="font-size:8pt; color:var(--tpl-text-muted);">${escapeHTML(edu.startDate)} – ${escapeHTML(edu.endDate)}</div>
                 </div>
               `).join('')}
+            ` : ''}
+
+            ${data.languages && data.languages.length > 0 ? `
+              <div class="section-title">Languages</div>
+              <div style="margin-bottom:12px; font-size:8.5pt;">
+                ${data.languages.map((l) => `<div style="margin-bottom:4px;"><strong>${escapeHTML(l.name)}:</strong> <span style="color:var(--tpl-text-muted);">${escapeHTML(l.fluency || 'Proficient')}</span></div>`).join('')}
+              </div>
             ` : ''}
 
             ${data.certifications && data.certifications.length > 0 ? `
@@ -394,15 +420,120 @@ const TemplateEngine = (() => {
             </div>
           `).join('')}
         ` : ''}
+
+        ${data.languages && data.languages.length > 0 ? `
+          <div class="section-title">SPOKEN_LANGUAGES_&_PROTOCOLS</div>
+          <div style="font-size:8.5pt; color:#cbd5e1; margin-bottom:10px; display:flex; flex-wrap:wrap; gap:12px;">
+            ${data.languages.map((l) => `<span><strong style="color:#00f2fe;">[${escapeHTML(l.name)}]</strong>: ${escapeHTML(l.fluency || 'Proficient')}</span>`).join('')}
+          </div>
+        ` : ''}
+
+        ${data.certifications && data.certifications.length > 0 ? `
+          <div class="section-title">SECURITY_CERTIFICATIONS</div>
+          ${data.certifications.map((c) => `
+            <div style="margin-bottom:6px; font-size:8.5pt; color:#cbd5e1;">
+              <strong style="color:#38ef7d;">${escapeHTML(c.name)}</strong> — ${escapeHTML(c.issuer)} [${escapeHTML(c.date)}]
+            </div>
+          `).join('')}
+        ` : ''}
       </div>
     `;
   };
 
   /**
-   * Template 5: Ivy League Academic
+   * Template 5: Ivy League Academic (Serif Single Column)
    */
   const renderAcademic = (data) => {
-    return renderExecutive(data); // Uses distinguished serif typography wrapper
+    const p = data.personalInfo || {};
+    return `
+      <div class="tpl-academic">
+        <header class="header-top">
+          <div class="header-name">${escapeHTML(p.fullName || 'Your Name')}</div>
+          <div class="header-title">${escapeHTML(p.jobTitle || 'Academic & Research Professional')}</div>
+          <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:16px; font-size:9pt; color:var(--tpl-text-muted); margin-top:8px;">
+            ${p.email ? `<span>${escapeHTML(p.email)}</span>` : ''}
+            ${p.phone ? `<span>${escapeHTML(p.phone)}</span>` : ''}
+            ${p.location ? `<span>${escapeHTML(p.location)}</span>` : ''}
+            ${p.website ? `<span>${escapeHTML(p.website.replace(/^https?:\/\//, ''))}</span>` : ''}
+            ${p.linkedin ? `<span>LinkedIn: ${escapeHTML(p.linkedin.replace(/^https?:\/\//, ''))}</span>` : ''}
+          </div>
+        </header>
+
+        ${data.summary ? `
+          <div class="section-title">Scholarly / Executive Profile</div>
+          <p style="margin-bottom:14px; text-align:justify;">${escapeHTML(data.summary)}</p>
+        ` : ''}
+
+        ${data.education && data.education.length > 0 ? `
+          <div class="section-title">Education & Academic Background</div>
+          ${data.education.map((edu) => `
+            <div style="margin-bottom:12px;">
+              <div style="display:flex; justify-content:space-between;">
+                <strong>${escapeHTML(edu.degree)}</strong>
+                <span>${escapeHTML(edu.startDate)} – ${escapeHTML(edu.endDate)}</span>
+              </div>
+              <div style="font-style:italic; color:var(--tpl-accent);">${escapeHTML(edu.institution)} ${edu.location ? `— ${escapeHTML(edu.location)}` : ''}</div>
+              ${edu.gpa ? `<div style="font-size:8.5pt;">Academic Distinction / GPA: ${escapeHTML(edu.gpa)}</div>` : ''}
+              ${edu.details ? `<div style="font-size:8.5pt; margin-top:2px;">${escapeHTML(edu.details)}</div>` : ''}
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${data.experience && data.experience.length > 0 ? `
+          <div class="section-title">Professional Appointments & Experience</div>
+          ${data.experience.map((exp) => `
+            <div style="margin-bottom:14px;">
+              <div style="display:flex; justify-content:space-between;">
+                <strong>${escapeHTML(exp.role)}</strong>
+                <span>${escapeHTML(exp.startDate)} – ${exp.current ? 'Present' : escapeHTML(exp.endDate)}</span>
+              </div>
+              <div style="font-style:italic; margin-bottom:4px;">${escapeHTML(exp.company)}</div>
+              <div>${formatBullets(exp.description)}</div>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${data.projects && data.projects.length > 0 ? `
+          <div class="section-title">Research & Technical Projects</div>
+          ${data.projects.map((proj) => `
+            <div style="margin-bottom:12px;">
+              <div style="display:flex; justify-content:space-between;">
+                <strong>${escapeHTML(proj.title)}</strong>
+                ${proj.techStack ? `<span style="font-style:italic; font-size:8.5pt;">(${escapeHTML(proj.techStack)})</span>` : ''}
+              </div>
+              <div>${formatBullets(proj.description)}</div>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${data.skills ? `
+          <div class="section-title">Technical Proficiencies & Competencies</div>
+          <div style="font-size:9pt; line-height:1.6;">
+            ${data.skills.languages ? `<div><strong>Programming Languages:</strong> ${escapeHTML(data.skills.languages)}</div>` : ''}
+            ${data.skills.frontend ? `<div><strong>Web & Frameworks:</strong> ${escapeHTML(data.skills.frontend)}</div>` : ''}
+            ${data.skills.tools ? `<div><strong>Tools & Platforms:</strong> ${escapeHTML(data.skills.tools)}</div>` : ''}
+            ${data.skills.security ? `<div><strong>Specializations:</strong> ${escapeHTML(data.skills.security)}</div>` : ''}
+          </div>
+        ` : ''}
+
+        ${data.languages && data.languages.length > 0 ? `
+          <div class="section-title">Languages & Fluency</div>
+          <div style="font-size:9pt; display:flex; flex-wrap:wrap; gap:16px; margin-bottom:8px;">
+            ${data.languages.map((l) => `<span><strong>${escapeHTML(l.name)}:</strong> ${escapeHTML(l.fluency || 'Proficient')}</span>`).join('')}
+          </div>
+        ` : ''}
+
+        ${data.certifications && data.certifications.length > 0 ? `
+          <div class="section-title">Certifications & Honors</div>
+          ${data.certifications.map((c) => `
+            <div style="margin-bottom:6px; display:flex; justify-content:space-between; font-size:9pt;">
+              <div><strong>${escapeHTML(c.name)}</strong> — ${escapeHTML(c.issuer)}</div>
+              <div>${escapeHTML(c.date)}</div>
+            </div>
+          `).join('')}
+        ` : ''}
+      </div>
+    `;
   };
 
   /**
@@ -463,6 +594,7 @@ const TemplateEngine = (() => {
                 ${data.skills.languages ? `<div><strong>Languages:</strong> ${escapeHTML(data.skills.languages)}</div>` : ''}
                 ${data.skills.frontend ? `<div><strong>Web & UI:</strong> ${escapeHTML(data.skills.frontend)}</div>` : ''}
                 ${data.skills.tools ? `<div><strong>Tools:</strong> ${escapeHTML(data.skills.tools)}</div>` : ''}
+                ${data.skills.security ? `<div><strong>Security/Core:</strong> ${escapeHTML(data.skills.security)}</div>` : ''}
               </div>
             ` : ''}
 
@@ -475,6 +607,13 @@ const TemplateEngine = (() => {
                   <div style="font-size:7.5pt;">${escapeHTML(edu.startDate)}–${escapeHTML(edu.endDate)}</div>
                 </div>
               `).join('')}
+            ` : ''}
+
+            ${data.languages && data.languages.length > 0 ? `
+              <div class="section-title">Languages</div>
+              <div style="font-size:8pt; margin-bottom:6px;">
+                ${data.languages.map((l) => `<div><strong>${escapeHTML(l.name)}</strong>: ${escapeHTML(l.fluency || 'Proficient')}</div>`).join('')}
+              </div>
             ` : ''}
 
             ${data.certifications && data.certifications.length > 0 ? `
@@ -536,3 +675,7 @@ const TemplateEngine = (() => {
     render,
   };
 })();
+
+if (typeof window !== 'undefined') window.TemplateEngine = TemplateEngine;
+if (typeof globalThis !== 'undefined') globalThis.TemplateEngine = TemplateEngine;
+

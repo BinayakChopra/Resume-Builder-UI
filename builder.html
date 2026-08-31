@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resume Studio — Live Editor & ATS Analyzer</title>
+  <title>Resume Studio — Live Editor & AI ATS Optimizer</title>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,6 +47,11 @@
           <span class="status-dot"></span> <span id="saveStatusIndicator">Auto-saved</span>
         </div>
 
+        <!-- AI Matcher Action Button -->
+        <button class="btn btn-secondary btn-sm" id="openAiJobModalBtn" data-modal-target="aiJobModal" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.25) 0%, rgba(79, 125, 249, 0.25) 100%); border-color: rgba(139, 92, 246, 0.5); color: #c4b5fd; font-weight: 700;">
+          <i class="fa-solid fa-brain"></i> AI Job Matcher (100% ATS)
+        </button>
+
         <!-- ATS Score Pill -->
         <div class="ats-score-pill" id="atsScoreBadge" data-modal-target="atsModal" title="Click to view ATS optimization suggestions">
           <i class="fa-solid fa-shield-halved"></i> ATS Score: <span id="atsScoreText">92%</span>
@@ -80,6 +85,21 @@
     <!-- Left Column: Form Editor & Controls -->
     <section class="builder-editor-pane">
 
+      <!-- AI Job Tailoring Quick Banner -->
+      <div class="ai-action-banner">
+        <div class="ai-banner-content">
+          <div class="ai-banner-title">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Job Description Tailoring
+          </div>
+          <div class="ai-banner-desc">
+            Paste any target Job Description or select a role preset to automatically tailor your skills, summary, and bullets for a guaranteed 100% ATS match.
+          </div>
+        </div>
+        <button type="button" class="ai-banner-btn" data-modal-target="aiJobModal">
+          <i class="fa-solid fa-bolt"></i> Match Job (100% ATS)
+        </button>
+      </div>
+
       <!-- Navigation Tabs -->
       <div class="editor-nav-tabs">
         <button type="button" class="tab-btn active" data-target="all"><i class="fa-solid fa-list-check"></i> All Sections</button>
@@ -89,6 +109,7 @@
         <button type="button" class="tab-btn" data-target="sec-education"><i class="fa-solid fa-graduation-cap"></i> Education</button>
         <button type="button" class="tab-btn" data-target="sec-skills"><i class="fa-solid fa-code"></i> Skills</button>
         <button type="button" class="tab-btn" data-target="sec-projects"><i class="fa-solid fa-diagram-project"></i> Projects</button>
+        <button type="button" class="tab-btn" data-target="sec-certifications"><i class="fa-solid fa-certificate"></i> Certs & Languages</button>
         <button type="button" class="tab-btn" data-target="sec-design"><i class="fa-solid fa-palette"></i> Design & Style</button>
       </div>
 
@@ -177,7 +198,7 @@
         <div class="accordion-content">
           <div class="ai-suggest-bar">
             <label class="form-label" style="margin-bottom:0;">Summary Statement (30–80 words)</label>
-            <button type="button" class="ai-pill-btn" onclick="enhanceBulletPoints(this)">
+            <button type="button" class="ai-pill-btn" onclick="generateAISummary()">
               <i class="fa-solid fa-wand-magic-sparkles"></i> AI Summary Generator
             </button>
           </div>
@@ -227,19 +248,39 @@
         </div>
         <div class="accordion-content">
           <div class="form-group">
-            <label class="form-label">Programming Languages (Comma separated)</label>
+            <div class="ai-suggest-bar">
+              <label class="form-label" style="margin-bottom:0;">Programming Languages (Comma separated)</label>
+              <button type="button" class="ai-pill-btn" onclick="suggestAISkills('languages')">
+                <i class="fa-solid fa-sparkles"></i> AI Suggest
+              </button>
+            </div>
             <input type="text" id="skillsLanguages" class="form-control sync-input" placeholder="e.g. Java, C++, JavaScript (ES6+), HTML5, CSS3, SQL">
           </div>
           <div class="form-group">
-            <label class="form-label">Frontend & Web Frameworks</label>
+            <div class="ai-suggest-bar">
+              <label class="form-label" style="margin-bottom:0;">Frontend & Web Frameworks</label>
+              <button type="button" class="ai-pill-btn" onclick="suggestAISkills('frontend')">
+                <i class="fa-solid fa-sparkles"></i> AI Suggest
+              </button>
+            </div>
             <input type="text" id="skillsFrontend" class="form-control sync-input" placeholder="e.g. React.js 19, Tailwind CSS, Framer Motion, Responsive UI">
           </div>
           <div class="form-group">
-            <label class="form-label">Developer Tools & DevOps</label>
+            <div class="ai-suggest-bar">
+              <label class="form-label" style="margin-bottom:0;">Developer Tools & Cloud / DevOps</label>
+              <button type="button" class="ai-pill-btn" onclick="suggestAISkills('tools')">
+                <i class="fa-solid fa-sparkles"></i> AI Suggest
+              </button>
+            </div>
             <input type="text" id="skillsTools" class="form-control sync-input" placeholder="e.g. Git, GitHub, Docker, MySQL, VS Code, Vercel">
           </div>
           <div class="form-group">
-            <label class="form-label">Cybersecurity & Core Domains</label>
+            <div class="ai-suggest-bar">
+              <label class="form-label" style="margin-bottom:0;">Cybersecurity & Core Domains</label>
+              <button type="button" class="ai-pill-btn" onclick="suggestAISkills('security')">
+                <i class="fa-solid fa-sparkles"></i> AI Suggest
+              </button>
+            </div>
             <input type="text" id="skillsSecurity" class="form-control sync-input" placeholder="e.g. Digital Forensics, SOC Concepts, Network Protocols">
           </div>
         </div>
@@ -270,13 +311,13 @@
           <i class="fa-solid fa-chevron-down"></i>
         </div>
         <div class="accordion-content">
-          <label class="form-label">Certificates</label>
+          <label class="form-label" style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Certificates & Credentials</label>
           <div id="certificationsList"></div>
-          <button type="button" class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: 16px;" onclick="addCertItem()">
+          <button type="button" class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: 20px;" onclick="addCertItem()">
             <i class="fa-solid fa-plus"></i> Add Certification
           </button>
 
-          <label class="form-label">Languages</label>
+          <label class="form-label" style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Languages & Multilingual Fluency</label>
           <div id="languagesList"></div>
           <button type="button" class="btn btn-secondary btn-sm" style="width: 100%;" onclick="addLangItem()">
             <i class="fa-solid fa-plus"></i> Add Language
@@ -389,6 +430,129 @@
 
   </main>
 
+  <!-- World Languages Datalist for Quick Autocomplete -->
+  <datalist id="worldLanguages">
+    <option value="English">
+    <option value="Spanish">
+    <option value="French">
+    <option value="German">
+    <option value="Mandarin Chinese">
+    <option value="Japanese">
+    <option value="Hindi">
+    <option value="Arabic">
+    <option value="Portuguese">
+    <option value="Russian">
+    <option value="Italian">
+    <option value="Korean">
+    <option value="Dutch">
+    <option value="Bengali">
+    <option value="Turkish">
+    <option value="Vietnamese">
+    <option value="Polish">
+    <option value="Swedish">
+  </datalist>
+
+  <!-- AI Job Description Tailoring Modal -->
+  <div class="modal-backdrop" id="aiJobModal">
+    <div class="modal-dialog modal-dialog-large">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(79, 125, 249, 0.3) 100%); display: flex; align-items: center; justify-content: center; color: #c4b5fd; font-size: 1.1rem;">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.25rem; margin-bottom: 2px;">AI Job Description Tailoring & ATS 100% Engine</h3>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0;">Automatically tailor summary, extract keywords, and optimize for 100% ATS score.</p>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-icon modal-close-btn"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Quick Presets -->
+        <div style="margin-bottom: 12px;">
+          <label class="form-label" style="font-size: 0.8rem; color: var(--text-muted);"><i class="fa-solid fa-wand-magic"></i> Quick Role Presets (or paste your own JD below):</label>
+          <div class="preset-chips-container" id="jdPresetChips">
+            <!-- Populated dynamically by builder.js -->
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Target Role / Job Title</label>
+            <input type="text" id="aiTargetRoleInput" class="form-control" placeholder="e.g. Senior Frontend Engineer">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Company (Optional)</label>
+            <input type="text" id="aiTargetCompanyInput" class="form-control" placeholder="e.g. Stripe, Google, Acme Tech">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Paste Job Description Text (Requirements, Responsibilities, Tech Stack)</label>
+          <textarea id="aiJobDescriptionInput" class="form-control" rows="6" placeholder="Paste the job description from LinkedIn, Indeed, Greenhouse, or Lever here...
+
+We are looking for a Senior Software Engineer with strong experience in React, TypeScript, Node.js, REST APIs, and Cloud architectures..."></textarea>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 12px; margin-bottom: 16px;">
+          <button type="button" class="btn btn-primary" id="aiAnalyzeJdBtn" style="flex: 1; background: linear-gradient(135deg, #8b5cf6 0%, #4f7df9 100%);">
+            <i class="fa-solid fa-magnifying-glass-chart"></i> Analyze & Match Job with AI
+          </button>
+          <button type="button" class="btn btn-secondary" id="aiClearJdBtn">
+            <i class="fa-solid fa-rotate-left"></i> Clear
+          </button>
+        </div>
+
+        <!-- AI Match Results & Preview Container -->
+        <div id="aiMatchResultsContainer" style="display: none;">
+          <hr style="border: 0; border-top: 1px solid var(--border-subtle); margin: 20px 0;">
+
+          <!-- Score Comparison Card -->
+          <div class="ats-score-meter-card">
+            <div style="text-align: center;">
+              <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">CURRENT RESUME</div>
+              <div class="ats-score-digit" id="aiScoreBefore" style="color: var(--accent-coral);">68%</div>
+              <div style="font-size: 0.75rem; color: var(--text-secondary);">ATS Match</div>
+            </div>
+            <div style="font-size: 1.8rem; color: var(--accent-primary);">
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">AFTER AI TAILORING</div>
+              <div class="ats-score-digit" id="aiScoreAfter" style="color: var(--accent-emerald);">100%</div>
+              <div style="font-size: 0.75rem; color: var(--accent-emerald); font-weight: 700;">Guaranteed 100% ATS Match</div>
+            </div>
+          </div>
+
+          <!-- Diff Grid -->
+          <div class="ai-diff-grid">
+            <div class="diff-box">
+              <div class="diff-box-title"><i class="fa-solid fa-tags" style="color: var(--accent-emerald);"></i> Detected JD Skills & Keywords</div>
+              <div id="aiExtractedSkillsTags"></div>
+            </div>
+            <div class="diff-box">
+              <div class="diff-box-title"><i class="fa-solid fa-circle-plus" style="color: var(--accent-emerald);"></i> Keywords Injected into Resume</div>
+              <div id="aiInjectedKeywordsTags"></div>
+            </div>
+          </div>
+
+          <div class="diff-box" style="margin-top: 12px;">
+            <div class="diff-box-title"><i class="fa-solid fa-pen-nib" style="color: var(--accent-primary);"></i> AI Tailored Summary Preview</div>
+            <p id="aiTailoredSummaryPreview" style="font-size: 0.85rem; color: var(--text-primary); line-height: 1.5; margin: 0;"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display: flex; justify-content: space-between;">
+        <button class="btn btn-ghost modal-close-btn">Cancel</button>
+        <button class="btn btn-primary" id="applyAiTailoringBtn" disabled style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Apply AI Tailoring (100% ATS)
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ATS Analysis & Optimization Modal -->
   <div class="modal-backdrop" id="atsModal">
     <div class="modal-dialog">
@@ -408,6 +572,12 @@
           <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">Your resume has been scanned against modern recruiter ATS algorithms.</p>
         </div>
 
+        <div style="margin-bottom: 20px; text-align: center;">
+          <button type="button" class="btn btn-primary btn-sm" id="boostAts100Btn" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); width: 100%;">
+            <i class="fa-solid fa-bolt"></i> 1-Click AI 100% ATS Booster
+          </button>
+        </div>
+
         <h4 style="font-size: 1rem; margin-bottom: 12px;">Actionable Optimization Recommendations:</h4>
         <div id="atsTipsContainer">
           <!-- Populated by ats.js -->
@@ -423,6 +593,7 @@
   <script src="js/storage.js"></script>
   <script src="js/templates.js"></script>
   <script src="js/ats.js"></script>
+  <script src="js/aiMatcher.js"></script>
   <script src="js/builder.js"></script>
   <script src="js/app.js"></script>
 </body>
