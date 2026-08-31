@@ -109,7 +109,8 @@
         <button type="button" class="tab-btn" data-target="sec-education"><i class="fa-solid fa-graduation-cap"></i> Education</button>
         <button type="button" class="tab-btn" data-target="sec-skills"><i class="fa-solid fa-code"></i> Skills</button>
         <button type="button" class="tab-btn" data-target="sec-projects"><i class="fa-solid fa-diagram-project"></i> Projects</button>
-        <button type="button" class="tab-btn" data-target="sec-certifications"><i class="fa-solid fa-certificate"></i> Certs & Languages</button>
+        <button type="button" class="tab-btn" data-target="sec-certifications"><i class="fa-solid fa-certificate"></i> Certifications</button>
+        <button type="button" class="tab-btn" data-target="sec-languages"><i class="fa-solid fa-language"></i> Languages</button>
         <button type="button" class="tab-btn" data-target="sec-design"><i class="fa-solid fa-palette"></i> Design & Style</button>
       </div>
 
@@ -302,24 +303,62 @@
         </div>
       </div>
 
-      <!-- Section: Certifications & Languages -->
+      <!-- Section: Certifications -->
       <div class="accordion-section active" id="sec-certifications">
         <div class="accordion-header">
           <div class="accordion-title">
-            <i class="fa-solid fa-certificate"></i> Certifications & Languages
+            <i class="fa-solid fa-certificate"></i> Certifications & Credentials
           </div>
           <i class="fa-solid fa-chevron-down"></i>
         </div>
         <div class="accordion-content">
-          <label class="form-label" style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Certificates & Credentials</label>
+          <div style="margin-bottom: 12px;">
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 10px 0;">Add your professional certifications, licenses, and verified credentials.</p>
+            <div style="background: rgba(255, 255, 255, 0.02); padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 6px;"><i class="fa-solid fa-wand-magic-sparkles"></i> 1-Click Quick Add Popular Certifications:</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddCert('AWS Certified Solutions Architect', 'Amazon Web Services')">+ AWS Architect</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddCert('Certified Kubernetes Administrator (CKA)', 'CNCF / Linux Foundation')">+ CKA Kubernetes</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddCert('CompTIA Security+', 'CompTIA')">+ CompTIA Security+</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddCert('Certified Ethical Hacker (CEH)', 'EC-Council')">+ CEH Hacker</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddCert('Project Management Professional (PMP)', 'PMI')">+ PMP</button>
+              </div>
+            </div>
+          </div>
           <div id="certificationsList"></div>
-          <button type="button" class="btn btn-secondary btn-sm" style="width: 100%; margin-bottom: 20px;" onclick="addCertItem()">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnAddCert" style="width: 100%; margin-top: 10px;" onclick="addCertificationItem()">
             <i class="fa-solid fa-plus"></i> Add Certification
           </button>
+        </div>
+      </div>
 
-          <label class="form-label" style="font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Languages & Multilingual Fluency</label>
+      <!-- Section: Spoken Languages -->
+      <div class="accordion-section active" id="sec-languages">
+        <div class="accordion-header">
+          <div class="accordion-title">
+            <i class="fa-solid fa-language"></i> Spoken Languages & Multilingual Fluency
+          </div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <div style="margin-bottom: 12px;">
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 10px 0;">Add all languages you speak with your verified proficiency level.</p>
+            <div style="background: rgba(255, 255, 255, 0.02); padding: 10px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <span style="font-size: 0.78rem; color: var(--text-muted); display: block; margin-bottom: 6px;"><i class="fa-solid fa-wand-magic-sparkles"></i> 1-Click Quick Add Languages:</span>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddLang('English', 'Native / Bilingual')">+ English</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddLang('Spanish', 'Professional Working')">+ Spanish</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddLang('French', 'Fluent')">+ French</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddLang('German', 'Professional Working')">+ German</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddLang('Mandarin Chinese', 'Conversational')">+ Mandarin</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddLang('Japanese', 'Conversational')">+ Japanese</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddLang('Hindi', 'Native / Bilingual')">+ Hindi</button>
+                <button type="button" class="btn btn-secondary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="quickAddLang('Arabic', 'Conversational')">+ Arabic</button>
+              </div>
+            </div>
+          </div>
           <div id="languagesList"></div>
-          <button type="button" class="btn btn-secondary btn-sm" style="width: 100%;" onclick="addLangItem()">
+          <button type="button" class="btn btn-secondary btn-sm" id="btnAddLang" style="width: 100%; margin-top: 10px;" onclick="addLanguageItem()">
             <i class="fa-solid fa-plus"></i> Add Language
           </button>
         </div>

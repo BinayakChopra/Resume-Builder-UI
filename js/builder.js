@@ -10,6 +10,16 @@ let zoomLevel = 1.0;
 let autoSaveTimer = null;
 let currentTailoredResumeDraft = null;
 
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initStudio();
 });
@@ -25,6 +35,14 @@ function initStudio() {
 
   // Load Active Resume for current user
   activeResume = StorageService.getActiveResume();
+
+  if (activeResume) {
+    if (!Array.isArray(activeResume.languages)) activeResume.languages = [];
+    if (!Array.isArray(activeResume.certifications)) activeResume.certifications = [];
+    if (!Array.isArray(activeResume.experience)) activeResume.experience = [];
+    if (!Array.isArray(activeResume.education)) activeResume.education = [];
+    if (!Array.isArray(activeResume.projects)) activeResume.projects = [];
+  }
 
   // Check URL param for template override
   const urlParams = new URLSearchParams(window.location.search);
@@ -46,6 +64,7 @@ function initStudio() {
   setupZoomControls();
   setupExportControls();
   setupTabNavigation();
+  setupAccordionToggle();
   setupAIJobMatcher();
 
   // Update ATS Score
@@ -111,7 +130,7 @@ function setVal(id, val) {
 }
 
 /**
- * Setup live typing listeners on form inputs
+ * Setup live typing listeners on form inputs & repeater buttons
  */
 function setupFormListeners() {
   const inputs = document.querySelectorAll('.sync-input');
@@ -120,12 +139,40 @@ function setupFormListeners() {
     if (input.dataset.listenerAttached === 'true') return;
     input.dataset.listenerAttached = 'true';
 
-    input.addEventListener('input', () => {
+    const syncHandler = () => {
       syncFormDataToState();
       updateLivePreview();
       triggerAutoSave();
       updateATSScore();
-    });
+    };
+
+    input.addEventListener('input', syncHandler);
+    input.addEventListener('change', syncHandler);
+  });
+
+  // Direct Button Listeners for Repeaters (supports both IDs and onclick attributes)
+  const addButtons = [
+    { id: 'btnAddLang', fn: addLanguageItem },
+    { id: 'addLangBtn', fn: addLanguageItem },
+    { id: 'btnAddCert', fn: addCertificationItem },
+    { id: 'addCertBtn', fn: addCertificationItem },
+    { id: 'btnAddExp', fn: addExperienceItem },
+    { id: 'addExpBtn', fn: addExperienceItem },
+    { id: 'btnAddEdu', fn: addEducationItem },
+    { id: 'addEduBtn', fn: addEducationItem },
+    { id: 'btnAddProj', fn: addProjectItem },
+    { id: 'addProjBtn', fn: addProjectItem },
+  ];
+
+  addButtons.forEach(({ id, fn }) => {
+    const btn = document.getElementById(id);
+    if (btn && !btn.dataset.listenerAttached) {
+      btn.dataset.listenerAttached = 'true';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fn();
+      });
+    }
   });
 
   // Avatar Upload Listener
@@ -456,6 +503,26 @@ function setupTabNavigation() {
       const targetSec = document.getElementById(targetId);
       if (targetSec && targetId !== 'all') {
         targetSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+}
+
+/**
+ * Setup Accordion Header Toggle
+ */
+function setupAccordionToggle() {
+  document.querySelectorAll('.accordion-header').forEach((header) => {
+    if (header.dataset.listenerAttached === 'true') return;
+    header.dataset.listenerAttached = 'true';
+    header.style.cursor = 'pointer';
+
+    header.addEventListener('click', (e) => {
+      // Don't toggle if clicking an inner interactive element
+      if (e.target.closest('button') || e.target.closest('input') || e.target.closest('select')) return;
+      const sec = header.closest('.accordion-section');
+      if (sec) {
+        sec.classList.toggle('active');
       }
     });
   });
@@ -1078,32 +1145,44 @@ function renderCertificationsList(list) {
   const container = document.getElementById('certificationsList');
   if (!container) return;
 
-  container.innerHTML = list
+  const items = Array.isArray(list) ? list : [];
+
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 16px 14px; text-align: center; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); border-radius: var(--radius-sm); margin-bottom: 10px; color: var(--text-muted); font-size: 0.85rem;">
+        <i class="fa-solid fa-certificate" style="font-size: 1.3rem; margin-bottom: 4px; display: block; color: var(--accent-primary);"></i>
+        No certifications added yet. Click <strong>+ Add Certification</strong> or pick a quick-add preset above!
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = items
     .map(
       (item, idx) => `
     <div class="repeater-item cert-item" data-id="${item.id || 'cert_' + idx}">
       <div class="repeater-header">
-        <span class="repeater-title"><i class="fa-solid fa-certificate"></i> ${item.name || 'Certification'}</span>
-        <button type="button" class="btn-remove-item" onclick="removeCertificationItem('${item.id || idx}')"><i class="fa-solid fa-trash-can"></i></button>
+        <span class="repeater-title"><i class="fa-solid fa-certificate"></i> ${escapeHTML(item.name || 'Certification')}</span>
+        <button type="button" class="btn-remove-item" onclick="removeCertificationItem('${item.id || idx}')" title="Delete Certification"><i class="fa-solid fa-trash-can"></i></button>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Certification Name</label>
-          <input type="text" class="form-control sync-input cert-name" value="${item.name || ''}" placeholder="e.g. AWS Certified Solutions Architect">
+          <input type="text" class="form-control sync-input cert-name" value="${escapeHTML(item.name || '')}" placeholder="e.g. AWS Certified Solutions Architect">
         </div>
         <div class="form-group">
           <label class="form-label">Issuing Organization</label>
-          <input type="text" class="form-control sync-input cert-issuer" value="${item.issuer || ''}" placeholder="e.g. Amazon Web Services">
+          <input type="text" class="form-control sync-input cert-issuer" value="${escapeHTML(item.issuer || '')}" placeholder="e.g. Amazon Web Services">
         </div>
       </div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Issue Date / Year</label>
-          <input type="text" class="form-control sync-input cert-date" value="${item.date || '2024'}" placeholder="e.g. 2024">
+          <input type="text" class="form-control sync-input cert-date" value="${escapeHTML(item.date || '2024')}" placeholder="e.g. 2024">
         </div>
         <div class="form-group">
           <label class="form-label">Credential ID (Optional)</label>
-          <input type="text" class="form-control sync-input cert-id" value="${item.credentialId || ''}" placeholder="e.g. AWS-83921-PSA">
+          <input type="text" class="form-control sync-input cert-id" value="${escapeHTML(item.credentialId || '')}" placeholder="e.g. AWS-83921-PSA">
         </div>
       </div>
     </div>
@@ -1116,23 +1195,66 @@ function renderCertificationsList(list) {
 
 function addCertificationItem() {
   syncFormDataToState();
-  if (!activeResume.certifications) activeResume.certifications = [];
-  activeResume.certifications.push({
-    id: 'cert_' + Date.now(),
+  if (!activeResume) activeResume = StorageService.getActiveResume() || {};
+  if (!Array.isArray(activeResume.certifications)) activeResume.certifications = [];
+
+  const certSec = document.getElementById('sec-certifications');
+  if (certSec) certSec.classList.add('active');
+
+  const newCert = {
+    id: 'cert_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
     name: '',
     issuer: '',
     date: '2024',
     credentialId: '',
-  });
+  };
+
+  activeResume.certifications.push(newCert);
+  renderCertificationsList(activeResume.certifications);
+  updateLivePreview();
+  triggerAutoSave();
+  updateATSScore();
+
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('.cert-name');
+    if (inputs.length > 0) {
+      inputs[inputs.length - 1].focus();
+    }
+  }, 60);
+}
+
+function removeCertificationItem(id) {
+  syncFormDataToState();
+  if (!activeResume || !Array.isArray(activeResume.certifications)) return;
+  activeResume.certifications = activeResume.certifications.filter((x, idx) => (x.id || idx) != id && idx != id);
   renderCertificationsList(activeResume.certifications);
   updateLivePreview();
   triggerAutoSave();
   updateATSScore();
 }
 
-function removeCertificationItem(id) {
+function quickAddCert(name, issuer = '', date = '2024') {
   syncFormDataToState();
-  activeResume.certifications = activeResume.certifications.filter((x, idx) => (x.id || idx) != id);
+  if (!activeResume) activeResume = StorageService.getActiveResume() || {};
+  if (!Array.isArray(activeResume.certifications)) activeResume.certifications = [];
+
+  const certSec = document.getElementById('sec-certifications');
+  if (certSec) certSec.classList.add('active');
+
+  const existing = activeResume.certifications.find((c) => (c.name || '').toLowerCase() === name.toLowerCase());
+  if (!existing) {
+    activeResume.certifications.push({
+      id: 'cert_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+      name: name,
+      issuer: issuer,
+      date: date,
+      credentialId: '',
+    });
+    showToast(`Added ${name} certification!`, 'success');
+  } else {
+    showToast(`${name} is already in your certifications!`, 'info');
+  }
+
   renderCertificationsList(activeResume.certifications);
   updateLivePreview();
   triggerAutoSave();
@@ -1146,18 +1268,30 @@ function renderLanguagesList(list) {
   const container = document.getElementById('languagesList');
   if (!container) return;
 
-  container.innerHTML = list
+  const items = Array.isArray(list) ? list : [];
+
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 16px 14px; text-align: center; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle); border-radius: var(--radius-sm); margin-bottom: 10px; color: var(--text-muted); font-size: 0.85rem;">
+        <i class="fa-solid fa-language" style="font-size: 1.3rem; margin-bottom: 4px; display: block; color: var(--accent-primary);"></i>
+        No languages added yet. Click <strong>+ Add Language</strong> or pick a quick-add preset above!
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = items
     .map(
       (item, idx) => `
     <div class="repeater-item lang-item" data-id="${item.id || 'lang_' + idx}">
       <div class="repeater-header">
-        <span class="repeater-title"><i class="fa-solid fa-language"></i> ${item.name || 'Spoken Language'} (${item.fluency || 'Proficient'})</span>
-        <button type="button" class="btn-remove-item" onclick="removeLanguageItem('${item.id || idx}')"><i class="fa-solid fa-trash-can"></i></button>
+        <span class="repeater-title"><i class="fa-solid fa-language"></i> ${escapeHTML(item.name || 'Spoken Language')} (${escapeHTML(item.fluency || 'Proficient')})</span>
+        <button type="button" class="btn-remove-item" onclick="removeLanguageItem('${item.id || idx}')" title="Delete Language"><i class="fa-solid fa-trash-can"></i></button>
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label class="form-label">Language</label>
-          <input type="text" list="worldLanguages" class="form-control sync-input lang-name" value="${item.name || ''}" placeholder="e.g. Spanish, French, German, Mandarin, Japanese, Hindi...">
+          <label class="form-label">Language Name</label>
+          <input type="text" list="worldLanguages" class="form-control sync-input lang-name" value="${escapeHTML(item.name || '')}" placeholder="e.g. Spanish, French, German, Mandarin, Hindi...">
         </div>
         <div class="form-group">
           <label class="form-label">Proficiency Level</label>
@@ -1180,21 +1314,63 @@ function renderLanguagesList(list) {
 
 function addLanguageItem() {
   syncFormDataToState();
-  if (!activeResume.languages) activeResume.languages = [];
-  activeResume.languages.push({
-    id: 'lang_' + Date.now(),
+  if (!activeResume) activeResume = StorageService.getActiveResume() || {};
+  if (!Array.isArray(activeResume.languages)) activeResume.languages = [];
+
+  const langSec = document.getElementById('sec-languages');
+  if (langSec) langSec.classList.add('active');
+
+  const newLang = {
+    id: 'lang_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
     name: '',
     fluency: 'Professional Working',
-  });
+  };
+
+  activeResume.languages.push(newLang);
+  renderLanguagesList(activeResume.languages);
+  updateLivePreview();
+  triggerAutoSave();
+  updateATSScore();
+
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('.lang-name');
+    if (inputs.length > 0) {
+      inputs[inputs.length - 1].focus();
+    }
+  }, 60);
+}
+
+function removeLanguageItem(id) {
+  syncFormDataToState();
+  if (!activeResume || !Array.isArray(activeResume.languages)) return;
+  activeResume.languages = activeResume.languages.filter((x, idx) => (x.id || idx) != id && idx != id);
   renderLanguagesList(activeResume.languages);
   updateLivePreview();
   triggerAutoSave();
   updateATSScore();
 }
 
-function removeLanguageItem(id) {
+function quickAddLang(name, fluency = 'Professional Working') {
   syncFormDataToState();
-  activeResume.languages = activeResume.languages.filter((x, idx) => (x.id || idx) != id);
+  if (!activeResume) activeResume = StorageService.getActiveResume() || {};
+  if (!Array.isArray(activeResume.languages)) activeResume.languages = [];
+
+  const langSec = document.getElementById('sec-languages');
+  if (langSec) langSec.classList.add('active');
+
+  const existing = activeResume.languages.find((l) => (l.name || '').toLowerCase() === name.toLowerCase());
+  if (existing) {
+    existing.fluency = fluency;
+    showToast(`Updated ${name} to ${fluency}!`, 'info');
+  } else {
+    activeResume.languages.push({
+      id: 'lang_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+      name: name,
+      fluency: fluency,
+    });
+    showToast(`Added ${name} (${fluency}) to languages!`, 'success');
+  }
+
   renderLanguagesList(activeResume.languages);
   updateLivePreview();
   triggerAutoSave();
@@ -1206,11 +1382,13 @@ window.addLangItem = addLanguageItem;
 window.removeLangItem = removeLanguageItem;
 window.addLanguageItem = addLanguageItem;
 window.removeLanguageItem = removeLanguageItem;
+window.quickAddLang = quickAddLang;
 
 window.addCertItem = addCertificationItem;
 window.removeCertItem = removeCertificationItem;
 window.addCertificationItem = addCertificationItem;
 window.removeCertificationItem = removeCertificationItem;
+window.quickAddCert = quickAddCert;
 
 window.addExpItem = addExperienceItem;
 window.removeExpItem = removeExperienceItem;

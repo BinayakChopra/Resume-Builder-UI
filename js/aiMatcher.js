@@ -372,6 +372,10 @@ Key Requirements:
     if (!resumeCopy.personalInfo.location) {
       resumeCopy.personalInfo.location = 'San Francisco, CA (Open to Remote)';
     }
+    if (!resumeCopy.personalInfo.linkedin && !resumeCopy.personalInfo.github && !resumeCopy.personalInfo.website) {
+      const cleanName = (resumeCopy.personalInfo.fullName || 'candidate').toLowerCase().replace(/[^a-z0-9]/g, '');
+      resumeCopy.personalInfo.linkedin = `linkedin.com/in/${cleanName}`;
+    }
 
     // 2. Generate 100% Tailored Executive Summary
     resumeCopy.summary = generateTailoredSummary(resumeCopy, jdInfo, targetRole, targetCompany);
