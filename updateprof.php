@@ -1,20 +1,26 @@
 <?php
 session_start();
-$name=$_POST["names"];
-$uname=$_POST["unames"];
-$pass=$_POST["passs"];
-
-$con = new mysqli('localhost','root','','cv');
-// $array = $con->query("select * from users where id = '$_SESSION[userId]' ");
-$succes=$con->query("UPDATE users SET username='{$uname}',password='{$pass}',name='{$name}' WHERE id = '$_SESSION[userId]'");
-
-if($succes){
-    echo "updated successfully";
+if (!isset($_SESSION['userId'])) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Unauthorized']);
+    exit;
 }
 
+require_once 'database.php';
+$name = filter_input(INPUT_POST, 'names', FILTER_SANITIZE_SPECIAL_CHARS);
+$uname = filter_input(INPUT_POST, 'unames', FILTER_SANITIZE_SPECIAL_CHARS);
+$pass = $_POST['passs'] ?? '';
 
+if ($database->isConnected && $database->link) {
+    $userId = (int)$_SESSION['userId'];
+    $stmt = $database->link->prepare("UPDATE users SET username=?, password=?, name=? WHERE id=?");
+    if ($stmt) {
+        $hashed = password_hash($pass, PASSWORD_DEFAULT);
+        $stmt->bind_param("sssi", $uname, $hashed, $name, $userId);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
 
-
-
-
+echo json_encode(['success' => true, 'message' => 'Profile updated securely.']);
 ?>
