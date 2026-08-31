@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Instant ATS Resume Scanner & Score Checker — ResumeFlow AI</title>
+  <meta name="description" content="Check if your resume passes applicant tracking systems (ATS) like Workday, Greenhouse, and Lever. Get an instant score and actionable fixes.">
+
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Core App Stylesheets -->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    .checker-hero {
+      text-align: center;
+      padding: 60px 20px 30px;
+    }
+
+    .dropzone-card {
+      background: var(--bg-card);
+      border: 2px dashed var(--border-medium);
+      border-radius: var(--radius-lg);
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      max-width: 780px;
+      margin: 0 auto 30px;
+    }
+
+    .dropzone-card:hover, .dropzone-card.drag-over {
+      border-color: var(--accent-primary);
+      background: rgba(79, 125, 249, 0.04);
+      transform: translateY(-2px);
+    }
+
+    .drop-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(79, 125, 249, 0.12);
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 16px;
+    }
+
+    .or-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 20px auto;
+      max-width: 780px;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .or-divider::before, .or-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .or-divider span {
+      padding: 0 16px;
+    }
+
+    .text-paste-area {
+      max-width: 780px;
+      margin: 0 auto 40px;
+    }
+
+    .results-container {
+      display: none;
+      max-width: 900px;
+      margin: 0 auto 60px;
+    }
+
+    .results-container.active {
+      display: block;
+      animation: fadeInUp 0.4s ease-out;
+    }
+
+    .score-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 30px;
+      box-shadow: var(--shadow-md);
+      flex-wrap: wrap;
+    }
+
+    .score-circle-lg {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      border: 4px solid var(--accent-amber);
+      background: rgba(245, 158, 11, 0.08);
+      flex-shrink: 0;
+    }
+
+    .score-num {
+      font-size: 2.2rem;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+
+    .score-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    .breakdown-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .breakdown-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+
+    .breakdown-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .breakdown-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scan-loading-state {
+      display: none;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .radar-pulse {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: rgba(79, 125, 249, 0.2);
+      position: relative;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: var(--accent-primary);
+      animation: pulse 1.8s infinite;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header Navigation -->
+  <header class="app-header">
+    <div class="container-wide">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-mark"><i class="fa-solid fa-file-waveform"></i></div>
+        <div class="logo-text">Resume<span>Flow</span> AI</div>
+      </a>
+
+      <nav class="main-nav">
+        <a href="templates.html" class="nav-link"><i class="fa-solid fa-layer-group"></i> Templates</a>
+        <a href="ats-checker.html" class="nav-link active"><i class="fa-solid fa-radar"></i> Free ATS Scanner</a>
+        <a href="cover-letter.html" class="nav-link"><i class="fa-solid fa-envelope-open-text"></i> AI Cover Letter</a>
+        <a href="tracker.html" class="nav-link"><i class="fa-solid fa-table-columns"></i> Job Tracker</a>
+        <a href="pricing.html" class="nav-link"><i class="fa-solid fa-bolt"></i> Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="btn btn-ghost btn-icon theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <div id="authNavContainer">
+          <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="builder.html" class="btn btn-primary btn-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> Build Resume</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="padding-bottom: 80px;">
+
+    <section class="checker-hero animate-fade-in-up">
+      <div class="badge badge-primary" style="margin-bottom: 12px;">
+        <i class="fa-solid fa-shield-halved"></i> Enterprise ATS Parsing Simulation
+      </div>
+      <h1 style="font-size: 2.6rem; font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px;">
+        Will your resume pass the ATS filter?
+      </h1>
+      <p style="font-size: 1.05rem; color: var(--text-secondary); max-width: 620px; margin: 0 auto 30px;">
+        Scan your resume against top applicant tracking systems (Workday, Greenhouse, Taleo). Receive an instant score and actionable 100% boost suggestions.
+      </p>
+
+      <!-- Drag & Drop Upload Zone -->
+      <div class="dropzone-card" id="dropzone" onclick="document.getElementById('resumeFileInput').click()">
+        <input type="file" id="resumeFileInput" accept=".pdf,.docx,.txt,.json" style="display: none;">
+        <div class="drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 6px;">Drop your resume file here</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px;">Supports PDF, DOCX, TXT, or JSON (Max 10MB)</p>
+        <button type="button" class="btn btn-primary btn-sm" onclick="event.stopPropagation(); document.getElementById('resumeFileInput').click();">
+          <i class="fa-solid fa-folder-open"></i> Browse Files
+        </button>
+      </div>
+
+      <div class="or-divider"><span>OR PASTE TEXT DIRECTLY</span></div>
+
+      <div class="text-paste-area">
+        <textarea id="rawResumeText" class="form-control" rows="6" placeholder="Paste your resume content or bullet points here to scan immediately..."></textarea>
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 12px;">
+          <button type="button" class="btn btn-secondary btn-sm" onclick="loadSampleResume()">Load Sample Resume</button>
+          <button type="button" class="btn btn-primary" onclick="runATSCheck()"><i class="fa-solid fa-magnifying-glass-chart"></i> Scan Resume ATS Score</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scanning State Indicator -->
+    <div class="scan-loading-state" id="scanLoading">
+      <div class="radar-pulse"><i class="fa-solid fa-radar fa-spin"></i></div>
+      <h3 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 8px;" id="scanStatusTitle">Parsing resume structure...</h3>
+      <p style="font-size: 0.88rem; color: var(--text-muted);" id="scanStatusSubtitle">Simulating Workday & Greenhouse ATS parser engines</p>
+    </div>
+
+    <!-- ATS Score Results Container -->
+    <section class="results-container" id="resultsSection">
+
+      <div class="score-banner">
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <div class="score-circle-lg" id="resScoreCircle">
+            <span class="score-num" id="resScoreNum">72</span>
+            <span class="score-label">ATS Score</span>
+          </div>
+          <div>
+            <h2 style="font-size: 1.45rem; font-weight: 800; margin-bottom: 4px;" id="resScoreHeadline">Moderate ATS Readiness</h2>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); margin: 0; max-width: 480px;" id="resScoreSummary">
+              Your resume has strong foundations but is missing key quantifiable metrics and technical skill categorizations.
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" class="btn btn-primary" onclick="importToBuilderAndBoost()">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Boost to 100% in Studio
+          </button>
+        </div>
+      </div>
+
+      <!-- Category Breakdown Grid -->
+      <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 18px;">Detailed ATS Metric Breakdown</h3>
+      <div class="breakdown-grid" id="breakdownGrid">
+        <!-- Dynamically rendered breakdown cards -->
+      </div>
+
+      <!-- Specific Recommendations -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 28px; margin-top: 30px;">
+        <h3 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-list-check" style="color: var(--accent-primary);"></i> AI Recommended Fixes
+        </h3>
+        <ul id="recommendationsList" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+          <!-- Recommendations injected here -->
+        </ul>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/aiMatcher.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentScannedText = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const dropzone = document.getElementById('dropzone');
+      const fileInput = document.getElementById('resumeFileInput');
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          dropzone.classList.add('drag-over');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          dropzone.classList.remove('drag-over');
+        });
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0) handleFileUpload(files[0]);
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) handleFileUpload(e.target.files[0]);
+      });
+    });
+
+    function handleFileUpload(file) {
+      showToast(`Uploading and parsing ${file.name}...`, 'info');
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target.result;
+        document.getElementById('rawResumeText').value = content;
+        runATSCheck();
+      };
+      reader.readAsText(file);
+    }
+
+    function loadSampleResume() {
+      const sample = `Alex Mercer
+Senior Full-Stack Engineer | San Francisco, CA | alex.mercer@email.com | (555) 349-2819
+LinkedIn: linkedin.com/in/alexmercer | GitHub: github.com/alexmercer
+
+PROFESSIONAL SUMMARY
+Experienced Software Engineer with 6+ years designing, developing, and deploying scalable distributed web applications and high-throughput microservices in React, TypeScript, Node.js, and AWS.
+
+EXPERIENCE
+Lead Full-Stack Developer | Apex Cloud Technologies (2022 - Present)
+- Spearheaded the architectural migration of legacy monolith to containerized Docker & Kubernetes microservices, reducing AWS infrastructure costs by 34%.
+- Engineered real-time WebSocket data synchronization pipeline processing 1.4M events daily with 99.99% uptime.
+- Mentored a squad of 6 junior and mid-level engineers and instituted automated CI/CD GitHub Actions pipelines.
+
+Software Engineer | Velocity Data Systems (2019 - 2022)
+- Built enterprise customer analytics dashboard using React, Next.js, and GraphQL, increasing user engagement by 48%.
+- Optimized PostgreSQL database indexing and query execution plans, slashing API p99 latency from 450ms to 85ms.
+
+SKILLS
+Frontend: React, TypeScript, Next.js, HTML5, CSS3, TailwindCSS
+Backend: Node.js, Express, Python, Go, GraphQL, REST APIs
+Cloud & DevOps: AWS (EC2, S3, Lambda), Docker, Kubernetes, CI/CD, Terraform
+Databases: PostgreSQL, Redis, MongoDB`;
+
+      document.getElementById('rawResumeText').value = sample;
+      showToast('Sample developer resume loaded!', 'success');
+    }
+
+    function runATSCheck() {
+      const text = (document.getElementById('rawResumeText').value || '').trim();
+      if (!text) {
+        showToast('Please upload a resume or paste your resume text first.', 'error');
+        return;
+      }
+
+      currentScannedText = text;
+      const loader = document.getElementById('scanLoading');
+      const results = document.getElementById('resultsSection');
+      const statusTitle = document.getElementById('scanStatusTitle');
+
+      results.classList.remove('active');
+      loader.style.display = 'block';
+
+      const steps = [
+        'Checking semantic headers & contact info...',
+        'Auditing action verbs & leadership keywords...',
+        'Calculating quantifiable metric density...',
+        'Running ATS parsing compatibility model...'
+      ];
+
+      let stepIdx = 0;
+      const interval = setInterval(() => {
+        if (stepIdx < steps.length) {
+          statusTitle.textContent = steps[stepIdx];
+          stepIdx++;
+        } else {
+          clearInterval(interval);
+          loader.style.display = 'none';
+          displayResults(calculateTextATS(text));
+        }
+      }, 350);
+    }
+
+    function calculateTextATS(text) {
+      let score = 50;
+      const t = text.toLowerCase();
+
+      // Check contacts
+      const hasEmail = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(text);
+      const hasPhone = /(\+?[0-9\s\-()]{7,})/.test(text);
+      const hasLinkedIn = /linkedin\.com/.test(t);
+      const hasGithub = /github\.com/.test(t);
+
+      if (hasEmail && hasPhone) score += 15;
+      if (hasLinkedIn || hasGithub) score += 10;
+
+      // Check action verbs
+      const verbs = ['spearheaded', 'architected', 'engineered', 'optimized', 'reduced', 'increased', 'developed', 'mentored', 'orchestrated', 'built'];
+      const matchedVerbs = verbs.filter(v => t.includes(v));
+      score += Math.min(15, matchedVerbs.length * 3);
+
+      // Check metrics / percentages / numbers
+      const metrics = text.match(/\b\d+([.,]\d+)?(%|M|k|x|\+)?\b/g) || [];
+      if (metrics.length >= 3) score += 10;
+
+      // Ensure cap between 55 and 92 for un-optimized resumes
+      score = Math.min(92, Math.max(55, score));
+
+      return {
+        score,
+        hasEmail,
+        hasPhone,
+        hasLinkedIn,
+        verbCount: matchedVerbs.length,
+        metricCount: metrics.length
+      };
+    }
+
+    function displayResults(data) {
+      const results = document.getElementById('resultsSection');
+      const scoreNum = document.getElementById('resScoreNum');
+      const scoreCircle = document.getElementById('resScoreCircle');
+      const headline = document.getElementById('resScoreHeadline');
+      const summary = document.getElementById('resScoreSummary');
+      const breakdownGrid = document.getElementById('breakdownGrid');
+      const recList = document.getElementById('recommendationsList');
+
+      scoreNum.textContent = data.score;
+
+      if (data.score >= 85) {
+        scoreCircle.style.borderColor = 'var(--accent-emerald)';
+        scoreCircle.style.background = 'rgba(16, 185, 129, 0.08)';
+        headline.textContent = 'Excellent ATS Score — High Match';
+        summary.textContent = 'Your resume meets enterprise ATS standards and is ready for top-tier corporate applicant pools.';
+      } else if (data.score >= 70) {
+        scoreCircle.style.borderColor = 'var(--accent-amber)';
+        scoreCircle.style.background = 'rgba(245, 158, 11, 0.08)';
+        headline.textContent = 'Moderate ATS Score — Improvements Needed';
+        summary.textContent = 'Your resume passes basic filters, but lacks dense quantifiable metrics and high-impact action verbs.';
+      } else {
+        scoreCircle.style.borderColor = 'var(--accent-coral)';
+        scoreCircle.style.background = 'rgba(239, 68, 68, 0.08)';
+        headline.textContent = 'Low ATS Score — Risk of Automated Rejection';
+        summary.textContent = 'ATS filters may discard your application due to missing contact links and weak keyword alignment.';
+      }
+
+      // Breakdown Cards
+      breakdownGrid.innerHTML = `
+        <div class="breakdown-card">
+          <div class="breakdown-header">
+            <div class="breakdown-title"><i class="fa-solid fa-address-card" style="color: var(--accent-primary);"></i> Contact & Social Links</div>
+            <span class="badge ${data.hasLinkedIn ? 'badge-emerald' : 'badge-amber'}">${data.hasLinkedIn ? '100%' : '75%'}</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">${data.hasLinkedIn ? 'LinkedIn and direct contact details verified.' : 'Missing LinkedIn or GitHub profile link.'}</p>
+        </div>
+
+        <div class="breakdown-card">
+          <div class="breakdown-header">
+            <div class="breakdown-title"><i class="fa-solid fa-bolt" style="color: var(--accent-primary);"></i> Action Verb Density</div>
+            <span class="badge ${data.verbCount >= 4 ? 'badge-emerald' : 'badge-amber'}">${Math.min(100, data.verbCount * 20)}%</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">Found ${data.verbCount} power action verbs (e.g. Spearheaded, Engineered).</p>
+        </div>
+
+        <div class="breakdown-card">
+          <div class="breakdown-header">
+            <div class="breakdown-title"><i class="fa-solid fa-chart-line" style="color: var(--accent-primary);"></i> Quantified Impact (KPIs)</div>
+            <span class="badge ${data.metricCount >= 3 ? 'badge-emerald' : 'badge-amber'}">${Math.min(100, data.metricCount * 25)}%</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">Detected ${data.metricCount} measurable metric and percentage figures.</p>
+        </div>
+      `;
+
+      // Recommendations
+      recList.innerHTML = `
+        <li style="display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: var(--text-secondary);">
+          <i class="fa-solid fa-circle-check" style="color: var(--accent-emerald); margin-top: 3px;"></i>
+          <span><strong>Incorporate target Job Description keywords</strong> into your Summary and Skills block.</span>
+        </li>
+        <li style="display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: var(--text-secondary);">
+          <i class="fa-solid fa-circle-check" style="color: var(--accent-emerald); margin-top: 3px;"></i>
+          <span><strong>Use the Google X-Y-Z formula</strong>: "Accomplished [X] as measured by [Y], by doing [Z]" in every bullet.</span>
+        </li>
+        <li style="display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: var(--text-secondary);">
+          <i class="fa-solid fa-circle-check" style="color: var(--accent-emerald); margin-top: 3px;"></i>
+          <span><strong>Export in semantic vector PDF format</strong> to prevent Workday and Lever parser OCR errors.</span>
+        </li>
+      `;
+
+      results.classList.add('active');
+    }
+
+    function importToBuilderAndBoost() {
+      showToast('Redirecting to Resume Studio with 1-Click ATS Optimization...', 'info');
+      setTimeout(() => {
+        window.location.href = 'builder.html';
+      }, 800);
+    }
+  </script>
+</body>
+</html>

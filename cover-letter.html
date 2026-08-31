@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Cover Letter Generator — ResumeFlow AI</title>
+  <meta name="description" content="Generate high-converting, tailored cover letters matching your resume and target job description in seconds.">
+
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Core App Stylesheets -->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    .cover-letter-layout {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 28px;
+      margin-top: 24px;
+      margin-bottom: 60px;
+    }
+
+    @media (max-width: 1024px) {
+      .cover-letter-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      height: fit-content;
+    }
+
+    .preview-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .letter-paper {
+      background: #ffffff;
+      color: #1e293b;
+      border-radius: 4px;
+      padding: 48px 56px;
+      box-shadow: var(--shadow-lg);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      line-height: 1.7;
+      font-size: 0.95rem;
+      min-height: 680px;
+    }
+
+    .letter-header-name {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .letter-header-meta {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .letter-body {
+      color: #334155;
+      white-space: pre-line;
+      outline: none;
+    }
+
+    .letter-body:focus {
+      background: rgba(79, 125, 249, 0.02);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header Navigation -->
+  <header class="app-header">
+    <div class="container-wide">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-mark"><i class="fa-solid fa-file-waveform"></i></div>
+        <div class="logo-text">Resume<span>Flow</span> AI</div>
+      </a>
+
+      <nav class="main-nav">
+        <a href="templates.html" class="nav-link"><i class="fa-solid fa-layer-group"></i> Templates</a>
+        <a href="ats-checker.html" class="nav-link"><i class="fa-solid fa-radar"></i> Free ATS Scanner</a>
+        <a href="cover-letter.html" class="nav-link active"><i class="fa-solid fa-envelope-open-text"></i> AI Cover Letter</a>
+        <a href="tracker.html" class="nav-link"><i class="fa-solid fa-table-columns"></i> Job Tracker</a>
+        <a href="pricing.html" class="nav-link"><i class="fa-solid fa-bolt"></i> Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="btn btn-ghost btn-icon theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <div id="authNavContainer">
+          <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="builder.html" class="btn btn-primary btn-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> Build Resume</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-wide" style="padding-top: 16px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <h1 style="font-size: 1.85rem; font-weight: 900; margin-bottom: 4px;">AI Cover Letter Generator</h1>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">Create a compelling, recruiter-ready cover letter tailored to your dream role.</p>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="btn btn-secondary" onclick="copyLetterText()"><i class="fa-solid fa-copy"></i> Copy Text</button>
+        <button type="button" class="btn btn-secondary" onclick="saveLetterToVault()"><i class="fa-solid fa-bookmark"></i> Save to Vault</button>
+        <button type="button" class="btn btn-primary" onclick="printCoverLetter()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+      </div>
+    </div>
+
+    <div class="cover-letter-layout">
+
+      <!-- Left Input Panel -->
+      <aside class="form-panel">
+        <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-sliders" style="color: var(--accent-primary);"></i> Role & Target Details
+        </h3>
+
+        <div class="form-group">
+          <label class="form-label">Target Job Title</label>
+          <input type="text" id="clJobTitle" class="form-control" placeholder="e.g. Senior Software Engineer">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Target Company Name</label>
+          <input type="text" id="clCompany" class="form-control" placeholder="e.g. Stripe, Google, Acme Corp">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Hiring Manager / Team (Optional)</label>
+          <input type="text" id="clHiringManager" class="form-control" placeholder="e.g. Engineering Hiring Team">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tone of Voice</label>
+          <select id="clTone" class="form-control">
+            <option value="confident">Confident & High-Impact (Recommended)</option>
+            <option value="professional">Formal & Traditional</option>
+            <option value="technical">Technical & Metric-Heavy</option>
+            <option value="creative">Enthusiastic & Conversational</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Paste Job Description</label>
+          <textarea id="clJobDesc" class="form-control" rows="5" placeholder="Paste requirements or key skills from the job posting..."></textarea>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="btnGenerateLetter" style="width: 100%;" onclick="generateCoverLetter()">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Tailored Letter
+        </button>
+      </aside>
+
+      <!-- Right Letter Paper Preview -->
+      <section class="preview-panel">
+        <div class="letter-paper" id="letterPrintArea">
+          <div class="letter-header-name" id="previewSenderName">Alex Mercer</div>
+          <div class="letter-header-meta" id="previewSenderMeta">
+            San Francisco, CA • alex.mercer@email.com • (555) 349-2819 • linkedin.com/in/alexmercer
+          </div>
+
+          <div style="font-size: 0.88rem; color: #475569; margin-bottom: 20px;" id="previewDateAndRecipient">
+            August 31, 2026<br><br>
+            <strong>Hiring Team</strong><br>
+            Stripe Inc.<br>
+            San Francisco, CA
+          </div>
+
+          <div class="letter-body" contenteditable="true" id="previewLetterBody">
+Dear Hiring Team,
+
+I am writing to express my enthusiastic interest in the Senior Software Engineer position at Stripe. With over 6 years of experience engineering high-throughput microservices, scalable distributed architectures, and modern web applications, I have consistently driven measurable improvements in system performance and reliability.
+
+Throughout my tenure at Apex Cloud Technologies, I spearheaded the architectural migration of legacy infrastructure into containerized Kubernetes microservices, reducing operational cloud costs by 34% while maintaining 99.99% uptime for 1.4M daily transactions. Your mission to increase the GDP of the internet deeply resonates with my dedication to building rock-solid, developer-first APIs and scalable financial systems.
+
+I would welcome the opportunity to discuss how my technical expertise in TypeScript, React, distributed systems, and cloud infrastructure can support Stripe's continuous growth. Thank you for your time and consideration.
+
+Sincerely,
+
+Alex Mercer
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Pre-fill user profile info if available
+      const resume = StorageService.loadCurrentResume();
+      if (resume && resume.personal) {
+        const p = resume.personal;
+        const fullName = `${p.firstName || 'Alex'} ${p.lastName || 'Mercer'}`.trim();
+        document.getElementById('previewSenderName').textContent = fullName;
+        document.getElementById('previewSenderMeta').textContent =
+          `${p.city || 'San Francisco'}, ${p.country || 'USA'} • ${p.email || 'alex@email.com'} • ${p.phone || '(555) 000-0000'} • ${p.linkedin || 'linkedin.com/in/alex'}`;
+
+        if (p.title && !document.getElementById('clJobTitle').value) {
+          document.getElementById('clJobTitle').value = p.title;
+        }
+      }
+    });
+
+    function generateCoverLetter() {
+      const jobTitle = document.getElementById('clJobTitle').value.trim() || 'Software Engineer';
+      const company = document.getElementById('clCompany').value.trim() || 'the Company';
+      const manager = document.getElementById('clHiringManager').value.trim() || 'Hiring Team';
+      const tone = document.getElementById('clTone').value;
+      const jobDesc = document.getElementById('clJobDesc').value.trim();
+
+      const btn = document.getElementById('btnGenerateLetter');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Generating with AI...`;
+
+      const resume = StorageService.loadCurrentResume();
+      const p = (resume && resume.personal) ? resume.personal : { firstName: 'Alex', lastName: 'Mercer' };
+      const fullName = `${p.firstName || 'Alex'} ${p.lastName || 'Mercer'}`.trim();
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> Generate Tailored Letter`;
+
+        // Update Date & Recipient block
+        const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        document.getElementById('previewDateAndRecipient').innerHTML = `
+          ${today}<br><br>
+          <strong>${escapeHTML(manager)}</strong><br>
+          ${escapeHTML(company)}
+        `;
+
+        // Compose customized letter
+        let bodyText = `Dear ${manager},\n\n`;
+
+        if (tone === 'confident') {
+          bodyText += `I am excited to submit my application for the ${jobTitle} role at ${company}. Having followed ${company}'s impressive engineering milestones, I am eager to bring my background in high-performance application development, scalable architectures, and team mentorship to your organization.\n\n`;
+          bodyText += `In my recent roles, I have consistently focused on delivering quantifiable business impact—optimizing system latency by over 40%, orchestrating seamless microservices migrations, and collaborating across cross-functional product teams to release mission-critical features on schedule. The opportunity to solve high-impact technical challenges at ${company} directly aligns with my passion for building resilient, user-centric software.\n\n`;
+          bodyText += `I am confident that my technical proficiency, analytical problem-solving skills, and proactive communication will make an immediate positive addition to the ${company} team. I look forward to the possibility of discussing how my experience can support your upcoming product goals.\n\n`;
+        } else if (tone === 'technical') {
+          bodyText += `I am writing to apply for the ${jobTitle} position at ${company}. My background centers on architecting distributed systems, streamlining CI/CD deployment lifecycles, and maintaining high availability across cloud-native environments.\n\n`;
+          bodyText += `Throughout my engineering career, I have prioritized rigorous code quality, automated test coverage, and quantifiable KPI improvements—including reducing cloud infrastructure costs by 34% and scaling data pipelines to process millions of daily requests with sub-100ms response times. I am enthusiastic about applying these best practices to ${company}'s core software systems.\n\n`;
+          bodyText += `Thank you for your time and consideration. I would welcome the opportunity to discuss my qualifications and how I can contribute to ${company}'s technical roadmap.\n\n`;
+        } else {
+          bodyText += `I am writing to express my strong interest in the ${jobTitle} position at ${company}. With a proven track record in software design, cross-functional collaboration, and technical execution, I am eager to contribute to your ongoing success.\n\n`;
+          bodyText += `My experience spans end-to-end development, code optimization, and collaborating closely with stakeholders to deliver elegant solutions under tight deadlines. I have long admired ${company}'s dedication to innovation, and I am excited about the opportunity to bring my energy and expertise to your team.\n\n`;
+          bodyText += `Thank you for reviewing my application. I look forward to speaking with you about how I can add immediate value to ${company}.\n\n`;
+        }
+
+        bodyText += `Sincerely,\n\n${fullName}`;
+
+        document.getElementById('previewLetterBody').textContent = bodyText;
+        showToast('Cover letter generated and tailored successfully!', 'success');
+      }, 900);
+    }
+
+    function copyLetterText() {
+      const text = document.getElementById('previewLetterBody').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Cover letter copied to clipboard!', 'success');
+      });
+    }
+
+    function saveLetterToVault() {
+      const jobTitle = document.getElementById('clJobTitle').value || 'Target Role';
+      const company = document.getElementById('clCompany').value || 'Target Company';
+      const content = document.getElementById('previewLetterBody').textContent;
+
+      StorageService.saveCoverLetter({
+        title: `${jobTitle} at ${company}`,
+        company,
+        jobTitle,
+        content
+      });
+
+      showToast('Cover letter saved to your vault!', 'success');
+    }
+
+    function printCoverLetter() {
+      window.print();
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[m]));
+    }
+  </script>
+</body>
+</html>

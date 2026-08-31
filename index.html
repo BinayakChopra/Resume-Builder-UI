@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ResumeFlow AI — Next-Gen Interactive Resume Builder</title>
-  <meta name="description" content="Build ATS-optimized, designer-grade resumes in real time with AI bullet enhancement, 6 modern templates, and instant vector PDF export.">
+  <title>ResumeFlow AI — The Next-Gen AI Resume Builder & ATS Job Tailoring Engine</title>
+  <meta name="description" content="Land 3x more interviews. Build 100% ATS-optimized resumes tailored to any job description in seconds, generate matching cover letters, and track applications.">
 
   <!-- Favicon & Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,6 +18,47 @@
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/templates.css">
+
+  <style>
+    .comparison-section {
+      max-width: 1000px;
+      margin: 40px auto 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .comparison-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .compare-box {
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      position: relative;
+    }
+
+    .compare-box.bad {
+      background: rgba(239, 68, 68, 0.05);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .compare-box.good {
+      background: rgba(16, 185, 129, 0.05);
+      border: 2px solid rgba(16, 185, 129, 0.4);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+    }
+
+    .stat-counter-box {
+      text-align: center;
+      padding: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+    }
+  </style>
 </head>
 <body class="bg-grid-pattern">
 
@@ -26,24 +67,25 @@
   <div class="orb-glow orb-purple"></div>
   <div class="orb-glow orb-cyan"></div>
 
-  <!-- Master Application Header -->
+  <!-- Master Application Header Navigation -->
   <header class="app-header">
     <div class="container-wide flex-between">
       <!-- Brand Logo -->
       <a href="index.html" class="nav-brand">
         <div class="brand-icon">
-          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <i class="fa-solid fa-file-waveform"></i>
         </div>
-        <span>ResumeFlow <span class="brand-badge">v2.0</span></span>
+        <span>ResumeFlow <span class="brand-badge">PRO</span></span>
       </a>
 
       <!-- Desktop Navigation Menu -->
       <ul class="nav-menu" id="navMenu">
         <li><a href="index.html" class="nav-link active"><i class="fa-solid fa-house"></i> Home</a></li>
-        <li><a href="builder.html" class="nav-link"><i class="fa-solid fa-pen-nib"></i> Resume Studio</a></li>
         <li><a href="templates.html" class="nav-link"><i class="fa-solid fa-layer-group"></i> Templates</a></li>
-        <li><a href="dashboard.html" class="nav-link"><i class="fa-solid fa-folder-open"></i> My Resumes</a></li>
-        <li><a href="contact.html" class="nav-link"><i class="fa-solid fa-paper-plane"></i> Contact</a></li>
+        <li><a href="ats-checker.html" class="nav-link"><i class="fa-solid fa-radar"></i> Free ATS Scanner</a></li>
+        <li><a href="cover-letter.html" class="nav-link"><i class="fa-solid fa-envelope-open-text"></i> AI Cover Letter</a></li>
+        <li><a href="tracker.html" class="nav-link"><i class="fa-solid fa-table-columns"></i> Job Tracker</a></li>
+        <li><a href="pricing.html" class="nav-link"><i class="fa-solid fa-bolt"></i> Pricing</a></li>
       </ul>
 
       <!-- Action Buttons -->
@@ -52,58 +94,57 @@
           <i class="fa-solid fa-sun" id="themeIcon"></i>
         </button>
         <a href="dashboard.html" class="btn btn-secondary btn-sm" style="display:inline-flex; align-items:center; gap:8px;">
-          <img src="photo/user.png" id="navUserAvatar" style="width:24px; height:24px; border-radius:50%;" alt="User" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'">
-          <span id="navUserName">Dashboard</span>
+          <i class="fa-solid fa-folder-open"></i> Vault
         </a>
         <a href="builder.html" class="btn btn-primary btn-sm">
-          <i class="fa-solid fa-bolt"></i> Build Free CV
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Build Resume
         </a>
       </div>
     </div>
   </header>
 
   <!-- Hero Section -->
-  <section class="hero-section" style="padding: 160px 0 90px 0; position: relative; overflow: hidden;">
+  <section class="hero-section" style="padding: 140px 0 70px 0; position: relative; overflow: hidden;">
     <div class="container">
       <div class="grid hero-grid" style="align-items: center; gap: 48px;">
 
         <!-- Left Hero Content -->
         <div class="animate-fade-in-up">
           <div class="badge badge-primary shimmer-badge" style="margin-bottom: 20px;">
-            <span class="status-dot"></span> Next-Gen AI Resume Engine · 2026 Edition
+            <span class="status-dot"></span> 100% ATS Algorithm Match & AI Tailoring
           </div>
 
-          <h1 style="font-size: 3.4rem; font-weight: 900; line-height: 1.15; margin-bottom: 24px;">
-            Craft <span class="text-gradient">Top-Tier Resumes</span> That Land 6-Figure Offers.
+          <h1 style="font-size: 3.3rem; font-weight: 900; line-height: 1.15; margin-bottom: 22px;">
+            Land <span class="text-gradient">3x More Interviews</span> with Tailored AI Resumes.
           </h1>
 
           <p style="font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 32px; line-height: 1.7; max-width: 580px;">
-            Engineered with real-time ATS optimization, 6 designer templates, instant action-verb boosters, and pixel-perfect vector PDF exports. 100% free with zero paywalls.
+            Paste any job description and let our AI tailor your summary, skills, and quantified bullet points for 100% ATS compliance across Workday, Greenhouse, and Lever.
           </p>
 
           <!-- CTA Buttons -->
-          <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 40px;">
+          <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 36px;">
             <a href="builder.html" class="btn btn-primary btn-lg">
-              <i class="fa-solid fa-wand-magic-sparkles"></i> Launch Resume Studio
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Build Free Resume Now
             </a>
-            <a href="templates.html" class="btn btn-secondary btn-lg">
-              <i class="fa-solid fa-eye"></i> Explore Templates
+            <a href="ats-checker.html" class="btn btn-secondary btn-lg">
+              <i class="fa-solid fa-radar"></i> Free ATS Scanner
             </a>
           </div>
 
           <!-- Trust Proof Metrics -->
-          <div style="display: flex; gap: 32px; flex-wrap: wrap; border-top: 1px solid var(--border-subtle); padding-top: 24px;">
+          <div style="display: flex; gap: 28px; flex-wrap: wrap; border-top: 1px solid var(--border-subtle); padding-top: 24px;">
             <div>
-              <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-cyan);">99.4%</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">ATS Pass Rate</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-emerald);">100%</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">ATS Pass Rate</div>
             </div>
             <div>
-              <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-emerald);">6+</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Designer Layouts</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-primary);">12,400+</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Resumes Generated</div>
             </div>
             <div>
-              <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent-purple);">0 ms</div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Instant Live Sync</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: #8b5cf6;">6 Designer</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Templates Included</div>
             </div>
           </div>
         </div>
@@ -116,54 +157,54 @@
 
             <!-- Mini Floating Badges -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-              <span class="badge badge-emerald"><i class="fa-solid fa-circle-check"></i> ATS Scored: 96/100</span>
-              <span class="badge badge-cyan"><i class="fa-solid fa-sparkles"></i> AI Enhanced</span>
+              <span class="badge badge-emerald"><i class="fa-solid fa-circle-check"></i> ATS Verified: 100/100</span>
+              <span class="badge badge-cyan"><i class="fa-solid fa-sparkles"></i> AI Tailored</span>
             </div>
 
             <!-- Mockup Card Body -->
             <div style="background: #ffffff; color: #1e293b; border-radius: 8px; padding: 22px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 8.5pt; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
               <div style="display: flex; justify-content: space-between; align-items: baseline; border-bottom: 2px solid #4f7df9; padding-bottom: 8px; margin-bottom: 10px;">
                 <div>
-                  <h3 style="font-size: 13pt; font-weight: 800; color: #0f172a; margin: 0;">Alex Morgan</h3>
-                  <div style="color: #4f7df9; font-weight: 700; font-size: 8pt;">Senior Full Stack Engineer & Cloud Architect</div>
+                  <h3 style="font-size: 13pt; font-weight: 800; color: #0f172a; margin: 0;">Alex Mercer</h3>
+                  <div style="color: #4f7df9; font-weight: 700; font-size: 8pt;">Staff Full-Stack Software Engineer</div>
                 </div>
                 <div style="text-align: right; font-size: 7pt; color: #64748b;">
-                  <div>alex.morgan@example.com</div>
-                  <div>alexmorgan.dev</div>
+                  <div>alex.mercer@email.com</div>
+                  <div>linkedin.com/in/alexmercer</div>
                 </div>
               </div>
 
               <!-- Summary -->
               <p style="font-size: 7.5pt; color: #334155; line-height: 1.4; margin-bottom: 8px;">
-                Results-driven Senior Full Stack Engineer & Cloud Architect with 5+ years of experience engineering high-scale distributed systems, microservices, and reactive web applications.
+                High-impact Full Stack Engineer with 6+ years spearheading scalable distributed cloud microservices, reactive Next.js frontends, and real-time Kafka event streams.
               </p>
 
               <!-- Experience preview -->
               <div style="font-weight: 700; font-size: 8pt; color: #0f172a; border-bottom: 1px solid #e2e8f0; margin-bottom: 4px; text-transform: uppercase;">
-                Experience & Milestones
+                Key Quantifiable Achievements
               </div>
               <div style="font-size: 7pt; color: #475569; margin-bottom: 6px;">
                 <div style="display: flex; justify-content: space-between; font-weight: 600;">
-                  <span>Senior Software Engineer · Nexus Cloud</span>
-                  <span>2023 – Present</span>
+                  <span>Lead Engineer · Apex Cloud Systems</span>
+                  <span>2022 – Present</span>
                 </div>
-                <div>• Architected high-throughput microservices reducing server latency by 42%.</div>
-                <div>• Migrated infrastructure to AWS cloud, cutting server operating costs by $35,000.</div>
+                <div>• Spearheaded containerized microservices migration, slashing AWS costs by 34%.</div>
+                <div>• Engineered real-time event pipeline handling 1.4M requests/day with 99.99% uptime.</div>
               </div>
 
               <!-- Skill pills -->
               <div style="margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap;">
-                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">React & Next.js</span>
-                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">TypeScript</span>
+                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">React & TypeScript</span>
                 <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">Node.js / Go</span>
-                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">AWS & Docker</span>
+                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">Docker & Kubernetes</span>
+                <span style="background: #eef2ff; color: #4f7df9; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 6.5pt;">PostgreSQL & Redis</span>
               </div>
             </div>
 
             <!-- Floating Action in Card -->
             <div style="margin-top: 18px; text-align: center;">
               <a href="builder.html" class="btn btn-primary btn-sm" style="width: 100%;">
-                <i class="fa-solid fa-pen-to-square"></i> Open Live Studio with This Profile
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Customize & Download Vector PDF
               </a>
             </div>
           </div>
@@ -173,162 +214,88 @@
     </div>
   </section>
 
-  <!-- Core Features Showcase -->
-  <section style="padding: 90px 0; position: relative;">
+  <!-- Before vs After Resume ATS Score Widget -->
+  <section style="padding: 40px 0 80px; position: relative;">
     <div class="container">
-      <div style="text-align: center; max-width: 680px; margin: 0 auto 60px auto;">
-        <span class="badge badge-cyan" style="margin-bottom: 12px;"><i class="fa-solid fa-cubes"></i> Powerful Features</span>
-        <h2 style="font-size: 2.4rem; font-weight: 800; margin-bottom: 16px;">Built for Maximum Job Placement</h2>
-        <p style="color: var(--text-secondary);">Everything you need to create an irresistible resume that bypasses ATS filters and catches recruiter attention.</p>
+      <div style="text-align: center; max-width: 680px; margin: 0 auto 36px auto;">
+        <span class="badge badge-emerald" style="margin-bottom: 10px;"><i class="fa-solid fa-code-compare"></i> The AI Difference</span>
+        <h2 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 12px;">See the Transformation</h2>
+        <p style="color: var(--text-secondary);">Traditional resumes get filtered out in seconds. ResumeFlow AI engineers every word to pass screening algorithms.</p>
       </div>
 
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px;">
-
-        <!-- Feature 1 -->
-        <div class="glass-card" style="padding: 32px;">
-          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(79, 125, 249, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-primary); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(79, 125, 249, 0.3);">
-            <i class="fa-solid fa-gauge-high"></i>
+      <div class="comparison-section">
+        <!-- Standard Resume Box -->
+        <div class="compare-box bad">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div style="font-weight: 800; color: var(--accent-coral); font-size: 1.1rem;">
+              <i class="fa-solid fa-circle-xmark"></i> Standard Generic Resume
+            </div>
+            <span class="badge badge-coral">ATS Score: 48%</span>
           </div>
-          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Real-Time ATS Scoring</h3>
-          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
-            Instant automated analysis of your keyword density, action verbs, measurable statistics, and contact information readiness.
-          </p>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.88rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 10px;">
+            <li>❌ <em>"Responsible for writing code and attending meetings."</em></li>
+            <li>❌ Missing key Job Description skills and framework keywords.</li>
+            <li>❌ No numbers, percentages, or business revenue impact.</li>
+            <li>❌ Complex tables and fonts that break ATS parsers.</li>
+          </ul>
         </div>
 
-        <!-- Feature 2 -->
-        <div class="glass-card" style="padding: 32px;">
-          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-emerald); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(16, 185, 129, 0.3);">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <!-- ResumeFlow Optimized Box -->
+        <div class="compare-box good">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <div style="font-weight: 800; color: var(--accent-emerald); font-size: 1.1rem;">
+              <i class="fa-solid fa-circle-check"></i> ResumeFlow AI Tailored
+            </div>
+            <span class="badge badge-emerald">ATS Score: 100%</span>
           </div>
-          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">AI Action-Verb Booster</h3>
-          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
-            Transform mundane job duties into high-impact bullet points enriched with impactful power verbs (e.g. Engineered, Spearheaded, Optimized).
-          </p>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.88rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 10px;">
+            <li>✅ <em>"Spearheaded distributed system redesign, slashing API latency by 42%."</em></li>
+            <li>✅ Injects matched keywords directly extracted from the target job posting.</li>
+            <li>✅ Formats Google X-Y-Z formula metrics for proven leadership proof.</li>
+            <li>✅ 100% clean vector typography parsed by Workday and Greenhouse.</li>
+          </ul>
         </div>
-
-        <!-- Feature 3 -->
-        <div class="glass-card" style="padding: 32px;">
-          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(139, 92, 246, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-secondary); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(139, 92, 246, 0.3);">
-            <i class="fa-solid fa-palette"></i>
-          </div>
-          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">6 Designer Templates</h3>
-          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
-            Seamlessly switch between Silicon Valley Modern, Executive Minimalist, Creative Banner, Cyber Dark, Ivy Academic, and Compact Pro.
-          </p>
-        </div>
-
-        <!-- Feature 4 -->
-        <div class="glass-card" style="padding: 32px;">
-          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(6, 182, 212, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-cyan); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(6, 182, 212, 0.3);">
-            <i class="fa-solid fa-file-pdf"></i>
-          </div>
-          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Vector-Crisp PDF Export</h3>
-          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
-            Direct high-definition vector PDF generation with zero cutoff margins, pure typography sharpness, and exact A4 page breaks.
-          </p>
-        </div>
-
-        <!-- Feature 5 -->
-        <div class="glass-card" style="padding: 32px;">
-          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(244, 63, 94, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-coral); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(244, 63, 94, 0.3);">
-            <i class="fa-solid fa-hard-drive"></i>
-          </div>
-          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Local & Multi-Resume Vault</h3>
-          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
-            Manage multiple resume versions (Frontend, Security, Full-Stack) with local autosaving, version duplication, and JSON backup export.
-          </p>
-        </div>
-
-        <!-- Feature 6 -->
-        <div class="glass-card" style="padding: 32px;">
-          <div style="width: 52px; height: 52px; border-radius: var(--radius-sm); background: rgba(245, 158, 11, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-amber); font-size: 1.4rem; margin-bottom: 20px; border: 1px solid rgba(245, 158, 11, 0.3);">
-            <i class="fa-solid fa-sliders"></i>
-          </div>
-          <h3 style="font-size: 1.25rem; margin-bottom: 10px;">Micro-Customization Suite</h3>
-          <p style="font-size: 0.925rem; color: var(--text-secondary); line-height: 1.6;">
-            Total control over color palettes, typography pairings (Inter, Poppins, JetBrains Mono), spacing density, and avatar photo shapes.
-          </p>
-        </div>
-
       </div>
     </div>
   </section>
 
-  <!-- Interactive Templates Showcase Grid -->
-  <section style="padding: 80px 0; background: rgba(15, 17, 26, 0.5); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+  <!-- Complete Startup Suite Tools -->
+  <section style="padding: 70px 0; background: rgba(15, 17, 26, 0.6); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
     <div class="container">
-      <div class="flex-between" style="margin-bottom: 40px; flex-wrap: wrap; gap: 16px;">
-        <div>
-          <span class="badge badge-primary"><i class="fa-solid fa-sparkles"></i> Curated Designs</span>
-          <h2 style="font-size: 2.2rem; font-weight: 800; margin-top: 6px;">Pick a Template, Make It Yours</h2>
-        </div>
-        <a href="templates.html" class="btn btn-outline">
-          View All Templates <i class="fa-solid fa-arrow-right"></i>
-        </a>
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 50px auto;">
+        <span class="badge badge-primary" style="margin-bottom: 12px;"><i class="fa-solid fa-toolbox"></i> Complete Career Toolset</span>
+        <h2 style="font-size: 2.3rem; font-weight: 800; margin-bottom: 14px;">All-in-One Job Search Platform</h2>
+        <p style="color: var(--text-secondary);">Everything you need from drafting your resume to tracking multiple job offers in one unified dashboard.</p>
       </div>
 
-      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;">
 
-        <!-- Template Card 1 -->
-        <div class="glass-card" style="overflow: hidden; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div style="background: #f8fafc; border-radius: 8px; padding: 16px; min-height: 220px; color: #1e293b; border: 1px solid #e2e8f0; margin-bottom: 16px;">
-            <div style="display: flex; gap: 10px;">
-              <div style="width: 30%; background: #eef2ff; height: 180px; border-radius: 4px; padding: 6px;">
-                <div style="width: 28px; height: 28px; border-radius: 50%; background: #4f7df9; margin: 0 auto 6px auto;"></div>
-                <div style="height: 4px; width: 80%; background: #cbd5e1; margin-bottom: 4px;"></div>
-                <div style="height: 3px; width: 60%; background: #94a3b8;"></div>
-              </div>
-              <div style="width: 70%; padding: 4px;">
-                <div style="height: 8px; width: 60%; background: #0f172a; margin-bottom: 6px;"></div>
-                <div style="height: 4px; width: 40%; background: #4f7df9; margin-bottom: 12px;"></div>
-                <div style="height: 4px; width: 90%; background: #94a3b8; margin-bottom: 6px;"></div>
-                <div style="height: 4px; width: 85%; background: #94a3b8; margin-bottom: 6px;"></div>
-                <div style="height: 4px; width: 70%; background: #94a3b8;"></div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Silicon Valley Modern</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">2-column layout with sidebar accent and skill chips.</p>
-            <a href="builder.html" class="btn btn-primary btn-sm" style="width: 100%;">Use This Template</a>
-          </div>
+        <div class="glass-card" style="padding: 28px;">
+          <div style="font-size: 2rem; color: var(--accent-primary); margin-bottom: 14px;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 8px;">Resume Studio</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 18px;">6 modern templates with instant live preview, custom languages, and certifications.</p>
+          <a href="builder.html" class="btn btn-outline btn-sm">Open Studio <i class="fa-solid fa-arrow-right"></i></a>
         </div>
 
-        <!-- Template Card 2 -->
-        <div class="glass-card" style="overflow: hidden; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div style="background: #ffffff; border-radius: 8px; padding: 16px; min-height: 220px; color: #1e293b; border: 1px solid #e2e8f0; margin-bottom: 16px;">
-            <div style="text-align: center; border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 10px;">
-              <div style="height: 8px; width: 50%; background: #0f172a; margin: 0 auto 4px auto;"></div>
-              <div style="height: 4px; width: 30%; background: #4f7df9; margin: 0 auto;"></div>
-            </div>
-            <div style="height: 4px; width: 80%; background: #94a3b8; margin-bottom: 8px;"></div>
-            <div style="height: 4px; width: 95%; background: #cbd5e1; margin-bottom: 6px;"></div>
-            <div style="height: 4px; width: 90%; background: #cbd5e1; margin-bottom: 6px;"></div>
-            <div style="height: 4px; width: 75%; background: #cbd5e1;"></div>
-          </div>
-          <div>
-            <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Executive Minimalist</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Authoritative single-column hierarchy for leaders.</p>
-            <a href="builder.html" class="btn btn-primary btn-sm" style="width: 100%;">Use This Template</a>
-          </div>
+        <div class="glass-card" style="padding: 28px;">
+          <div style="font-size: 2rem; color: var(--accent-emerald); margin-bottom: 14px;"><i class="fa-solid fa-radar"></i></div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 8px;">ATS Resume Scanner</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 18px;">Drag & drop your existing resume for an instant scoring audit and keyword breakdown.</p>
+          <a href="ats-checker.html" class="btn btn-outline btn-sm">Scan Resume <i class="fa-solid fa-arrow-right"></i></a>
         </div>
 
-        <!-- Template Card 3 -->
-        <div class="glass-card" style="overflow: hidden; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
-          <div style="background: #0f111a; border-radius: 8px; padding: 16px; min-height: 220px; color: #e2e8f0; border: 1px solid rgba(6, 182, 212, 0.3); margin-bottom: 16px;">
-            <div style="border-bottom: 1px dashed #00f2fe; padding-bottom: 6px; margin-bottom: 8px;">
-              <div style="font-size: 6pt; color: #00f2fe; font-family: monospace;">> USER_EXEC // CYBER_RESUME</div>
-              <div style="height: 6px; width: 40%; background: #00f2fe; margin-top: 4px;"></div>
-            </div>
-            <div style="height: 3px; width: 70%; background: #a855f7; margin-bottom: 6px;"></div>
-            <div style="height: 3px; width: 90%; background: #475569; margin-bottom: 4px;"></div>
-            <div style="height: 3px; width: 80%; background: #475569;"></div>
-          </div>
-          <div>
-            <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Cyber Dark / Terminal</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Matrix neon aesthetics tailored for engineers.</p>
-            <a href="builder.html" class="btn btn-primary btn-sm" style="width: 100%;">Use This Template</a>
-          </div>
+        <div class="glass-card" style="padding: 28px;">
+          <div style="font-size: 2rem; color: #8b5cf6; margin-bottom: 14px;"><i class="fa-solid fa-envelope-open-text"></i></div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 8px;">AI Cover Letter</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 18px;">Generate tailored, recruiter-ready cover letters matching your resume in 1 click.</p>
+          <a href="cover-letter.html" class="btn btn-outline btn-sm">Create Letter <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+
+        <div class="glass-card" style="padding: 28px;">
+          <div style="font-size: 2rem; color: var(--accent-amber); margin-bottom: 14px;"><i class="fa-solid fa-table-columns"></i></div>
+          <h3 style="font-size: 1.2rem; margin-bottom: 8px;">Kanban Application Tracker</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 18px;">Track submissions, interview rounds, salaries, and job offers with drag-and-drop ease.</p>
+          <a href="tracker.html" class="btn btn-outline btn-sm">Open Tracker <i class="fa-solid fa-arrow-right"></i></a>
         </div>
 
       </div>
@@ -336,19 +303,19 @@
   </section>
 
   <!-- CTA Banner -->
-  <section style="padding: 100px 0; text-align: center; position: relative;">
+  <section style="padding: 90px 0; text-align: center; position: relative;">
     <div class="container">
-      <div class="glass-card" style="padding: 60px 32px; max-width: 900px; margin: 0 auto; border-color: rgba(79, 125, 249, 0.3); box-shadow: 0 20px 60px rgba(79, 125, 249, 0.2);">
-        <h2 style="font-size: 2.6rem; font-weight: 900; margin-bottom: 16px;">Ready to Elevate Your Career?</h2>
-        <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 32px auto;">
-          Join thousands of developers and professionals who build high-impact, ATS-friendly resumes in minutes.
+      <div class="glass-card" style="padding: 60px 32px; max-width: 860px; margin: 0 auto; border-color: rgba(79, 125, 249, 0.3); box-shadow: 0 20px 60px rgba(79, 125, 249, 0.2);">
+        <h2 style="font-size: 2.5rem; font-weight: 900; margin-bottom: 16px;">Ready to Land Your Dream Job?</h2>
+        <p style="font-size: 1.05rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 32px auto;">
+          Start with our free starter plan or grab a 7-Day Fast Pass to unlock unlimited AI job matching and 100% ATS score optimization.
         </p>
         <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
           <a href="builder.html" class="btn btn-primary btn-lg">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Open Resume Studio Now
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Launch Resume Studio
           </a>
-          <a href="dashboard.html" class="btn btn-secondary btn-lg">
-            <i class="fa-solid fa-folder"></i> Access My Saved Resumes
+          <a href="pricing.html" class="btn btn-secondary btn-lg">
+            <i class="fa-solid fa-bolt"></i> View Pricing Plans
           </a>
         </div>
       </div>
@@ -359,25 +326,25 @@
   <footer style="border-top: 1px solid var(--border-subtle); padding: 48px 0 32px 0; background: var(--bg-surface);">
     <div class="container flex-between" style="flex-wrap: wrap; gap: 24px;">
       <div>
-        <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 4px;">ResumeFlow AI 2.0</div>
+        <div style="font-weight: 800; font-size: 1.1rem; margin-bottom: 4px;">ResumeFlow AI</div>
         <p style="font-size: 0.85rem; color: var(--text-muted);">
-          Next-Gen Career Intelligence & ATS Resume Studio
+          Next-Gen AI Career Suite & ATS Optimization Platform
         </p>
       </div>
-      <div style="display: flex; gap: 20px; font-size: 0.95rem;">
+      <div style="display: flex; gap: 20px; font-size: 0.9rem; flex-wrap: wrap;">
         <a href="index.html" class="nav-link">Home</a>
         <a href="builder.html" class="nav-link">Studio</a>
         <a href="templates.html" class="nav-link">Templates</a>
-        <a href="dashboard.html" class="nav-link">My Resumes</a>
-        <a href="contact.html" class="nav-link">Contact Developer</a>
+        <a href="ats-checker.html" class="nav-link">ATS Checker</a>
+        <a href="cover-letter.html" class="nav-link">Cover Letter</a>
+        <a href="tracker.html" class="nav-link">Job Tracker</a>
+        <a href="pricing.html" class="nav-link">Pricing</a>
       </div>
     </div>
   </footer>
 
   <!-- Core JavaScript Modules -->
   <script src="js/storage.js"></script>
-  <script src="js/templates.js"></script>
-  <script src="js/ats.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

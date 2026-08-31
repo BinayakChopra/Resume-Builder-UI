@@ -154,6 +154,10 @@ const StorageService = (() => {
   // Internal keys scoped by User ID
   const getUserResumesKey = (userId) => `rb_user_${userId}_resumes`;
   const getUserActiveResumeKey = (userId) => `rb_user_${userId}_active_res_id`;
+  const getUserPlanKey = (userId) => `rb_user_${userId}_plan`;
+  const getUserCreditsKey = (userId) => `rb_user_${userId}_ai_credits`;
+  const getUserApplicationsKey = (userId) => `rb_user_${userId}_applications`;
+  const getUserCoverLettersKey = (userId) => `rb_user_${userId}_cover_letters`;
 
   /**
    * Get all registered users
@@ -675,6 +679,180 @@ const StorageService = (() => {
     reader.readAsText(file);
   };
 
+  /**
+   * Get User Subscription Plan
+   */
+  const getUserPlan = () => {
+    const user = getUserSession();
+    if (!user) return { plan: 'free', isPro: false, expiresAt: null, planName: 'Free Starter' };
+    const planData = getJSON(getUserPlanKey(user.id), {
+      plan: 'free',
+      isPro: false,
+      expiresAt: null,
+      planName: 'Free Starter',
+    });
+
+    // Check expiration if not lifetime or free
+    if (planData.expiresAt && new Date(planData.expiresAt) < new Date()) {
+      planData.isPro = false;
+      planData.plan = 'free';
+      planData.planName = 'Free Starter (Expired)';
+      setJSON(getUserPlanKey(user.id), planData);
+    }
+    return planData;
+  };
+
+  /**
+   * Upgrade User Plan (7-Day Pass, Pro Monthly, Lifetime)
+   */
+  const upgradeUserPlan = (planType, options = {}) => {
+    const user = getUserSession();
+    if (!user) return { success: false, error: 'User must be signed in to upgrade.' };
+
+    let expiresAt = null;
+    let planName = 'Pro Monthly';
+
+    if (planType === 'pass' || planType === '7day') {
+      const d = new Date();
+      d.setDate(d.getDate() + 7);
+      expiresAt = d.toISOString();
+      planName = '7-Day Fast Pass';
+    } else if (planType === 'pro' || planType === 'monthly') {
+      const d = new Date();
+      d.setMonth(d.getMonth() + 1);
+      expiresAt = d.toISOString();
+      planName = 'Pro Monthly';
+    } else if (planType === 'annual') {
+      const d = new Date();
+      d.setFullYear(d.getFullYear() + 1);
+      expiresAt = d.toISOString();
+      planName = 'Pro Annual';
+    } else if (planType === 'lifetime') {
+      expiresAt = null;
+      planName = 'Lifetime Career Pass';
+    }
+
+    const newPlan = {
+      plan: planType,
+      isPro: true,
+      planName: planName,
+      upgradedAt: new Date().toISOString(),
+      expiresAt: expiresAt,
+      orderId: 'ORD_' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+      amountPaid: options.amount || '$11.99',
+    };
+
+    setJSON(getUserPlanKey(user.id), newPlan);
+    return { success: true, plan: newPlan };
+  };
+
+  /**
+   * Check if active user has Pro access
+   */
+  const isPro = () => {
+    const plan = getUserPlan();
+    return Boolean(plan && plan.isPro);
+  };
+
+  /**
+   * Get remaining AI Credits (Free gets 3 free scans/tailors, Pro gets unlimited 9999)
+   */
+  const getAICredits = () => {
+    if (isPro()) return 9999;
+    const user = getUserSession();
+    if (!user) return 3;
+    const credits = getJSON(getUserCreditsKey(user.id), 3);
+    return credits;
+  };
+
+  /**
+   * Deduct 1 AI Credit for free users
+   */
+  const useAICredit = () => {
+    if (isPro()) return { success: true, remaining: 9999, isPro: true };
+    const user = getUserSession();
+    if (!user) return { success: false, error: 'Sign in to use AI tools.' };
+
+    let current = getAICredits();
+    if (current <= 0) {
+      return { success: false, error: 'Free AI credits exhausted. Upgrade to Pro for unlimited AI tailoring.' };
+    }
+
+    current -= 1;
+    setJSON(getUserCreditsKey(user.id), current);
+    return { success: true, remaining: current, isPro: false };
+  };
+
+  // ==========================================================================
+  // JOB APPLICATION KANBAN TRACKER
+  // ==========================================================================
+  const getApplications = () => {
+    const user = getUserSession();
+    if (!user) return [];
+    return getJSON(getUserApplicationsKey(user.id), []);
+  };
+
+  const saveApplication = (appData) => {
+    const user = getUserSession();
+    if (!user) return null;
+    if (!appData.id) appData.id = 'app_' + Date.now();
+    appData.updatedAt = new Date().toISOString();
+
+    const list = getApplications();
+    const idx = list.findIndex((a) => a.id === appData.id);
+    if (idx >= 0) {
+      list[idx] = appData;
+    } else {
+      list.unshift(appData);
+    }
+    setJSON(getUserApplicationsKey(user.id), list);
+    return appData;
+  };
+
+  const deleteApplication = (appId) => {
+    const user = getUserSession();
+    if (!user) return [];
+    let list = getApplications();
+    list = list.filter((a) => a.id !== appId);
+    setJSON(getUserApplicationsKey(user.id), list);
+    return list;
+  };
+
+  // ==========================================================================
+  // AI COVER LETTERS
+  // ==========================================================================
+  const getCoverLetters = () => {
+    const user = getUserSession();
+    if (!user) return [];
+    return getJSON(getUserCoverLettersKey(user.id), []);
+  };
+
+  const saveCoverLetter = (letterData) => {
+    const user = getUserSession();
+    if (!user) return null;
+    if (!letterData.id) letterData.id = 'cl_' + Date.now();
+    letterData.updatedAt = new Date().toISOString();
+
+    const list = getCoverLetters();
+    const idx = list.findIndex((l) => l.id === letterData.id);
+    if (idx >= 0) {
+      list[idx] = letterData;
+    } else {
+      list.unshift(letterData);
+    }
+    setJSON(getUserCoverLettersKey(user.id), list);
+    return letterData;
+  };
+
+  const deleteCoverLetter = (letterId) => {
+    const user = getUserSession();
+    if (!user) return [];
+    let list = getCoverLetters();
+    list = list.filter((l) => l.id !== letterId);
+    setJSON(getUserCoverLettersKey(user.id), list);
+    return list;
+  };
+
   return {
     // Auth & User Session
     getUserSession,
@@ -684,6 +862,23 @@ const StorageService = (() => {
     logoutUser,
     requireAuth,
     updateUserProfile,
+
+    // Subscriptions & Monetization
+    getUserPlan,
+    upgradeUserPlan,
+    isPro,
+    getAICredits,
+    useAICredit,
+
+    // Job Application Tracker
+    getApplications,
+    saveApplication,
+    deleteApplication,
+
+    // AI Cover Letters
+    getCoverLetters,
+    saveCoverLetter,
+    deleteCoverLetter,
 
     // Resumes (Account Scoped)
     getAllResumes,

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing & Plans — ResumeFlow AI | Land Interviews 3x Faster</title>
+  <meta name="description" content="Affordable plans for job seekers. 100% ATS score booster, AI Job Matching, unlimited resume templates, and cover letter generator.">
+
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Core App Stylesheets -->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    .pricing-hero {
+      text-align: center;
+      padding: 70px 20px 40px;
+      position: relative;
+    }
+
+    .pricing-toggle-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 32px auto 48px;
+    }
+
+    .pricing-toggle {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-medium);
+      padding: 4px;
+      border-radius: var(--radius-full);
+      display: inline-flex;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .toggle-option {
+      padding: 8px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      transition: all var(--transition-fast);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .toggle-option.active {
+      background: var(--accent-primary);
+      color: #ffffff;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .discount-badge {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto 60px;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: transform var(--transition-normal), border-color var(--transition-normal), box-shadow var(--transition-normal);
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--border-medium);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .pricing-card.featured {
+      border: 2px solid var(--accent-primary);
+      background: linear-gradient(180deg, rgba(79, 125, 249, 0.08) 0%, var(--bg-card) 100%);
+      box-shadow: 0 10px 40px rgba(79, 125, 249, 0.2);
+    }
+
+    .card-ribbon {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #8b5cf6 0%, #4f7df9 100%);
+      color: #ffffff;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      box-shadow: 0 4px 14px rgba(79, 125, 249, 0.4);
+      white-space: nowrap;
+    }
+
+    .plan-name {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .plan-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      min-height: 40px;
+    }
+
+    .plan-price-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .plan-currency {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .plan-price {
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .plan-period {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .plan-features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 32px 0;
+      flex: 1;
+    }
+
+    .plan-features li {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plan-features li i.fa-check {
+      color: var(--accent-emerald);
+      font-size: 0.85rem;
+      width: 16px;
+    }
+
+    .plan-features li i.fa-xmark {
+      color: var(--text-muted);
+      opacity: 0.4;
+      font-size: 0.85rem;
+      width: 16px;
+    }
+
+    .guarantee-bar {
+      max-width: 800px;
+      margin: 0 auto 60px;
+      padding: 20px 24px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .guarantee-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    /* Checkout Dialog */
+    .checkout-modal-card {
+      max-width: 540px;
+      width: 95%;
+    }
+
+    .coupon-box {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header Navigation -->
+  <header class="app-header">
+    <div class="container-wide">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-mark"><i class="fa-solid fa-file-waveform"></i></div>
+        <div class="logo-text">Resume<span>Flow</span> AI</div>
+      </a>
+
+      <nav class="main-nav">
+        <a href="templates.html" class="nav-link"><i class="fa-solid fa-layer-group"></i> Templates</a>
+        <a href="ats-checker.html" class="nav-link"><i class="fa-solid fa-radar"></i> Free ATS Scanner</a>
+        <a href="cover-letter.html" class="nav-link"><i class="fa-solid fa-envelope-open-text"></i> AI Cover Letter</a>
+        <a href="tracker.html" class="nav-link"><i class="fa-solid fa-table-columns"></i> Job Tracker</a>
+        <a href="pricing.html" class="nav-link active"><i class="fa-solid fa-bolt"></i> Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="btn btn-ghost btn-icon theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <div id="authNavContainer">
+          <!-- Populated by app.js with signed in state or Login / Sign Up -->
+          <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="builder.html" class="btn btn-primary btn-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> Build Resume</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Pricing Main Content -->
+  <main class="container" style="padding-top: 20px; padding-bottom: 80px;">
+
+    <section class="pricing-hero animate-fade-in-up">
+      <div class="badge badge-primary" style="margin-bottom: 12px;">
+        <i class="fa-solid fa-shield-halved"></i> 100% ATS Readiness Guarantee
+      </div>
+      <h1 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 16px; letter-spacing: -0.5px;">
+        Invest in your career. Land your dream job.
+      </h1>
+      <p style="font-size: 1.1rem; color: var(--text-secondary); max-width: 650px; margin: 0 auto;">
+        Choose the plan that fits your job search timeline. Upgrade to unlock unlimited AI Job Description tailoring, Cover Letters, and 100% ATS-optimized vector PDF downloads.
+      </p>
+
+      <!-- Monthly vs Annual Billing Toggle -->
+      <div class="pricing-toggle-wrap">
+        <div class="pricing-toggle" id="billingToggle">
+          <span class="toggle-option active" data-period="monthly">Monthly Billing</span>
+          <span class="toggle-option" data-period="annual">Annual (Save 40%)</span>
+        </div>
+        <span class="discount-badge"><i class="fa-solid fa-fire"></i> Save 40%</span>
+      </div>
+    </section>
+
+    <!-- Pricing Plans Grid -->
+    <div class="pricing-grid animate-fade-in-up">
+
+      <!-- Plan 1: Free Starter -->
+      <div class="pricing-card">
+        <div class="plan-name">Free Starter</div>
+        <div class="plan-desc">For creating a basic clean resume to test the editor.</div>
+        <div class="plan-price-wrap">
+          <span class="plan-currency">$</span>
+          <span class="plan-price">0</span>
+          <span class="plan-period">/ forever</span>
+        </div>
+        <ul class="plan-features">
+          <li><i class="fa-solid fa-check"></i> 1 Active Resume in Vault</li>
+          <li><i class="fa-solid fa-check"></i> Modern Tech (2-Column) Template</li>
+          <li><i class="fa-solid fa-check"></i> Basic Real-Time ATS Score</li>
+          <li><i class="fa-solid fa-check"></i> 3 Free AI Credits</li>
+          <li><i class="fa-solid fa-xmark"></i> AI Job Description Tailoring</li>
+          <li><i class="fa-solid fa-xmark"></i> AI Cover Letter Generator</li>
+          <li><i class="fa-solid fa-xmark"></i> High-Resolution Vector PDF</li>
+        </ul>
+        <a href="builder.html" class="btn btn-secondary" style="width: 100%; text-align: center;">Get Started Free</a>
+      </div>
+
+      <!-- Plan 2: 7-Day Fast Pass (Impulse Buy Winner) -->
+      <div class="pricing-card featured">
+        <div class="card-ribbon"><i class="fa-solid fa-bolt"></i> Most Popular for Active Applicants</div>
+        <div class="plan-name">7-Day Fast Pass</div>
+        <div class="plan-desc">Instant access to tailor and download for this week's job applications.</div>
+        <div class="plan-price-wrap">
+          <span class="plan-currency">$</span>
+          <span class="plan-price">3.99</span>
+          <span class="plan-period">/ 7 days full pass</span>
+        </div>
+        <ul class="plan-features">
+          <li><i class="fa-solid fa-check"></i> <strong>Unlimited</strong> Resumes & Downloads</li>
+          <li><i class="fa-solid fa-check"></i> <strong>All 6 Premium Templates</strong> (Executive, Cyber, Creative, etc.)</li>
+          <li><i class="fa-solid fa-check"></i> <strong>AI Job Description Tailoring</strong> (100% ATS Match)</li>
+          <li><i class="fa-solid fa-check"></i> <strong>AI Cover Letter Generator</strong></li>
+          <li><i class="fa-solid fa-check"></i> <strong>Watermark-Free Vector PDF Export</strong></li>
+          <li><i class="fa-solid fa-check"></i> Full Job Application Kanban Tracker</li>
+        </ul>
+        <button type="button" class="btn btn-primary" style="width: 100%;" onclick="openCheckoutModal('7day', '7-Day Fast Pass', '$3.99')">
+          <i class="fa-solid fa-sparkles"></i> Get 7-Day Pass — $3.99
+        </button>
+      </div>
+
+      <!-- Plan 3: Pro Monthly / Annual -->
+      <div class="pricing-card">
+        <div class="plan-name">Pro Unlimited</div>
+        <div class="plan-desc">Comprehensive career suite for continuous job seeking & promotions.</div>
+        <div class="plan-price-wrap">
+          <span class="plan-currency">$</span>
+          <span class="plan-price" id="proPriceValue">11.99</span>
+          <span class="plan-period" id="proPricePeriod">/ month</span>
+        </div>
+        <ul class="plan-features">
+          <li><i class="fa-solid fa-check"></i> <strong>Unlimited Everything</strong></li>
+          <li><i class="fa-solid fa-check"></i> <strong>Unlimited AI Generations</strong> & ATS 100% Boosts</li>
+          <li><i class="fa-solid fa-check"></i> Unlimited Matching Cover Letters</li>
+          <li><i class="fa-solid fa-check"></i> Multi-Role Version Management</li>
+          <li><i class="fa-solid fa-check"></i> Priority Headless Cloud PDF Rendering</li>
+          <li><i class="fa-solid fa-check"></i> Cancel Anytime in 1 Click</li>
+        </ul>
+        <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="openCheckoutModal('pro', 'Pro Subscription', currentProPrice)">
+          Upgrade to Pro
+        </button>
+      </div>
+
+      <!-- Plan 4: Lifetime Career Pass -->
+      <div class="pricing-card">
+        <div class="plan-name">Lifetime Career</div>
+        <div class="plan-desc">Pay once, own forever. Perfect for lifelong career progression.</div>
+        <div class="plan-price-wrap">
+          <span class="plan-currency">$</span>
+          <span class="plan-price">49</span>
+          <span class="plan-period">/ one-time payment</span>
+        </div>
+        <ul class="plan-features">
+          <li><i class="fa-solid fa-check"></i> <strong>Lifetime Unlimited Access</strong></li>
+          <li><i class="fa-solid fa-check"></i> All Current & Future Templates</li>
+          <li><i class="fa-solid fa-check"></i> Permanent AI Credits Vault</li>
+          <li><i class="fa-solid fa-check"></i> VIP Priority Email Support</li>
+          <li><i class="fa-solid fa-check"></i> No recurring monthly fees</li>
+        </ul>
+        <button type="button" class="btn btn-secondary" style="width: 100%;" onclick="openCheckoutModal('lifetime', 'Lifetime Career Pass', '$49.00')">
+          Get Lifetime Access
+        </button>
+      </div>
+
+    </div>
+
+    <!-- 100% Money Back Guarantee -->
+    <div class="guarantee-bar animate-fade-in">
+      <div class="guarantee-icon">
+        <i class="fa-solid fa-shield-heart"></i>
+      </div>
+      <div>
+        <h4 style="font-size: 1.05rem; font-weight: 800; color: var(--text-primary); margin-bottom: 2px;">
+          14-Day 100% Money-Back Guarantee
+        </h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">
+          If our ATS score optimizer and AI job matching tools don't help you secure interviews or enhance your confidence, simply email support for an immediate 100% refund. No questions asked.
+        </p>
+      </div>
+    </div>
+
+    <!-- Frequently Asked Questions Accordion -->
+    <section style="max-width: 860px; margin: 0 auto;">
+      <h2 style="text-align: center; font-size: 1.8rem; font-weight: 800; margin-bottom: 32px;">Frequently Asked Questions</h2>
+
+      <div class="accordion-section active" style="margin-bottom: 12px;">
+        <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
+          <div class="accordion-title"><i class="fa-solid fa-circle-question"></i> How does the AI achieve a 100% ATS score?</div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+            Our algorithm scans target Job Descriptions using advanced NLP to extract hard skills, soft competencies, and framework requirements. It re-aligns your target headline, injects high-impact action verbs (e.g. <em>Spearheaded, Architected, Optimized</em>), and formats measurable metric bullets to satisfy standard ATS parsing rules.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-section" style="margin-bottom: 12px;">
+        <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
+          <div class="accordion-title"><i class="fa-solid fa-circle-question"></i> Can I cancel my monthly subscription anytime?</div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+            Yes, absolutely. You can cancel your subscription at any time with 1 click directly from your Settings or Dashboard. You will retain full access until the end of your billing cycle.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-section" style="margin-bottom: 12px;">
+        <div class="accordion-header" onclick="this.parentElement.classList.toggle('active')">
+          <div class="accordion-title"><i class="fa-solid fa-circle-question"></i> Are the downloaded PDF files truly ATS compatible?</div>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">
+            Yes! All templates are built with semantic, vector-compliant HTML structure and clean typography. ATS bots (Workday, Greenhouse, Lever, Taleo) can parse 100% of the text cleanly without graphic layer obstructions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Checkout & Upgrade Modal -->
+  <div class="modal-backdrop" id="checkoutModal">
+    <div class="modal-dialog checkout-modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, rgba(79, 125, 249, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%); display: flex; align-items: center; justify-content: center; color: var(--accent-primary);">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.15rem; margin-bottom: 2px;" id="modalPlanTitle">Upgrade to Pro</h3>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">256-Bit Encrypted Secure Checkout</p>
+          </div>
+        </div>
+        <button type="button" class="btn btn-ghost btn-icon modal-close-btn" onclick="closeCheckoutModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); margin-bottom: 16px;">
+          <div>
+            <div style="font-weight: 700; font-size: 0.95rem;" id="checkoutPlanName">7-Day Fast Pass</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted);">Instant activation for all AI features & PDF downloads</div>
+          </div>
+          <div style="font-size: 1.5rem; font-weight: 900; color: var(--accent-primary);" id="checkoutPlanAmount">$3.99</div>
+        </div>
+
+        <!-- Coupon Code Box -->
+        <div style="margin-bottom: 18px;">
+          <label class="form-label" style="font-size: 0.8rem; margin-bottom: 4px;">Have a Promo / Discount Code?</label>
+          <div class="coupon-box">
+            <input type="text" id="couponInput" class="form-control form-control-sm" placeholder="Try code: LAUNCH50 for 50% OFF" style="text-transform: uppercase;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="applyCoupon()">Apply</button>
+          </div>
+          <div id="couponStatus" style="font-size: 0.78rem; margin-top: 4px;"></div>
+        </div>
+
+        <!-- Payment Method Selection -->
+        <div class="form-group">
+          <label class="form-label">Payment Method</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+            <label style="display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid var(--accent-primary); border-radius: var(--radius-sm); background: rgba(79, 125, 249, 0.08); cursor: pointer;">
+              <input type="radio" name="payMethod" value="card" checked>
+              <span style="font-size: 0.85rem; font-weight: 600;"><i class="fa-solid fa-credit-card"></i> Credit Card</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; padding: 10px; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); cursor: pointer;">
+              <input type="radio" name="payMethod" value="paypal">
+              <span style="font-size: 0.85rem; font-weight: 600;"><i class="fa-brands fa-paypal"></i> PayPal</span>
+            </label>
+          </div>
+
+          <div id="cardFields">
+            <div class="form-group">
+              <label class="form-label">Card Number</label>
+              <input type="text" class="form-control form-control-sm" placeholder="4242 •••• •••• 4242" value="4242 4242 4242 4242">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Expiry Date</label>
+                <input type="text" class="form-control form-control-sm" placeholder="MM/YY" value="12/28">
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVC / CVV</label>
+                <input type="text" class="form-control form-control-sm" placeholder="CVC" value="888">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-bottom: 14px;">
+          <i class="fa-solid fa-lock"></i> Guaranteed Safe & Secure 256-Bit SSL Checkout
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeCheckoutModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" id="btnConfirmPay" style="flex: 1;" onclick="processPayment()">
+          <i class="fa-solid fa-bolt"></i> Complete Payment (<span id="btnPayAmount">$3.99</span>)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentSelectedPlan = '7day';
+    let currentBasePrice = 3.99;
+    let currentFinalPrice = 3.99;
+    let currentPeriod = 'monthly';
+    let currentProPrice = '$11.99';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Billing Toggle Setup
+      const toggleOptions = document.querySelectorAll('.toggle-option');
+      toggleOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+          toggleOptions.forEach(o => o.classList.remove('active'));
+          opt.classList.add('active');
+          currentPeriod = opt.dataset.period;
+
+          const proPriceEl = document.getElementById('proPriceValue');
+          const proPeriodEl = document.getElementById('proPricePeriod');
+
+          if (currentPeriod === 'annual') {
+            proPriceEl.textContent = '6.99';
+            proPeriodEl.textContent = '/ month (Billed $83.88/yr)';
+            currentProPrice = '$83.88 / yr';
+          } else {
+            proPriceEl.textContent = '11.99';
+            proPeriodEl.textContent = '/ month';
+            currentProPrice = '$11.99 / mo';
+          }
+        });
+      });
+    });
+
+    function openCheckoutModal(planType, name, price) {
+      currentSelectedPlan = planType;
+      currentBasePrice = parseFloat(price.replace(/[^0-9.]/g, '')) || 3.99;
+      currentFinalPrice = currentBasePrice;
+
+      document.getElementById('modalPlanTitle').textContent = `Unlock ${name}`;
+      document.getElementById('checkoutPlanName').textContent = name;
+      document.getElementById('checkoutPlanAmount').textContent = `$${currentFinalPrice.toFixed(2)}`;
+      document.getElementById('btnPayAmount').textContent = `$${currentFinalPrice.toFixed(2)}`;
+      document.getElementById('couponStatus').textContent = '';
+      document.getElementById('couponInput').value = '';
+
+      const modal = document.getElementById('checkoutModal');
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeCheckoutModal() {
+      const modal = document.getElementById('checkoutModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function applyCoupon() {
+      const input = document.getElementById('couponInput');
+      const status = document.getElementById('couponStatus');
+      const code = (input.value || '').trim().toUpperCase();
+
+      if (code === 'LAUNCH50' || code === 'SAVE50') {
+        currentFinalPrice = currentBasePrice * 0.5;
+        status.style.color = 'var(--accent-emerald)';
+        status.innerHTML = `<i class="fa-solid fa-circle-check"></i> Coupon applied! 50% discount active.`;
+      } else if (code === 'HIRING2026') {
+        currentFinalPrice = Math.max(1.99, currentBasePrice * 0.7);
+        status.style.color = 'var(--accent-emerald)';
+        status.innerHTML = `<i class="fa-solid fa-circle-check"></i> Coupon applied! 30% discount active.`;
+      } else {
+        status.style.color = 'var(--accent-coral)';
+        status.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Invalid or expired coupon code.`;
+        currentFinalPrice = currentBasePrice;
+      }
+
+      document.getElementById('checkoutPlanAmount').textContent = `$${currentFinalPrice.toFixed(2)}`;
+      document.getElementById('btnPayAmount').textContent = `$${currentFinalPrice.toFixed(2)}`;
+    }
+
+    function processPayment() {
+      const user = StorageService.getUserSession();
+      if (!user) {
+        showToast('Please sign in or create an account to activate your subscription.', 'info');
+        setTimeout(() => {
+          window.location.href = 'login.html?redirect=pricing.html';
+        }, 1500);
+        return;
+      }
+
+      const btn = document.getElementById('btnConfirmPay');
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Processing Secure Payment...`;
+
+      setTimeout(() => {
+        const result = StorageService.upgradeUserPlan(currentSelectedPlan, {
+          amount: `$${currentFinalPrice.toFixed(2)}`
+        });
+
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-bolt"></i> Complete Payment`;
+        closeCheckoutModal();
+
+        showToast(`🎉 Success! Upgraded to ${result.plan.planName}. Unlimited AI & ATS tools unlocked!`, 'success');
+
+        setTimeout(() => {
+          window.location.href = 'builder.html';
+        }, 1800);
+      }, 1200);
+    }
+  </script>
+</body>
+</html>

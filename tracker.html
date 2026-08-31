@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Application Tracker — ResumeFlow AI</title>
+  <meta name="description" content="Organize and manage your job applications, interview rounds, and offers with an intuitive Kanban pipeline board.">
+
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Core App Stylesheets -->
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 20px 0 28px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .metric-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(260px, 1fr));
+      gap: 18px;
+      overflow-x: auto;
+      padding-bottom: 24px;
+      min-height: 600px;
+    }
+
+    .kanban-col {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 260px);
+    }
+
+    .kanban-col-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .col-count-pill {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .kanban-cards-wrap {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .job-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      cursor: grab;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+
+    .job-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .job-card-company {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-bottom: 2px;
+    }
+
+    .job-card-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .job-card-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .job-card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Global Header Navigation -->
+  <header class="app-header">
+    <div class="container-wide">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-mark"><i class="fa-solid fa-file-waveform"></i></div>
+        <div class="logo-text">Resume<span>Flow</span> AI</div>
+      </a>
+
+      <nav class="main-nav">
+        <a href="templates.html" class="nav-link"><i class="fa-solid fa-layer-group"></i> Templates</a>
+        <a href="ats-checker.html" class="nav-link"><i class="fa-solid fa-radar"></i> Free ATS Scanner</a>
+        <a href="cover-letter.html" class="nav-link"><i class="fa-solid fa-envelope-open-text"></i> AI Cover Letter</a>
+        <a href="tracker.html" class="nav-link active"><i class="fa-solid fa-table-columns"></i> Job Tracker</a>
+        <a href="pricing.html" class="nav-link"><i class="fa-solid fa-bolt"></i> Pricing</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button type="button" class="btn btn-ghost btn-icon theme-toggle" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <div id="authNavContainer">
+          <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+          <a href="builder.html" class="btn btn-primary btn-sm"><i class="fa-solid fa-wand-magic-sparkles"></i> Build Resume</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container-wide" style="padding-top: 16px; padding-bottom: 40px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <h1 style="font-size: 1.85rem; font-weight: 900; margin-bottom: 4px;">Job Application Kanban Pipeline</h1>
+        <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0;">Track submissions, schedule interviews, and organize job offers.</p>
+      </div>
+
+      <button type="button" class="btn btn-primary" onclick="openAddJobModal()">
+        <i class="fa-solid fa-plus"></i> Add New Application
+      </button>
+    </div>
+
+    <!-- Analytics Metrics Bar -->
+    <div class="metrics-row animate-fade-in">
+      <div class="metric-card">
+        <div class="metric-icon-box" style="background: rgba(79, 125, 249, 0.12); color: var(--accent-primary);">
+          <i class="fa-solid fa-paper-plane"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Total Applied</div>
+          <div style="font-size: 1.4rem; font-weight: 900;" id="metricAppliedCount">0</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon-box" style="background: rgba(245, 158, 11, 0.12); color: var(--accent-amber);">
+          <i class="fa-solid fa-comments"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Interviewing</div>
+          <div style="font-size: 1.4rem; font-weight: 900;" id="metricInterviewCount">0</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon-box" style="background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald);">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Offers Received</div>
+          <div style="font-size: 1.4rem; font-weight: 900;" id="metricOfferCount">0</div>
+        </div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon-box" style="background: rgba(139, 92, 246, 0.12); color: #8b5cf6;">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">Interview Rate</div>
+          <div style="font-size: 1.4rem; font-weight: 900;" id="metricRate">0%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kanban Columns Grid -->
+    <div class="kanban-board">
+
+      <!-- Col 1: Wishlist -->
+      <div class="kanban-col" data-col="wishlist" ondragover="event.preventDefault()" ondrop="handleDrop(event, 'wishlist')">
+        <div class="kanban-col-header" style="border-top: 3px solid #64748b;">
+          <span><i class="fa-regular fa-bookmark"></i> Wishlist / Saved</span>
+          <span class="col-count-pill" id="count-wishlist">0</span>
+        </div>
+        <div class="kanban-cards-wrap" id="cards-wishlist"></div>
+      </div>
+
+      <!-- Col 2: Applied -->
+      <div class="kanban-col" data-col="applied" ondragover="event.preventDefault()" ondrop="handleDrop(event, 'applied')">
+        <div class="kanban-col-header" style="border-top: 3px solid var(--accent-primary);">
+          <span><i class="fa-solid fa-paper-plane"></i> Applied</span>
+          <span class="col-count-pill" id="count-applied">0</span>
+        </div>
+        <div class="kanban-cards-wrap" id="cards-applied"></div>
+      </div>
+
+      <!-- Col 3: Interviewing -->
+      <div class="kanban-col" data-col="interviewing" ondragover="event.preventDefault()" ondrop="handleDrop(event, 'interviewing')">
+        <div class="kanban-col-header" style="border-top: 3px solid var(--accent-amber);">
+          <span><i class="fa-solid fa-comments"></i> Interviewing</span>
+          <span class="col-count-pill" id="count-interviewing">0</span>
+        </div>
+        <div class="kanban-cards-wrap" id="cards-interviewing"></div>
+      </div>
+
+      <!-- Col 4: Offered -->
+      <div class="kanban-col" data-col="offered" ondragover="event.preventDefault()" ondrop="handleDrop(event, 'offered')">
+        <div class="kanban-col-header" style="border-top: 3px solid var(--accent-emerald);">
+          <span><i class="fa-solid fa-trophy"></i> Offers Received</span>
+          <span class="col-count-pill" id="count-offered">0</span>
+        </div>
+        <div class="kanban-cards-wrap" id="cards-offered"></div>
+      </div>
+
+      <!-- Col 5: Archived -->
+      <div class="kanban-col" data-col="archived" ondragover="event.preventDefault()" ondrop="handleDrop(event, 'archived')">
+        <div class="kanban-col-header" style="border-top: 3px solid #475569;">
+          <span><i class="fa-solid fa-box-archive"></i> Archived</span>
+          <span class="col-count-pill" id="count-archived">0</span>
+        </div>
+        <div class="kanban-cards-wrap" id="cards-archived"></div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Add / Edit Job Modal -->
+  <div class="modal-backdrop" id="jobModal">
+    <div class="modal-dialog" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; margin-bottom: 2px;" id="modalJobTitle">Add Job Application</h3>
+        <button type="button" class="btn btn-ghost btn-icon modal-close-btn" onclick="closeJobModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" id="jobEditId">
+        <div class="form-group">
+          <label class="form-label">Company Name *</label>
+          <input type="text" id="jobCompany" class="form-control" placeholder="e.g. Stripe, Airbnb, Google" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Job Title / Role *</label>
+          <input type="text" id="jobRole" class="form-control" placeholder="e.g. Senior Software Engineer" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Salary / Compensation</label>
+            <input type="text" id="jobSalary" class="form-control" placeholder="e.g. $165,000 / yr">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Location / Remote</label>
+            <input type="text" id="jobLocation" class="form-control" placeholder="e.g. Remote (US) or Hybrid">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Status Pipeline Stage</label>
+          <select id="jobStatus" class="form-control">
+            <option value="wishlist">Wishlist / Saved</option>
+            <option value="applied" selected>Applied</option>
+            <option value="interviewing">Interviewing</option>
+            <option value="offered">Offers Received</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Job Posting URL / Notes</label>
+          <textarea id="jobNotes" class="form-control" rows="3" placeholder="Paste application link or recruiter notes here..."></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeJobModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="saveJobApplication()">Save Application</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let draggedJobId = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize with sample applications if empty
+      const existing = StorageService.getApplications();
+      if (!existing || existing.length === 0) {
+        seedSampleApplications();
+      }
+      renderBoard();
+    });
+
+    function seedSampleApplications() {
+      const sampleJobs = [
+        { id: 'app_1', company: 'Stripe', role: 'Staff Frontend Engineer', salary: '$185,000 / yr', location: 'San Francisco (Hybrid)', status: 'interviewing', notes: 'Technical round scheduled for next Tuesday.', appliedAt: '2026-08-24' },
+        { id: 'app_2', company: 'Linear', role: 'Full-Stack Developer', salary: '$160,000 / yr', location: 'Remote (Worldwide)', status: 'applied', notes: 'Applied with 100% ATS Modern Tech resume.', appliedAt: '2026-08-28' },
+        { id: 'app_3', company: 'Datadog', role: 'Senior Systems Engineer', salary: '$175,000 / yr', location: 'New York, NY', status: 'offered', notes: 'Offer letter received. In compensation review.', appliedAt: '2026-08-15' },
+        { id: 'app_4', company: 'Vercel', role: 'Developer Relations Engineer', salary: '$150,000 / yr', location: 'Remote', status: 'wishlist', notes: 'Preparing customized portfolio cover letter.', appliedAt: '2026-08-30' }
+      ];
+      sampleJobs.forEach(job => StorageService.saveApplication(job));
+    }
+
+    function renderBoard() {
+      const apps = StorageService.getApplications() || [];
+      const cols = ['wishlist', 'applied', 'interviewing', 'offered', 'archived'];
+
+      cols.forEach(col => {
+        const container = document.getElementById(`cards-${col}`);
+        const countEl = document.getElementById(`count-${col}`);
+        const colApps = apps.filter(a => (a.status || 'applied') === col);
+
+        countEl.textContent = colApps.length;
+        container.innerHTML = colApps.map(job => `
+          <div class="job-card" draggable="true" ondragstart="handleDragStart(event, '${job.id}')" onclick="editJob('${job.id}')">
+            <div class="job-card-company">${escapeHTML(job.company)}</div>
+            <div class="job-card-title">${escapeHTML(job.role)}</div>
+            <div class="job-card-meta">
+              ${job.location ? `<span><i class="fa-solid fa-location-dot"></i> ${escapeHTML(job.location)}</span>` : ''}
+              ${job.salary ? `<span><i class="fa-solid fa-dollar-sign"></i> ${escapeHTML(job.salary)}</span>` : ''}
+            </div>
+            <div class="job-card-actions" onclick="event.stopPropagation()">
+              <span style="color: var(--text-muted); font-size: 0.72rem;">${job.appliedAt || 'Recent'}</span>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-ghost btn-icon" style="width: 22px; height: 22px; font-size: 0.75rem;" onclick="deleteJob('${job.id}')" title="Delete"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      });
+
+      // Update Top Metrics
+      const totalApplied = apps.filter(a => a.status === 'applied' || a.status === 'interviewing' || a.status === 'offered').length;
+      const totalInterview = apps.filter(a => a.status === 'interviewing').length;
+      const totalOffer = apps.filter(a => a.status === 'offered').length;
+      const rate = totalApplied > 0 ? Math.round((totalInterview / totalApplied) * 100) : 0;
+
+      document.getElementById('metricAppliedCount').textContent = totalApplied;
+      document.getElementById('metricInterviewCount').textContent = totalInterview;
+      document.getElementById('metricOfferCount').textContent = totalOffer;
+      document.getElementById('metricRate').textContent = `${rate}%`;
+    }
+
+    function handleDragStart(e, id) {
+      draggedJobId = id;
+      e.dataTransfer.setData('text/plain', id);
+    }
+
+    function handleDrop(e, targetCol) {
+      e.preventDefault();
+      if (!draggedJobId) return;
+
+      const apps = StorageService.getApplications();
+      const job = apps.find(a => a.id === draggedJobId);
+      if (job && job.status !== targetCol) {
+        job.status = targetCol;
+        StorageService.saveApplication(job);
+        renderBoard();
+        showToast(`Moved ${job.role} to ${targetCol.toUpperCase()}!`, 'success');
+      }
+      draggedJobId = null;
+    }
+
+    function openAddJobModal() {
+      document.getElementById('jobEditId').value = '';
+      document.getElementById('modalJobTitle').textContent = 'Add Job Application';
+      document.getElementById('jobCompany').value = '';
+      document.getElementById('jobRole').value = '';
+      document.getElementById('jobSalary').value = '';
+      document.getElementById('jobLocation').value = '';
+      document.getElementById('jobStatus').value = 'applied';
+      document.getElementById('jobNotes').value = '';
+
+      document.getElementById('jobModal').classList.add('active');
+    }
+
+    function editJob(id) {
+      const apps = StorageService.getApplications();
+      const job = apps.find(a => a.id === id);
+      if (!job) return;
+
+      document.getElementById('jobEditId').value = job.id;
+      document.getElementById('modalJobTitle').textContent = 'Edit Job Application';
+      document.getElementById('jobCompany').value = job.company || '';
+      document.getElementById('jobRole').value = job.role || '';
+      document.getElementById('jobSalary').value = job.salary || '';
+      document.getElementById('jobLocation').value = job.location || '';
+      document.getElementById('jobStatus').value = job.status || 'applied';
+      document.getElementById('jobNotes').value = job.notes || '';
+
+      document.getElementById('jobModal').classList.add('active');
+    }
+
+    function closeJobModal() {
+      document.getElementById('jobModal').classList.remove('active');
+    }
+
+    function saveJobApplication() {
+      const company = document.getElementById('jobCompany').value.trim();
+      const role = document.getElementById('jobRole').value.trim();
+      if (!company || !role) {
+        showToast('Please enter both company name and job title.', 'error');
+        return;
+      }
+
+      const id = document.getElementById('jobEditId').value || ('app_' + Date.now());
+      const job = {
+        id,
+        company,
+        role,
+        salary: document.getElementById('jobSalary').value.trim(),
+        location: document.getElementById('jobLocation').value.trim(),
+        status: document.getElementById('jobStatus').value,
+        notes: document.getElementById('jobNotes').value.trim(),
+        appliedAt: new Date().toISOString().split('T')[0]
+      };
+
+      StorageService.saveApplication(job);
+      closeJobModal();
+      renderBoard();
+      showToast(`Saved application for ${company}!`, 'success');
+    }
+
+    function deleteJob(id) {
+      if (confirm('Are you sure you want to remove this job application?')) {
+        StorageService.deleteApplication(id);
+        renderBoard();
+        showToast('Job application removed.', 'info');
+      }
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      }[m]));
+    }
+  </script>
+</body>
+</html>
