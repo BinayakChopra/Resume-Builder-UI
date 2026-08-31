@@ -518,6 +518,21 @@
   <script src="js/storage.js"></script>
   <script src="js/app.js"></script>
   <script>
+    // =========================================================================
+    // 🚀 LIVE PAYMENT GATEWAY CONFIGURATION
+    // You can paste your direct Stripe Payment Link, Lemon Squeezy Checkout URL,
+    // or Razorpay/PayPal Link below.
+    // If empty (""), it defaults to the built-in instant simulated checkout.
+    // =========================================================================
+    const PAYMENT_GATEWAY_CONFIG = {
+      // Direct Live Payment Links (Paste your Stripe or Lemon Squeezy link here):
+      links: {
+        '7day': localStorage.getItem('resumeflow_paylink_7day') || '',       // e.g. 'https://buy.stripe.com/abc...'
+        'pro': localStorage.getItem('resumeflow_paylink_pro') || '',         // e.g. 'https://buy.stripe.com/def...'
+        'lifetime': localStorage.getItem('resumeflow_paylink_lifetime') || '' // e.g. 'https://buy.stripe.com/ghi...'
+      }
+    };
+
     let currentSelectedPlan = '7day';
     let currentBasePrice = 3.99;
     let currentFinalPrice = 3.99;
@@ -525,6 +540,20 @@
     let currentProPrice = '$11.99';
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Check if returning from a real Stripe or Lemon Squeezy payment
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('payment_success') === 'true' || urlParams.get('session_id')) {
+        const plan = urlParams.get('plan') || '7day';
+        const user = StorageService.getUserSession();
+        if (user) {
+          StorageService.upgradeUserPlan(plan);
+          showToast(`🎉 Payment Confirmed! Your ${plan.toUpperCase()} plan is now active.`, 'success');
+          setTimeout(() => window.location.href = 'builder.html', 1800);
+        } else {
+          showToast('Payment received! Please sign in to link your Pro plan.', 'info');
+        }
+      }
+
       // Billing Toggle Setup
       const toggleOptions = document.querySelectorAll('.toggle-option');
       toggleOptions.forEach(opt => {
@@ -551,6 +580,16 @@
 
     function openCheckoutModal(planType, name, price) {
       currentSelectedPlan = planType;
+
+      // If owner has configured a live payment link for this plan, redirect directly to Stripe / Lemon Squeezy
+      const liveLink = PAYMENT_GATEWAY_CONFIG.links[planType];
+      if (liveLink && liveLink.startsWith('http')) {
+        const user = StorageService.getUserSession();
+        const emailParam = user && user.email ? `?prefilled_email=${encodeURIComponent(user.email)}` : '';
+        window.location.href = liveLink + emailParam;
+        return;
+      }
+
       currentBasePrice = parseFloat(price.replace(/[^0-9.]/g, '')) || 3.99;
       currentFinalPrice = currentBasePrice;
 
@@ -600,6 +639,12 @@
         setTimeout(() => {
           window.location.href = 'login.html?redirect=pricing.html';
         }, 1500);
+        return;
+      }
+
+      const liveLink = PAYMENT_GATEWAY_CONFIG.links[currentSelectedPlan];
+      if (liveLink && liveLink.startsWith('http')) {
+        window.location.href = liveLink;
         return;
       }
 
